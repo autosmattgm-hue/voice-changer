@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Changer — 30 Real Human Voices</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🎙️</span>
+        <div>
+          <h1>Voice Changer</h1>
+          <p class="tag">Change the voice in <b>videos</b> and <b>audio</b> — 30 real, human voices</p>
+        </div>
+      </div>
+      <div class="current-voice" id="currentVoiceBadge">
+        <span id="currentEmoji">🧑</span>
+        <div>
+          <div class="cv-name" id="currentName">Adult Man</div>
+          <div class="cv-desc" id="currentDesc">Everyday natural guy.</div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="modes">
+      <button class="mode-btn active" data-mode="audio">🎵 Audio File</button>
+      <button class="mode-btn" data-mode="video">🎬 Video File</button>
+      <button class="mode-btn" data-mode="mic">🎤 Live Microphone</button>
+    </nav>
+
+    <!-- PRESETS -->
+    <section class="preset-section">
+      <div class="section-head">
+        <h2>Choose a human voice</h2>
+        <div class="filter-row">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="Male">Male</button>
+          <button class="chip" data-filter="Female">Female</button>
+          <button class="chip" data-filter="Child">Children</button>
+          <button class="chip" data-filter="Senior">Elderly</button>
+          <button class="chip" data-filter="Neutral">Neutral</button>
+        </div>
+      </div>
+      <div class="preset-grid" id="presetGrid"></div>
+    </section>
+
+    <!-- TUNE -->
+    <section class="tune-section">
+      <div class="tune-row">
+        <label>Fine-tune pitch
+          <input type="range" id="pitchFine" min="-8" max="8" step="0.5" value="0" />
+          <span id="pitchFineVal">0 st</span>
+        </label>
+        <label>Output volume
+          <input type="range" id="volume" min="0" max="200" step="5" value="100" />
+          <span id="volumeVal">100%</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- AUDIO MODE -->
+    <main>
+      <section class="panel" id="panel-audio">
+        <div class="drop" id="audioDrop">
+          <input type="file" id="audioFile" accept="audio/*" hidden />
+          <div class="drop-inner">
+            <span class="big-emoji">🎵</span>
+            <p><b>Drop an audio file</b> or <span class="link">browse</span></p>
+            <p class="hint">MP3, WAV, M4A, OGG, FLAC… the voice is changed without losing quality</p>
+          </div>
+        </div>
+        <div class="player" id="audioPlayer" style="display:none">
+          <audio id="audioEl" controls></audio>
+          <div class="actions">
+            <button class="btn primary" id="audioPreview">▶ Preview changed voice</button>
+            <button class="btn" id="audioExport">💾 Download WAV</button>
+            <button class="btn ghost" id="audioDemo">Generate sample</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEO MODE -->
+      <section class="panel" id="panel-video" style="display:none">
+        <div class="drop" id="videoDrop">
+          <input type="file" id="videoFile" accept="video/*" hidden />
+          <div class="drop-inner">
+            <span class="big-emoji">🎬</span>
+            <p><b>Drop a video file</b> or <span class="link">browse</span></p>
+            <p class="hint">MP4, WebM, MOV, MKV… its audio gets the chosen human voice</p>
+          </div>
+        </div>
+        <div class="player" id="videoPlayer" style="display:none">
+          <video id="videoEl" controls muted playsinline></video>
+          <div class="actions">
+            <button class="btn primary" id="videoPreview">▶ Preview changed voice</button>
+            <button class="btn" id="videoExport">💾 Save as WebM (new voice)</button>
+          </div>
+          <p class="hint" id="videoHint"></p>
+        </div>
+      </section>
+
+      <!-- MIC MODE -->
+      <section class="panel" id="panel-mic" style="display:none">
+        <div class="mic-box">
+          <span class="mic-icon" id="micIcon">🎤</span>
+          <h3>Live microphone</h3>
+          <p class="hint">Speak now — you'll hear yourself with the chosen human voice in real time.</p>
+          <div class="actions">
+            <button class="btn primary" id="micToggle">Start microphone</button>
+          </div>
+          <p class="hint" id="micStatus"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">All processing happens locally in your browser — nothing is uploaded. 30 real, human voices · no robots · no monsters.</footer>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/pitch.js"></script>
+  <script src="js/eq.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
