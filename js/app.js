@@ -23,6 +23,11 @@
   var videoAudioBuffer = null;  // decoded audio track for video mode
   var activeMode = 'audio';
 
+  // upgrade v3: background noise cancellation (spectral subtraction)
+  var NJ = window.NoiseJS;
+  var noiseStrength = 0;              // 0 = off .. 100
+  var noiseReducerL = null, noiseReducerR = null;
+
   // upgrade v2: fx + preferences + custom voices
   var fx = { bass: 0, mid: 0, treble: 0 };       // dB offsets
   var optFadeIn = 0, optFadeOut = 0, optNormalize = false, optFormat = 'wav';
@@ -580,6 +585,10 @@
 
   function renderChannels(chans, voice, sr, opts) {
     opts = opts || {};
+
+    // v3: optional background noise cancellation (before transformation)
+    if (opts.noiseStrength) chans = applyNoiseToChannels(chans, sr);
+
     var p = effectivePitch(voice);
     var shifted;
     if (voice.vibrato) {
@@ -621,9 +630,33 @@
     return buf;
   }
   function currentExportOpts(extra) {
-    var o = { fadeIn: optFadeIn, fadeOut: optFadeOut, normalize: optNormalize };
+    var o = { fadeIn: optFadeIn, fadeOut: optFadeOut, normalize: optNormalize, noiseStrength: noiseStrength };
     if (extra) for (var k in extra) o[k] = extra[k];
     return o;
+  }
+
+  /* ---------------- background noise cancellation ---------------- */
+  function noiseStrengthFrac() { return (noiseStrength || 0) / 100; }
+  function applyNoiseToChannels(chans, sr) {
+    if (!NJ || noiseStrength <= 0 || !chans.length) return chans;
+    return NJ.reduceChannels(chans, sr, noiseStrengthFrac());
+  }
+  // reset the persistent live (realtime) reducers so profiles re-learn
+  function resetNoiseReducers() {
+    noiseReducerL = null; noiseReducerR = null;
+  }
+  function ensureNoiseReducers() {
+    if (!NJ || !ctx || (noiseReducerL && noiseReducerR)) return;
+    var opts = { sampleRate: ctx.sampleRate, overSub: NJ.overSubFor(noiseStrengthFrac()), gateRatio: NJ.gateFor(noiseStrengthFrac()) };
+    noiseReducerL = new NJ.NoiseReducer(opts);
+    noiseReducerR = new NJ.NoiseReducer(opts);
+  }
+  function reduceLive(channel, side) {
+    if (!noiseStrength) return channel;
+    ensureNoiseReducers();
+    var r = side === 'L' ? noiseReducerL : noiseReducerR;
+    if (!r) return channel;
+    return r.process(channel);
   }
 
   /* ------------- live realtime graph (mic / video fallback) ---------- */
@@ -637,6 +670,8 @@
       rt.setVibrato(currentVoice.vibrato, 0);
       var il = ev.inputBuffer.getChannelData(0), ir = ev.inputBuffer.getChannelData(1);
       var ol = ev.outputBuffer.getChannelData(0), orr = ev.outputBuffer.getChannelData(1);
+      // v3: live background noise cancellation
+      if (noiseStrength) { il = reduceLive(il, 'L'); ir = reduceLive(ir, 'R'); }
       rt.process(il, ir, ol, orr, ev.inputBuffer.length);
     };
     return { sp: sp, rt: rt };
@@ -844,6 +879,18 @@
     [['fadeIn', 'fadeIn'], ['fadeOut', 'fadeOut']].forEach(function (pair) {
       $(pair[0]).addEventListener('input', function () { setOpt(pair[1], parseFloat(this.value)); });
     });
+    // v3: background noise cancellation control
+    var noiseEl = $('noiseStrength');
+    function updateNoiseLabel() {
+      var v = parseInt(noiseEl.value, 10) || 0;
+      $('noiseStrengthVal').textContent = v <= 0 ? 'Off' : v + '%';
+    }
+    noiseEl.addEventListener('input', function () {
+      noiseStrength = parseInt(noiseEl.value, 10) || 0;
+      updateNoiseLabel();
+      resetNoiseReducers();   // re-learn profiles when level changes
+    });
+    updateNoiseLabel();
     var normEl = $('optNormalize'); if (normEl) normEl.addEventListener('change', function () { optNormalize = normEl.checked; });
     var fmtEl = $('optFormat'); if (fmtEl) fmtEl.addEventListener('change', function () { optFormat = fmtEl.value; });
     window.addEventListener('beforeunload', function () { try { micStop(); } catch (e) {} });

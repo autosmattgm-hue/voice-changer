@@ -24,6 +24,8 @@ Open **`index.html`** in a modern browser (Chrome, Edge, Firefox, or Safari).
 2. **Shape your sound** with the sliders:
    - **Fine-tune pitch** (semitones) and **output volume**.
    - **Bass / Mid / Treble** FX (in dB) on top of whatever voice you chose.
+   - **Background noise cancellation** — removes hum, hiss & room tone; works
+     live on the mic and on exported files.
 3. Choose a mode:
 
 | Mode | What to do | Output |
@@ -35,6 +37,23 @@ Open **`index.html`** in a modern browser (Chrome, Edge, Firefox, or Safari).
 
 There's also a **Generate sample** button (audio tab) if you want a quick demo
 without any file.
+
+## Background noise cancellation
+
+A **Background noise cancellation** slider (Off → 100) cleans up hum, hiss, fans,
+air-conditioning and steady room tone:
+
+- **Live:** applies in real time to the microphone (and to the Google-voice /
+  tab capture path).
+- **Files:** applies while rendering/previewing and when you export audio or
+  video — before the pitch change, so the transformed voice stays clean.
+
+It uses **FFT-based spectral subtraction**: each Hann-windowed frame is analysed,
+a running noise profile is learned (through the quiet gaps), and that profile is
+subtracted from the spectrum (with an over-subtraction factor, a spectral floor to
+avoid "watery" artifacts, and original phase preserved). This is the same
+technique used in phones and cameras for noise suppression. Start around 40–60%
+and raise it only if the room is noisy — too high can thin out a clean recording.
 
 ## Google voices (text-to-speech)
 
@@ -90,18 +109,21 @@ voices) — deliberately **no** robotic phasing, no synthetic monster tones.
 index.html          page & layout
 css/style.css       dark UI styling
 js/pitch.js         WSOLA + RateTransposer pitch engine (portable DSP)
-js/eq.js            RBJ biquad EQ + 16-bit WAV encoder
+js/eq.js            RBJ biquad EQ + 16-bit WAV encoder + FX helpers
+js/noise.js         FFT-based spectral-subtraction noise reducer
 js/presets.js       the 30 human voice definitions
-js/app.js           app wiring: audio/video/mic, rendering, export
+js/app.js           app wiring: audio/video/mic/Google, rendering, export
 test/pitch.test.js  automated DSP test (Node)
-test/eq.test.js     automated preset/EQ/WAV test (Node)
+test/eq.test.js     automated preset/EQ/WAV/FX test (Node)
+test/noise.test.js  automated FFT + noise-reduction test (Node)
 ```
 
-- **Audio:** decode → WSOLA pitch‑shift (sound‑natural, keeps duration) → EQ →
-  normalize → play or download WAV.
+- **Audio:** decode → *(optional) noise cancel →* WSOLA pitch‑shift (sound‑natural,
+  keeps duration) → EQ → fade/normalize → play or download WAV.
 - **Video:** read the audio track, process it the same way, then re‑render the
   video with the changed audio via `captureStream()` + `MediaRecorder` (WebM).
-- **Microphone:** real‑time streaming path through the same pitch engine.
+- **Microphone:** real‑time streaming path through the same pitch engine (with
+  optional live noise cancellation).
 - The pitch engine is a clean re‑implementation of the well‑known
   time‑domain/WSOLA algorithm (Stretch + RateTransposer) that preserves duration
   while moving pitch.
@@ -112,10 +134,11 @@ From this folder:
 
 ```
 node test/pitch.test.js    # checks pitch up/down, duration, no NaN
-node test/eq.test.js       # checks 30 presets, EQ, WAV header
+node test/eq.test.js       # checks 30 presets, EQ, WAV header, FX helpers
+node test/noise.test.js    # checks FFT peaks + noise-reduction quality
 ```
 
-Both should print **ALL TESTS PASSED**.
+All three should print **ALL TESTS PASSED**.
 
 ## Notes & limitations
 

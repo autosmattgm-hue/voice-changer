@@ -84,6 +84,13 @@
           <span id="fxTrebleVal">0 dB</span>
         </label>
       </div>
+      <div class="tune-row">
+        <label>Background noise cancellation
+          <input type="range" id="noiseStrength" min="0" max="100" step="5" value="0" />
+          <span id="noiseStrengthVal">Off</span>
+        </label>
+        <span class="noise-hint">Removes background hum, hiss &amp; room tone (works live &amp; on exported files).</span>
+      </div>
     </section>
 
     <!-- AUDIO MODE -->
@@ -210,6 +217,7 @@
 
   <script src="js/pitch.js"></script>
   <script src="js/eq.js"></script>
+  <script src="js/noise.js"></script>
   <script src="js/presets.js"></script>
   <script src="js/app.js"></script>
 </body>
