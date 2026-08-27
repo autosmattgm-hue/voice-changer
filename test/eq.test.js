@@ -47,5 +47,28 @@ check('WAV byteRate correct', byteRate === sr * 2 * 2);
 check('WAV data size correct', dataLen === 2 * sr * 2);
 check('WAV total size = 44 + data', wav.byteLength === 44 + dataLen);
 
+// 4) FX helpers: fxChain produces finite output, fade in ramps up, normalize caps peak
+const fxOut = new Float32Array(tone); EQJS.applyChain(fxOut, EQJS.fxChain(sr, 3, -2, 4));
+let fxn = false;
+for (let i = 0; i < fxOut.length; i++) if (fxOut[i] !== fxOut[i] || !isFinite(fxOut[i])) { fxn = true; break; }
+check('fxChain output finite', !fxn);
+
+const tone2 = new Float32Array(sr); tone2.fill(0.9); // constant signal
+const faded = EQJS.fadeChannels([tone2.slice()], 0.1, 0.1, sr)[0];
+check('fade-in starts near silence', Math.abs(faded[0]) < 0.01);
+// check monotonic-ish ramp sample near fade end
+check('fade-in ramps upward', faded[Math.round(0.05 * sr)] > faded[0]);
+
+const loud = new Float32Array(1000); loud.fill(1.0);
+const normed = EQJS.normalizeChannels([loud], 0.5)[0];
+let peakAfter = 0;
+for (let i = 0; i < normed.length; i++) if (normed[i] > peakAfter) peakAfter = normed[i];
+check('normalize caps peak to target', Math.abs(peakAfter - 0.5) < 1e-4);
+
+// 5) WAV/encode handles stereo 16-bit
+const wav2 = EQJS.encodeWav([tone, tone], sr);
+const dv2 = new DataView(wav2);
+check('stereo WAV byteRate', dv2.getUint32(28, true) === sr * 2 * 2);
+
 console.log('\n' + (fails === 0 ? 'ALL MODULE TESTS PASSED \u2714' : fails + ' FAILED \u2718'));
 process.exit(fails === 0 ? 0 : 1);

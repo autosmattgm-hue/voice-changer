@@ -23,8 +23,14 @@
   var videoAudioBuffer = null;  // decoded audio track for video mode
   var activeMode = 'audio';
 
+  // upgrade v2: fx + preferences + custom voices
+  var fx = { bass: 0, mid: 0, treble: 0 };       // dB offsets
+  var optFadeIn = 0, optFadeOut = 0, optNormalize = false, optFormat = 'wav';
+  var customVoices = [];
+  var searchQ = '';
+
   var master = null, eqIn = null, eqOut = null;
-  var nativeFilters = { hp: null, low: null, mid: null, hi: null };
+  var nativeFilters = { hp: null, low: null, mid: null, hi: null, fxb: null, fxm: null, fxt: null };
 
   if (ctx) {
     master = ctx.createGain();
@@ -37,11 +43,18 @@
     nativeFilters.low = ctx.createBiquadFilter(); nativeFilters.low.type = 'lowshelf';
     nativeFilters.mid = ctx.createBiquadFilter(); nativeFilters.mid.type = 'peaking'; nativeFilters.mid.Q.value = 1.1;
     nativeFilters.hi = ctx.createBiquadFilter(); nativeFilters.hi.type = 'highshelf';
+    // v2: user FX bands (bass/mid/treble)
+    nativeFilters.fxb = ctx.createBiquadFilter(); nativeFilters.fxb.type = 'lowshelf'; nativeFilters.fxb.frequency.value = 120;
+    nativeFilters.fxm = ctx.createBiquadFilter(); nativeFilters.fxm.type = 'peaking'; nativeFilters.fxm.frequency.value = 1500; nativeFilters.fxm.Q.value = 1.0;
+    nativeFilters.fxt = ctx.createBiquadFilter(); nativeFilters.fxt.type = 'highshelf'; nativeFilters.fxt.frequency.value = 6500;
     eqIn.connect(nativeFilters.hp);
     nativeFilters.hp.connect(nativeFilters.low);
     nativeFilters.low.connect(nativeFilters.mid);
     nativeFilters.mid.connect(nativeFilters.hi);
-    nativeFilters.hi.connect(eqOut);
+    nativeFilters.hi.connect(nativeFilters.fxb);
+    nativeFilters.fxb.connect(nativeFilters.fxm);
+    nativeFilters.fxm.connect(nativeFilters.fxt);
+    nativeFilters.fxt.connect(eqOut);
     eqOut.connect(master);
   }
 
@@ -56,6 +69,19 @@
     nativeFilters.mid.Q.value = (e.mid && e.mid.Q) || 1.1;
     nativeFilters.hi.frequency.value = (e.high && e.high.f) || 6500;
     nativeFilters.hi.gain.value = (e.high && e.high.gain) || 0;
+    // v2: user FX bands
+    nativeFilters.fxb.gain.value = fx.bass || 0;
+    nativeFilters.fxm.gain.value = fx.mid || 0;
+    nativeFilters.fxt.gain.value = fx.treble || 0;
+  }
+  function applyFxLive() {
+    applyVoiceToNative(currentVoice);
+  }
+  function eqForVoicePlusFx(voice, sr) {
+    // full offline EQ chain: voice EQ + user FX
+    var ch = EQJS.buildChain(voice.eq || {}, sr);
+    ch = ch.concat(EQJS.fxChain(sr, fx.bass, fx.mid, fx.treble));
+    return ch;
   }
 
   function effectivePitch(voice) {
@@ -76,6 +102,168 @@
     a.href = url; a.download = name; a.rel = 'noopener';
     document.body.appendChild(a); a.click();
     setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1200);
+  }
+
+  /* ------------------- waveform + live analyser --------------------- */
+  var waveAnalyser = null, waveRAF = 0;
+  function drawWaveform(ab) {
+    var cv = document.getElementById('audioWave');
+    if (!cv || !ab) return;
+    var g = cv.getContext('2d');
+    var ch = ab.getChannelData(0);
+    var w = cv.width, h = cv.height;
+    g.fillStyle = '#0d1020'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#7c5cff'; g.lineWidth = 1.5;
+    g.beginPath();
+    var mid = h / 2;
+    var step = Math.max(1, Math.floor(ch.length / w));
+    for (var x = 0; x < w; x++) {
+      var start = x * step, end = Math.min(start + step, ch.length);
+      var peak = 0;
+      for (var i = start; i < end; i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; }
+      var y = mid - peak * (mid - 6);
+      g.moveTo(x, mid); g.lineTo(x, y);
+    }
+    g.stroke();
+  }
+  function wireOutputToAnalyser() {
+    if (!ctx || !master) return;
+    try {
+      if (waveAnalyser) waveAnalyser.disconnect();
+      waveAnalyser = ctx.createAnalyser();
+      waveAnalyser.fftSize = 512;
+      master.connect(waveAnalyser);
+      cancelAnimationFrame(waveRAF);
+      drawLiveMeter();
+    } catch (e) {}
+  }
+  function _meterToCanvas(cvId) {
+    var cv = document.getElementById(cvId);
+    if (!cv || !waveAnalyser) return;
+    var g = cv.getContext('2d');
+    var arr = new Uint8Array(waveAnalyser.frequencyBinCount);
+    waveAnalyser.getByteFrequencyData(arr);
+    var w = cv.width, h = cv.height;
+    g.fillStyle = '#0d1020'; g.fillRect(0, 0, w, h);
+    var n = Math.min(32, arr.length);
+    var bw = w / n;
+    for (var i = 0; i < n; i++) {
+      var v = arr[i] / 255;
+      var bh = Math.max(2, v * (h - 6));
+      var col = v > 0.7 ? '#ff5c7a' : (v > 0.4 ? '#ffb74d' : '#3ddc97');
+      g.fillStyle = col;
+      g.fillRect(i * bw + 1, h - bh, bw - 2, bh);
+    }
+  }
+  function drawLiveMeter() {
+    if (waveAnalyser) { _meterToCanvas('liveMeter'); _meterToCanvas('liveMeterMic'); }
+    waveRAF = requestAnimationFrame(drawLiveMeter);
+  }
+
+  /* ------------------- compressed (Opus/WebM) export ----------------- */
+  function exportCompressedAudio(chans, sr, name) {
+    if (!ctx) { toast('Audio not supported.'); return; }
+    if (!ctx.createMediaStreamDestination || !window.MediaRecorder) {
+      toast('Compressed export not supported in this browser.'); return;
+    }
+    var buf = ctx.createBuffer(chans.length, chans[0].length, sr);
+    chans.forEach(function (ch, c) { buf.copyToChannel(ch, c); });
+    var dest = ctx.createMediaStreamDestination();
+    var s = ctx.createBufferSource();
+    s.buffer = buf; s.connect(dest);
+    var rec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus' });
+    var chunks = [];
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = function () { download(new Blob(chunks, { type: 'audio/webm' }), name); toast('Compressed audio downloaded \u2714'); };
+    rec.start(); s.start();
+    s.onended = function () { try { rec.stop(); } catch (e) {} };
+  }
+
+  /* --------------------- recording (mic output) --------------------- */
+  function micRecToggle() {
+    var btn = document.getElementById('micRec');
+    if (!btn) return;
+    if (micRec && micRec.state !== 'inactive') { micRec.stop(); btn.textContent = '\u25cf Record changed voice'; btn.classList.remove('rec'); return; }
+    if (!micStream) { toast('Start the microphone first.'); return; }
+    var dest = ctx.createMediaStreamDestination();
+    if (live && live.sp) { try { live.sp.connect(dest); } catch (e) {} }
+    else { try { master.connect(dest); } catch (e) {} }
+    micRec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus' });
+    var chunks = [];
+    micRec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    micRec.onstop = function () { download(new Blob(chunks, { type: 'audio/webm' }), 'my-changed-voice.webm'); toast('Recording downloaded \u2714'); };
+    micRec.start();
+    btn.textContent = '\u25cf Recording\u2026 (tap to stop)';
+    btn.classList.add('rec');
+    toast('Recording\u2026 say something!');
+  }
+
+  /* ------------------- custom voices (localStorage) ----------------- */
+  function loadCustoms() {
+    try { customVoices = JSON.parse(localStorage.getItem('vc_customs') || '[]') || []; }
+    catch (e) { customVoices = []; }
+    buildCustomList();
+  }
+  function persistCustoms() {
+    try { localStorage.setItem('vc_customs', JSON.stringify(customVoices)); } catch (e) {}
+    buildCustomList();
+  }
+  function saveCustomAs(name) {
+    name = (name || '').trim();
+    if (!name) { toast('Give your voice a name first.'); return; }
+    var id = 'custom-' + Date.now();
+    var v = {
+      id: id, name: name, custom: true,
+      emoji: currentVoice.emoji || '\u2726',
+      gender: currentVoice.gender,
+      pitch: currentVoice.pitch,
+      eq: currentVoice.eq || {},
+      vibrato: currentVoice.vibrato,
+      desc: 'Your custom voice'
+    };
+    customVoices.push(v);
+    persistCustoms();
+    toast('Saved custom voice: ' + name);
+    selectVoice(id);
+  }
+  function removeCustom(id) {
+    customVoices = customVoices.filter(function (v) { return v.id !== id; });
+    if (currentVoice.id === id) selectVoice(V.DEFAULT);
+    persistCustoms();
+  }
+  function buildCustomList() {
+    var box = document.getElementById('customList');
+    if (!box) return;
+    box.innerHTML = '';
+    customVoices.forEach(function (v) {
+      var el = document.createElement('div');
+      el.className = 'custom-chip' + (currentVoice && currentVoice.id === v.id ? ' active' : '');
+      el.innerHTML = '<span class="cc-e">' + (v.emoji || '\u2726') + '</span><span class="cc-n" title="' + v.name + '"></span>';
+      el.querySelector('.cc-n').textContent = v.name;
+      var d = document.createElement('span');
+      d.className = 'cc-del'; d.textContent = '\u2715';
+      d.addEventListener('click', function (e) { e.stopPropagation(); removeCustom(v.id); });
+      el.appendChild(d);
+      el.addEventListener('click', function () { selectVoice(v.id); });
+      box.appendChild(el);
+    });
+  }
+
+  /* ------------------- get voice (incl. custom) --------------------- */
+  function getVoiceAny(id) {
+    var v = V.getVoice(id);
+    if (v) return v;
+    for (var i = 0; i < customVoices.length; i++) if (customVoices[i].id === id) return customVoices[i];
+    return null;
+  }
+  function allVoicesMerged() {
+    return customVoices.concat(V.VOICES);
+  }
+  function randomVoice() {
+    var list = allVoicesMerged();
+    if (!list.length) return;
+    var v = list[Math.floor(Math.random() * list.length)];
+    selectVoice(v.id);
   }
 
   /* ------------- real-time streaming pitch (mic / live) ------------- */
@@ -147,33 +335,49 @@
         hideDrop('audio');
         document.getElementById('audioEl').src = URL.createObjectURL(file);
         document.getElementById('audioEl').load();
-        toast('Audio loaded — pick a voice and press Preview.');
+        drawWaveform(ab);
+        toast('Audio loaded — pick a voice, tweak FX, then Preview (A/B).');
       }, function () { toast('Could not decode that audio file.'); });
     };
     reader.onerror = function () { toast('Could not read the file.'); };
     reader.readAsArrayBuffer(file);
   }
   function audioPreview() {
-    if (!fileAudioBuffer) { toast('Load an audio file first.'); return; }
+    if (!fileAudioBuffer) { toast('Load an audio file first, or press Generate sample.'); return; }
     toast('Rendering changed voice…');
     setTimeout(function () {
       try {
-        var buf = renderToBuffer(fileAudioBuffer, currentVoice);
-        applyVoiceToNative({ eq: {} }); // no double-EQ for offline render
+        // Buffer playback routes straight to master (bypasses native EQ chain),
+        // so ALL processing (pitch + voice EQ + FX + fades) happens offline here.
+        var buf = renderToBuffer(fileAudioBuffer, currentVoice, currentExportOpts());
         master.gain.value = volumeValue();
         playBuffer(buf);
+        wireOutputToAnalyser();
       } catch (e) { toast('Render failed: ' + e.message); }
     }, 30);
   }
+  function playOriginal() {
+    if (!fileAudioBuffer) { toast('Load an audio file first.'); return; }
+    stopPlayback();
+    var s = ctx.createBufferSource();
+    s.buffer = fileAudioBuffer;
+    s.connect(master);
+    s.start(); sourceNode = s;
+  }
   function audioExport() {
     if (!fileAudioBuffer) { toast('Load an audio file first.'); return; }
-    toast('Rendering WAV…');
+    var isWav = optFormat !== 'opus';
+    toast('Rendering ' + (isWav ? 'WAV' : 'compressed audio') + '…');
     setTimeout(function () {
       try {
-        var chans = renderChannels(channelsFromBuffer(fileAudioBuffer), currentVoice, fileAudioBuffer.sampleRate);
-        var wav = EQJS.encodeWav(chans, fileAudioBuffer.sampleRate);
-        download(new Blob([wav], { type: 'audio/wav' }), currentVoice.id + '-changed-voice.wav');
-        toast('WAV downloaded ✔');
+        var chans = renderChannels(channelsFromBuffer(fileAudioBuffer), currentVoice, fileAudioBuffer.sampleRate, currentExportOpts());
+        if (isWav) {
+          var wav = EQJS.encodeWav(chans, fileAudioBuffer.sampleRate);
+          download(new Blob([wav], { type: 'audio/wav' }), currentVoice.id + '-changed-voice.wav');
+          toast('WAV downloaded ✔');
+        } else {
+          exportCompressedAudio(chans, fileAudioBuffer.sampleRate, currentVoice.id + '-changed-voice.webm');
+        }
       } catch (e) { toast('Export failed: ' + e.message); }
     }, 30);
   }
@@ -290,7 +494,8 @@
     return out;
   }
 
-  function renderChannels(chans, voice, sr) {
+  function renderChannels(chans, voice, sr, opts) {
+    opts = opts || {};
     var p = effectivePitch(voice);
     var shifted;
     if (voice.vibrato) {
@@ -298,18 +503,23 @@
     } else {
       shifted = VP.shiftChannels(chans, p, sr);
     }
-    // EQ
+    // EQ: voice EQ + user FX (unless opts.flatEQ says skip double-EQ)
     var eqd = shifted.map(function (ch) {
       var c = ch.slice();
-      EQJS.applyChain(c, EQJS.buildChain(voice.eq, sr));
+      if (!opts.flatEQ) EQJS.applyChain(c, eqForVoicePlusFx(voice, sr));
       return c;
     });
-    // gentle normalize to a safe peak
+    // fade in / out
+    if (opts.fadeIn || opts.fadeOut) EQJS.fadeChannels(eqd, opts.fadeIn || 0, opts.fadeOut || 0, sr);
+    // normalize (bounded)
     var peak = 0;
     eqd.forEach(function (ch) { for (var i = 0; i < ch.length; i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; } });
-    if (peak > 1e-6 && peak > 0.98) {
-      var s = 0.97 / peak;
-      eqd.forEach(function (ch) { for (var i = 0; i < ch.length; i++) ch[i] *= s; });
+    var target = 0.96;
+    if (opts.normalize) {
+      EQJS.normalizeChannels(eqd, target);
+    } else if (peak > 1e-6 && peak > target) {
+      var gi = target / peak;
+      eqd.forEach(function (ch) { for (i = 0; i < ch.length; i++) ch[i] *= gi; });
     }
     return eqd;
   }
@@ -320,11 +530,16 @@
     for (var c = 0; c < n; c++) chans.push(ab.getChannelData(c));
     return chans;
   }
-  function renderToBuffer(ab, voice) {
-    var chans = renderChannels(channelsFromBuffer(ab), voice || currentVoice, ab.sampleRate);
+  function renderToBuffer(ab, voice, opts) {
+    var chans = renderChannels(channelsFromBuffer(ab), voice || currentVoice, ab.sampleRate, opts);
     var buf = ctx.createBuffer(chans.length, chans[0].length, ab.sampleRate);
     chans.forEach(function (ch, c) { buf.copyToChannel(ch, c); });
     return buf;
+  }
+  function currentExportOpts(extra) {
+    var o = { fadeIn: optFadeIn, fadeOut: optFadeOut, normalize: optNormalize };
+    if (extra) for (var k in extra) o[k] = extra[k];
+    return o;
   }
 
   /* ------------- live realtime graph (mic / video fallback) ---------- */
@@ -368,6 +583,7 @@
       micStream = stream;
       var src = ctx.createMediaStreamSource(stream);
       wireRealtime(src, null);
+      wireOutputToAnalyser();
       document.getElementById('micToggle').textContent = '\u25a0 Stop microphone';
       document.getElementById('micStatus').textContent = 'Live \u2014 speak and you\u2019ll hear your changed human voice.';
       toast('Microphone live \u2714');
@@ -432,15 +648,17 @@
   function buildPresets(filter) {
     var grid = $('presetGrid');
     grid.innerHTML = '';
-    V.VOICES.forEach(function (v) {
+    var trim = searchQ ? searchQ.toLowerCase() : '';
+    allVoicesMerged().forEach(function (v) {
       if (filter && filter !== 'all' && v.gender !== filter) return;
+      if (trim && (v.name.toLowerCase().indexOf(trim) === -1) && (v.id.toLowerCase().indexOf(trim) === -1)) return;
       var el = document.createElement('div');
       el.className = 'preset' + (v.id === currentVoice.id ? ' active' : '');
       el.dataset.id = v.id;
       var emoji = v.emoji || '\u{1F399}\uFE0F';
       el.innerHTML =
         '<span class="p-emoji">' + emoji + '</span>' +
-        '<div class="p-gender">' + v.gender + '</div>' +
+        '<div class="p-gender">' + (v.custom ? 'Custom' : v.gender) + '</div>' +
         '<div class="p-name"></div>' +
         '<div class="p-desc">' + (v.desc || '') + '</div>' +
         '<div class="p-pitch">' + (v.pitch > 0 ? '+' : '') + v.pitch + ' st</div>';
@@ -450,15 +668,17 @@
     });
   }
   function selectVoice(id) {
-    var v = V.getVoice(id); if (!v) return;
+    var v = getVoiceAny(id); if (!v) return;
     currentVoice = v;
     $('currentEmoji').textContent = v.emoji || '\u{1F399}\uFE0F';
     $('currentName').textContent = v.name;
     $('currentDesc').textContent = v.desc || '';
+    applyVoiceToNative(v);
     if (live && live.rt) live.rt.setPitch(effectivePitch(v));
     document.querySelectorAll('.preset').forEach(function (c) {
       c.classList.toggle('active', c.dataset.id === id);
     });
+    if (v.custom) buildCustomList();
     toast('Voice: ' + v.name);
   }
   function setMode(mode) {
@@ -502,9 +722,16 @@
     $('audioPreview').addEventListener('click', audioPreview);
     $('audioExport').addEventListener('click', audioExport);
     $('audioDemo').addEventListener('click', synthDemo);
+    $('audioOriginal').addEventListener('click', playOriginal);
     $('videoPreview').addEventListener('click', videoPreview);
     $('videoExport').addEventListener('click', videoExport);
     $('micToggle').addEventListener('click', micToggle);
+    var micRecBtn = $('micRec'); if (micRecBtn) micRecBtn.addEventListener('click', micRecToggle);
+    $('voiceSearch').addEventListener('input', function () { searchQ = this.value; buildPresets(activeFilter()); });
+    $('btnRandom').addEventListener('click', randomVoice);
+    $('btnSaveCustom').addEventListener('click', function () {
+      var n = $('customNameInput').value; saveCustomAs(n); $('customNameInput').value = '';
+    });
     $('pitchFine').addEventListener('input', function () {
       pitchFine = parseFloat(this.value);
       $('pitchFineVal').textContent = (pitchFine > 0 ? '+' : '') + pitchFine + ' st';
@@ -515,11 +742,32 @@
       $('volumeVal').textContent = this.value + '%';
       if (master) master.gain.value = v;
     });
+    [['fxBass', 'bass'], ['fxMid', 'mid'], ['fxTreble', 'treble']].forEach(function (pair) {
+      var el = $(pair[0]); var key = pair[1];
+      el.addEventListener('input', function () {
+        fx[key] = parseInt(this.value, 10);
+        $('fx' + key[0].toUpperCase() + key.slice(1) + 'Val').textContent = (fx[key] > 0 ? '+' : '') + fx[key] + ' dB';
+        applyFxLive();
+      });
+    });
+    [['fadeIn', 'fadeIn'], ['fadeOut', 'fadeOut']].forEach(function (pair) {
+      $(pair[0]).addEventListener('input', function () { setOpt(pair[1], parseFloat(this.value)); });
+    });
+    var normEl = $('optNormalize'); if (normEl) normEl.addEventListener('change', function () { optNormalize = normEl.checked; });
+    var fmtEl = $('optFormat'); if (fmtEl) fmtEl.addEventListener('change', function () { optFormat = fmtEl.value; });
     window.addEventListener('beforeunload', function () { try { micStop(); } catch (e) {} });
+  }
+  function setOpt(key, val) {
+    if (key === 'fadeIn') optFadeIn = val;
+    else if (key === 'fadeOut') optFadeOut = val;
+  }
+  function activeFilter() {
+    var a = document.querySelector('.chip.active'); return a ? a.dataset.filter : 'all';
   }
 
   // boot
   bindEvents();
+  loadCustoms();
   buildPresets('all');
   setMode('audio');
   selectVoice(currentVoice.id);

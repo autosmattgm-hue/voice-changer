@@ -149,11 +149,68 @@
     return buffer;
   }
 
+  /* ---------------- FX helpers (fade / fx-EQ / normalize) ---------- */
+  // Apply equal-power fade-in/[out] (in seconds) to every channel.
+  function fadeChannels(chans, fadeInSec, fadeOutSec, sr) {
+    if ((!fadeInSec && !fadeOutSec) || !chans.length) return chans;
+    sr = sr || 44100;
+    var n = chans[0].length;
+    var fi = Math.min(fadeInSec || 0, n / sr);
+    var fo = Math.min(fadeOutSec || 0, n / sr);
+    var fiN = Math.round(fi * sr);
+    var foN = Math.round(fo * sr);
+    if (fiN > 1 || foN > 1) {
+      for (var c = 0; c < chans.length; c++) {
+        var buf = chans[c];
+        for (var i = 0; i < fiN && i < n; i++) buf[i] *= (i / fiN) * (i / fiN);
+        for (i = 0; i < foN && i < n; i++) {
+          var j = n - 1 - i;
+          if (j < 0) break;
+          var g = (i / foN) * (i / foN);
+          buf[j] *= g;
+        }
+      }
+    }
+    return chans;
+  }
+
+  // Extra voice/EQ sweetening bands (bass/mid/treble gains in dB). Returns a
+  // biquad chain in the same "peaking / shelf" family used elsewhere.
+  function fxChain(sr, bassDb, midDb, trebleDb) {
+    var list = [];
+    if (bassDb) list.push(new Biquad(calcCoeffs('lowshelf', 120, 0.707, bassDb, sr)));
+    if (midDb) list.push(new Biquad(calcCoeffs('peaking', 1500, 1.0, midDb, sr)));
+    if (trebleDb) list.push(new Biquad(calcCoeffs('highshelf', 6500, 0.707, trebleDb, sr)));
+    return list;
+  }
+  function applyFxBuffer(chans, bassDb, midDb, trebleDb, sr) {
+    if (!bassDb && !midDb && !trebleDb) return chans;
+    var chain = fxChain(sr, bassDb, midDb, trebleDb);
+    chans.forEach(function (ch) { applyChain(ch, chain); });
+    return chans;
+  }
+
+  // Peak-normalize to a target (default ~0.96). No-op if already quiet.
+  function normalizeChannels(chans, target) {
+    target = target || 0.96;
+    var peak = 0;
+    chans.forEach(function (ch) { for (var i = 0; i < ch.length; i++) { var a = Math.abs(ch[i]); if (a > peak) peak = a; } });
+    if (peak <= 1e-6) return chans;
+    var g = (peak > target) ? target / peak : 1;
+    if (g >= 1) return chans;
+    chans.forEach(function (ch) { for (var i = 0; i < ch.length; i++) ch[i] *= g; });
+    return chans;
+  }
+
   return {
     calcCoeffs: calcCoeffs,
     Biquad: Biquad,
     buildChain: buildChain,
     applyChain: applyChain,
-    encodeWav: encodeWav
+    encodeWav: encodeWav,
+    fadeChannels: fadeChannels,
+    fxChain: fxChain,
+    applyFxBuffer: applyFxBuffer,
+    normalizeChannels: normalizeChannels
   };
 });

@@ -20,17 +20,34 @@ Open **`index.html`** in a modern browser (Chrome, Edge, Firefox, or Safari).
 
 1. **Pick a voice** from the 30 human presets (male, female, children, elderly, neutral).
    - Use the filters (Male / Female / Children / Elderly / Neutral) to browse.
-2. **Fine‑tune** the pitch slider and output volume if you like.
+   - Use the **search box** to find a voice by name, or hit **🎲 Random**.
+2. **Shape your sound** with the sliders:
+   - **Fine-tune pitch** (semitones) and **output volume**.
+   - **Bass / Mid / Treble** FX (in dB) on top of whatever voice you chose.
 3. Choose a mode:
 
 | Mode | What to do | Output |
 |------|------------|--------|
-| 🎵 **Audio file** | Drop/choose an MP3, WAV, M4A, OGG, FLAC… | Preview on the spot, then **Download WAV** |
+| 🎵 **Audio file** | Drop/choose an MP3, WAV, M4A, OGG, FLAC… | Preview (A/B), waveform, then **Export** as WAV or Opus/WebM |
 | 🎬 **Video file** | Drop/choose an MP4, WebM, MOV, MKV… | Preview with the new voice, then **Save as WebM** |
-| 🎤 **Live mic** | Press **Start microphone** and speak | Hear yourself in real time with the chosen voice |
+| 🎤 **Live mic** | Press **Start microphone** and speak | Hear yourself live + **record** your changed voice |
 
 There's also a **Generate sample** button (audio tab) if you want a quick demo
 without any file.
+
+## Extra features
+
+- **A/B compare** — Preview the changed voice, then tap **Play original** to hear
+  the before/after side by side.
+- **Waveform + live meter** — see the audio waveform and a real-time level meter.
+- **Fade in / Fade out** — smooth the start/end of your exported audio.
+- **Normalize** — boost quiet exports to a consistent loudness (optional).
+- **Export format** — lossless **WAV** or smaller **Opus/WebM**.
+- **Custom voices** — tweak any preset + FX, type a name, and hit **Save current
+  as custom**. Custom voices appear at the top and persist in your browser
+  (localStorage); click **✕** on a chip to delete one.
+- **Microphone recording** — start the mic, tap **Record changed voice**, and
+  download what you said in your new voice.
 
 ## The 30 human voices
 

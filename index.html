@@ -36,6 +36,10 @@
     <section class="preset-section">
       <div class="section-head">
         <h2>Choose a human voice</h2>
+        <div class="preset-tools">
+          <input type="search" id="voiceSearch" class="search" placeholder="Search voices…" />
+          <button class="chip" id="btnRandom">🎲 Random</button>
+        </div>
         <div class="filter-row">
           <button class="chip active" data-filter="all">All</button>
           <button class="chip" data-filter="Male">Male</button>
@@ -44,6 +48,11 @@
           <button class="chip" data-filter="Senior">Elderly</button>
           <button class="chip" data-filter="Neutral">Neutral</button>
         </div>
+      </div>
+      <div class="custom-row">
+        <input type="text" id="customNameInput" class="search" placeholder="Name your custom voice…" />
+        <button class="btn" id="btnSaveCustom">💾 Save current as custom</button>
+        <div class="custom-list" id="customList"></div>
       </div>
       <div class="preset-grid" id="presetGrid"></div>
     </section>
@@ -58,6 +67,20 @@
         <label>Output volume
           <input type="range" id="volume" min="0" max="200" step="5" value="100" />
           <span id="volumeVal">100%</span>
+        </label>
+      </div>
+      <div class="tune-row">
+        <label>Bass
+          <input type="range" id="fxBass" min="-12" max="12" step="1" value="0" />
+          <span id="fxBassVal">0 dB</span>
+        </label>
+        <label>Mid
+          <input type="range" id="fxMid" min="-12" max="12" step="1" value="0" />
+          <span id="fxMidVal">0 dB</span>
+        </label>
+        <label>Treble
+          <input type="range" id="fxTreble" min="-12" max="12" step="1" value="0" />
+          <span id="fxTrebleVal">0 dB</span>
         </label>
       </div>
     </section>
@@ -75,11 +98,25 @@
         </div>
         <div class="player" id="audioPlayer" style="display:none">
           <audio id="audioEl" controls></audio>
+          <canvas id="audioWave" width="720" height="90"></canvas>
           <div class="actions">
             <button class="btn primary" id="audioPreview">▶ Preview changed voice</button>
-            <button class="btn" id="audioExport">💾 Download WAV</button>
+            <button class="btn" id="audioOriginal">🔁 Play original (A/B)</button>
+            <button class="btn" id="audioExport">💾 Export audio</button>
             <button class="btn ghost" id="audioDemo">Generate sample</button>
           </div>
+          <div class="prefs">
+            <label>Fade-in <input type="range" id="fadeIn" min="0" max="3" step="0.1" value="0" /></label>
+            <label>Fade-out <input type="range" id="fadeOut" min="0" max="3" step="0.1" value="0" /></label>
+            <label class="check"><input type="checkbox" id="optNormalize" /> Normalize</label>
+            <label>Format
+              <select id="optFormat">
+                <option value="wav">WAV (lossless)</option>
+                <option value="opus">Opus/WebM (small)</option>
+              </select>
+            </label>
+          </div>
+          <canvas id="liveMeter" width="720" height="60"></canvas>
         </div>
       </section>
 
@@ -111,8 +148,10 @@
           <p class="hint">Speak now — you'll hear yourself with the chosen human voice in real time.</p>
           <div class="actions">
             <button class="btn primary" id="micToggle">Start microphone</button>
+            <button class="btn" id="micRec">● Record changed voice</button>
           </div>
           <p class="hint" id="micStatus"></p>
+          <canvas id="liveMeterMic" width="720" height="60"></canvas>
         </div>
       </section>
     </main>

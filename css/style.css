@@ -101,3 +101,36 @@ input[type=range] { flex: 1; accent-color: var(--accent); }
   .preset-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
   .topbar { justify-content: center; text-align: center; }
 }
+
+/* ---- upgrade v2 ---- */
+.preset-tools { display: flex; gap: 8px; align-items: center; }
+.search {
+  border: 1px solid #33406e; background: var(--bg2); color: var(--ink);
+  padding: 9px 13px; border-radius: 999px; font-size: 14px; outline: none; min-width: 200px;
+}
+.search::placeholder { color: var(--muted); }
+.search:focus { border-color: var(--accent); }
+
+.custom-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 6px 0 14px; }
+.custom-list { display: flex; gap: 8px; flex-wrap: wrap; }
+.custom-chip {
+  display: flex; align-items: center; gap: 7px; background: var(--card);
+  border: 1px solid #33406e; border-radius: 999px; padding: 5px 8px 5px 10px; cursor: pointer; font-size: 13px;
+}
+.custom-chip.active { border-color: var(--accent2); }
+.cc-e { font-size: 14px; }
+.cc-n { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-del { color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 50%; }
+.cc-del:hover { color: #fff; background: var(--danger); }
+
+.prefs { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin-top: 14px; padding: 12px 14px; background: #0d1020; border-radius: 12px; }
+.prefs label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.prefs label.check { gap: 6px; }
+.prefs input[type=range] { width: 90px; }
+.prefs select { background: var(--bg2); color: var(--ink); border: 1px solid #33406e; border-radius: 8px; padding: 5px 8px; }
+
+#audioWave, #liveMeter, #liveMeterMic { width: 100%; height: auto; margin: 14px 0 0; border-radius: 8px; border: 1px solid #26304f; background: #0d1020; }
+#liveMeter, #liveMeterMic { height: 60px; }
+
+.btn.rec { background: var(--danger); border: none; }
+.contains-recv #micRec, .mic i.rec { color: #ff5c7a; }
