@@ -30,6 +30,7 @@
       <button class="mode-btn active" data-mode="audio">🎵 Audio File</button>
       <button class="mode-btn" data-mode="video">🎬 Video File</button>
       <button class="mode-btn" data-mode="mic">🎤 Live Microphone</button>
+      <button class="mode-btn" data-mode="tts">🔊 Google Voices</button>
     </nav>
 
     <!-- PRESETS -->
@@ -152,6 +153,52 @@
           </div>
           <p class="hint" id="micStatus"></p>
           <canvas id="liveMeterMic" width="720" height="60"></canvas>
+        </div>
+      </section>
+
+      <!-- GOOGLE TTS MODE -->
+      <section class="panel" id="panel-tts" style="display:none">
+        <div class="mic-box tts-box">
+          <span class="mic-icon">🔊</span>
+          <h3>Google Text-to-Speech</h3>
+          <p class="hint">Type words and speak them with a real <b>Google voice</b>, then turn that voice into one of the
+            30 human voices and download it.</p>
+
+          <div class="tts-row">
+            <label>Google voice
+              <select id="googleVoice"></select>
+            </label>
+            <button class="chip" id="googleRefresh">↻ Reload voices</button>
+          </div>
+
+          <textarea id="googleText" class="tts-text" rows="3"
+            placeholder="Type something to say, then press Speak…">Hello! This is your Google voice, now transformed into a brand new human voice.</textarea>
+
+          <div class="tts-row">
+            <label>Speed
+              <input type="range" id="googleRate" min="0.5" max="2" step="0.05" value="1" />
+              <span id="googleRateVal">1.0×</span>
+            </label>
+            <label>Pitch
+              <input type="range" id="googlePitch" min="0" max="2" step="0.05" value="1" />
+              <span id="googlePitchVal">1.0</span>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="googleSpeak">▶ Speak</button>
+            <button class="btn" id="googleStop">⏹ Stop</button>
+          </div>
+
+          <div class="tts-divider"></div>
+          <h4 style="margin:2px 0 8px">Apply one of the 30 human voices</h4>
+          <p class="hint">Capture the browser audio playing the Google voice, run it through the current voice-changer
+            settings, and record the result.</p>
+          <div class="actions">
+            <button class="btn primary" id="googleConvert">🎧 Convert to current human voice</button>
+            <button class="btn" id="googleRec">● Record converted</button>
+          </div>
+          <p class="hint" id="googleStatus"></p>
         </div>
       </section>
     </main>

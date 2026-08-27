@@ -134,3 +134,20 @@ input[type=range] { flex: 1; accent-color: var(--accent); }
 
 .btn.rec { background: var(--danger); border: none; }
 .contains-recv #micRec, .mic i.rec { color: #ff5c7a; }
+
+/* ---- Google Text-to-Speech ---- */
+.tts-box { text-align: left; }
+.tts-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; justify-content: center; margin: 10px auto; }
+.tts-row label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); text-align: left; min-width: 160px; }
+.tts-row label span { color: #fff; font-variant-numeric: tabular-nums; }
+.tts-row select, .tts-row input[type=range] { background: var(--bg2); color: var(--ink); border: 1px solid #33406e; border-radius: 10px; padding: 8px 10px; font-size: 14px; }
+.tts-row input[type=range] { padding: 0; }
+.tts-text {
+  width: 100%; max-width: 640px; margin: 12px auto; display: block;
+  background: var(--bg2); color: var(--ink); border: 1px solid #33406e; border-radius: 12px;
+  padding: 12px 14px; font-size: 14.5px; font-family: inherit; resize: vertical; outline: none;
+}
+.tts-text:focus { border-color: var(--accent); }
+.tts-box .actions { justify-content: center; }
+.tts-divider { height: 1px; background: #33406e; margin: 22px auto 16px; max-width: 640px; }
+#googleStatus { min-height: 18px; }

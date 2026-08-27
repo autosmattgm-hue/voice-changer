@@ -198,7 +198,87 @@
     toast('Recording\u2026 say something!');
   }
 
-  /* ------------------- custom voices (localStorage) ----------------- */
+  /* ------------------- Google Text-to-Speech (TTS) ------------------ */
+  function refreshGoogleVoices() {
+    if (!gSynth) return;
+    var list = gSynth.getVoices ? (gSynth.getVoices() || []) : [];
+    if (list && list.length) {
+      gVoices = list.slice();
+      var sel = $('googleVoice');
+      if (sel) {
+        var prev = sel.value;
+        sel.innerHTML = '';
+        gVoices.forEach(function (v) {
+          var o = document.createElement('option');
+          o.value = v.name;
+          o.textContent = v.name + ' (' + v.lang + ')' + (v.localService ? '' : ' ·online');
+          sel.appendChild(o);
+        });
+        if (prev && sel.querySelector('option[value="' + prev + '"]')) sel.value = prev;
+      }
+    }
+  }
+  function googleSpeak() {
+    if (!gSynth) { toast('Speech synthesis is not supported in this browser. Try Chrome/Edge.'); return; }
+    var text = ($('googleText') ? $('googleText').value : '').trim();
+    if (!text) { toast('Type some text to speak.'); return; }
+    try { gSynth.cancel(); } catch (e) {}
+    var name = $('googleVoice').value;
+    var vv = null;
+    gVoices.forEach(function (x) { if (x.name === name) vv = x; });
+    var u = new SpeechSynthesisUtterance(text);
+    if (vv) u.voice = vv;
+    if (u.voice === null && vv) { try { u.voice = vv; } catch (e) {} }
+    u.rate = parseFloat($('googleRate').value) || 1;
+    u.pitch = parseFloat($('googlePitch').value) || 1;
+    if ($('googleStatus')) $('googleStatus').textContent = 'Speaking in ' + (vv ? vv.name : (name || 'a browser voice')) + '…';
+    gSynth.speak(u);
+  }
+  function googleStop() {
+    if (gSynth) { try { gSynth.cancel(); } catch (e) {} }
+    if ($('googleStatus')) $('googleStatus').textContent = '';
+  }
+  function googleConvert() {
+    if (gCapStream) { googleStopCapture(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      toast('Tab audio capture not supported here. Use Chrome/Edge.'); return;
+    }
+    navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+    }).then(function (stream) {
+      gCapStream = stream;
+      var src = ctx.createMediaStreamSource(stream);
+      wireRealtime(src, null);
+      wireOutputToAnalyser();
+      $('googleConvert').textContent = '\u25a0 Stop converting';
+      var st = $('googleStatus'); if (st) st.textContent = 'Capturing this tab\u2019s audio. Pick the tab, then press \u25b6 Speak.';
+      toast('\u270c Choose \u201cThis tab\u201d when prompted, then press Speak.');
+    }).catch(function (e) {
+      toast('Capture cancelled: ' + e.message);
+    });
+  }
+  function googleStopCapture() {
+    if (gCapStream) { try { gCapStream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {} gCapStream = null; }
+    stopLive();
+    var b = $('googleConvert'); if (b) b.textContent = '\u{1F3A7} Convert to current human voice';
+  }
+  function googleRecToggle() {
+    var btn = $('googleRec');
+    if (!btn) return;
+    if (micRec && micRec.state !== 'inactive') { micRec.stop(); btn.textContent = '\u25cf Record converted'; btn.classList.remove('rec'); return; }
+    if (!live || !live.sp || !gCapStream) { toast('Start capture and wait for it to be active first.'); return; }
+    var dest = ctx.createMediaStreamDestination();
+    try { live.sp.connect(dest); } catch (e) {}
+    micRec = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus' });
+    var chunks = [];
+    micRec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    micRec.onstop = function () { download(new Blob(chunks, { type: 'audio/webm' }), 'google-human-voice.webm'); toast('Converted recording downloaded \u2714'); };
+    micRec.start();
+    btn.textContent = '\u25cf Recording\u2026 (tap to stop)';
+    btn.classList.add('rec');
+    toast('Recording the converted voice…');
+  }
   function loadCustoms() {
     try { customVoices = JSON.parse(localStorage.getItem('vc_customs') || '[]') || []; }
     catch (e) { customVoices = []; }
@@ -305,6 +385,10 @@
   var sourceNode = null;
   var micStream = null, micSP = null, micRT = null, micRec = null;
   var videoRec = null;
+  // Google SpeechSynthesis (TTS) state
+  var gSynth = (typeof window !== 'undefined' && window.speechSynthesis) ? window.speechSynthesis : null;
+  var gVoices = [];
+  var gCapStream = null;
 
   function stopPlayback() {
     if (sourceNode) { try { sourceNode.stop(); } catch (e) {} try { sourceNode.disconnect(); } catch (e) {} sourceNode = null; }
@@ -727,6 +811,13 @@
     $('videoExport').addEventListener('click', videoExport);
     $('micToggle').addEventListener('click', micToggle);
     var micRecBtn = $('micRec'); if (micRecBtn) micRecBtn.addEventListener('click', micRecToggle);
+    $('googleSpeak').addEventListener('click', googleSpeak);
+    $('googleStop').addEventListener('click', googleStop);
+    $('googleRefresh').addEventListener('click', refreshGoogleVoices);
+    $('googleConvert').addEventListener('click', googleConvert);
+    $('googleRec').addEventListener('click', googleRecToggle);
+    $('googleRate').addEventListener('input', function () { $('googleRateVal').textContent = parseFloat(this.value).toFixed(2) + '\u00d7'; });
+    $('googlePitch').addEventListener('input', function () { $('googlePitchVal').textContent = parseFloat(this.value).toFixed(2); });
     $('voiceSearch').addEventListener('input', function () { searchQ = this.value; buildPresets(activeFilter()); });
     $('btnRandom').addEventListener('click', randomVoice);
     $('btnSaveCustom').addEventListener('click', function () {
@@ -766,6 +857,10 @@
   }
 
   // boot
+  if (gSynth && refreshGoogleVoices) {
+    refreshGoogleVoices();
+    try { gSynth.onvoiceschanged = refreshGoogleVoices; } catch (e) {}
+  }
   bindEvents();
   loadCustoms();
   buildPresets('all');

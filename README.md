@@ -31,9 +31,28 @@ Open **`index.html`** in a modern browser (Chrome, Edge, Firefox, or Safari).
 | 🎵 **Audio file** | Drop/choose an MP3, WAV, M4A, OGG, FLAC… | Preview (A/B), waveform, then **Export** as WAV or Opus/WebM |
 | 🎬 **Video file** | Drop/choose an MP4, WebM, MOV, MKV… | Preview with the new voice, then **Save as WebM** |
 | 🎤 **Live mic** | Press **Start microphone** and speak | Hear yourself live + **record** your changed voice |
+| 🔊 **Google Voices** | Pick a Google text-to-speech voice, type words, **Speak** | Hear the Google voice, then **convert it** to one of the 30 human voices & record it |
 
 There's also a **Generate sample** button (audio tab) if you want a quick demo
 without any file.
+
+## Google voices (text-to-speech)
+
+The **🔊 Google Voices** tab uses your browser's built-in speech engine (the same
+Google voices available in Chrome/Edge, e.g. *Google US English*).
+
+1. The dropdown lists every available voice and language.
+2. Type any text, adjust **Speed** and **Pitch**.
+3. Press **▶ Speak** to hear the text in that Google voice; **⏹ Stop** to halt it.
+4. **🎧 Convert to current human voice** captures the tab's audio and routes it
+   through the current voice-changer settings (the 30 human voices + FX), so the
+   Google speech comes out as one of your human voices.
+5. **● Record converted** saves the transformed result as a **WebM** file.
+
+> **Note on tab capture:** step 4 uses `getDisplayMedia` (screen/share audio), so
+> when prompted please pick **"This tab"**. This approach — rather than a cloud
+> API key — keeps everything local and free. Speech **playing** (step 3) always
+> works on its own.
 
 ## Extra features
 
