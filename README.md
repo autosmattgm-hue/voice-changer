@@ -30,13 +30,24 @@ Open **`index.html`** in a modern browser (Chrome, Edge, Firefox, or Safari).
 
 | Mode | What to do | Output |
 |------|------------|--------|
-| 🎵 **Audio file** | Drop/choose an MP3, WAV, M4A, OGG, FLAC… | Preview (A/B), waveform, then **Export** as WAV or Opus/WebM |
-| 🎬 **Video file** | Drop/choose an MP4, WebM, MOV, MKV… | Preview with the new voice, then **Save as WebM** |
+| 🎵 **Audio file** | Drop/choose an MP3, WAV, M4A, OGG, FLAC… | **Instant live preview**, A/B, waveform, then **Export** as WAV or Opus/WebM |
+| 🎬 **Video file** | Drop/choose an MP4, WebM, MOV, MKV… | **Instant live preview**, then **Save as WebM** |
 | 🎤 **Live mic** | Press **Start microphone** and speak | Hear yourself live + **record** your changed voice |
 | 🔊 **Google Voices** | Pick a Google text-to-speech voice, type words, **Speak** | Hear the Google voice, then **convert it** to one of the 30 human voices & record it |
 
 There's also a **Generate sample** button (audio tab) if you want a quick demo
 without any file.
+
+### Instant, smooth & changeable live
+
+- **No more waiting.** Previewing an audio/video file is **instant** — the media
+  is routed through a **real-time** engine instead of being re-rendered up front.
+- **Change the voice while it's playing.** Pick a different preset, move the
+  pitch / Bass / Mid / Treble / noise sliders and the change **applies live**,
+  with no re-render and no restart.
+- **Exports never freeze the page.** Rendering to WAV/WebM runs in **small chunks
+  that yield to the browser**, and the button shows a live **% progress**, so the
+  UI stays smooth and you can keep making changes while it works.
 
 ## Background noise cancellation
 

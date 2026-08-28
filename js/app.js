@@ -431,44 +431,67 @@
     reader.onerror = function () { toast('Could not read the file.'); };
     reader.readAsArrayBuffer(file);
   }
+  /* Route a media element's audio through the REAL-TIME WSOLA graph. This
+   * makes preview instant (no upfront render) and lets you change the voice,
+   * pitch and FX while it is already playing — they apply live. */
+  function previewMediaLive(el) {
+    if (!ctx) { toast('Audio not supported in this browser.'); return; }
+    if (!el) { toast('Nothing to preview yet.'); return; }
+    try {
+      if (!el.__src) el.__src = ctx.createMediaElementSource(el);
+      stopLive();
+      wireRealtime(el.__src, null);
+      master.gain.value = volumeValue();
+      wireOutputToAnalyser();
+      try { el.muted = false; } catch (e) {}
+      try { el.currentTime = el.currentTime || 0; } catch (e) {}
+      var p = el.play();
+      if (p && p.catch) p.catch(function () { toast('Playback blocked — click again.'); });
+      toast('Live preview ON — change the voice or FX anytime to hear it instantly.');
+    } catch (e) { toast('Live preview failed: ' + e.message); }
+  }
   function audioPreview() {
-    if (!fileAudioBuffer) { toast('Load an audio file first, or press Generate sample.'); return; }
-    toast('Rendering changed voice…');
+    var ae = document.getElementById('audioEl');
+    if (!fileAudioBuffer && !(ae && ae.getAttribute('src'))) { toast('Load an audio file first, or press Generate sample.'); return; }
+    if (ae && ae.getAttribute('src')) { previewMediaLive(ae); return; }
+    // No media element (generated sample): quick short render, still async.
+    toast('Rendering sample…');
     setTimeout(function () {
       try {
-        // Buffer playback routes straight to master (bypasses native EQ chain),
-        // so ALL processing (pitch + voice EQ + FX + fades) happens offline here.
         var buf = renderToBuffer(fileAudioBuffer, currentVoice, currentExportOpts());
-        master.gain.value = volumeValue();
-        playBuffer(buf);
-        wireOutputToAnalyser();
+        master.gain.value = volumeValue(); playBuffer(buf); wireOutputToAnalyser();
       } catch (e) { toast('Render failed: ' + e.message); }
-    }, 30);
+    }, 10);
   }
   function playOriginal() {
     if (!fileAudioBuffer) { toast('Load an audio file first.'); return; }
+    var ae = document.getElementById('audioEl');
+    if (ae) { try { ae.pause(); } catch (e) {} }
     stopPlayback();
     var s = ctx.createBufferSource();
     s.buffer = fileAudioBuffer;
     s.connect(master);
     s.start(); sourceNode = s;
   }
-  function audioExport() {
+  async function audioExport() {
     if (!fileAudioBuffer) { toast('Load an audio file first.'); return; }
     var isWav = optFormat !== 'opus';
-    toast('Rendering ' + (isWav ? 'WAV' : 'compressed audio') + '…');
-    setTimeout(function () {
-      try {
-        var chans = renderChannels(channelsFromBuffer(fileAudioBuffer), currentVoice, fileAudioBuffer.sampleRate, currentExportOpts());
-        if (isWav) {
-          var wav = EQJS.encodeWav(chans, fileAudioBuffer.sampleRate);
-          download(new Blob([wav], { type: 'audio/wav' }), currentVoice.id + '-changed-voice.wav');
-          toast('WAV downloaded ✔');
-        } else {
-          exportCompressedAudio(chans, fileAudioBuffer.sampleRate, currentVoice.id + '-changed-voice.webm');
-        }
-      } catch (e) { toast('Export failed: ' + e.message); }
-    }, 30);
+    var btn = (typeof $ === 'function') ? $('audioExport') : null;
+    var savedTxt = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Rendering 0%'; }
+    try {
+      var chans = await renderChannelsAsync(channelsFromBuffer(fileAudioBuffer), currentVoice, fileAudioBuffer.sampleRate, currentExportOpts(),
+        function (p) { if (btn) btn.textContent = 'Rendering ' + Math.max(0, Math.min(100, Math.round(p * 100))) + '%'; });
+      if (btn) btn.textContent = 'Encoding…';
+      if (isWav) {
+        var wav = EQJS.encodeWav(chans, fileAudioBuffer.sampleRate);
+        download(new Blob([wav], { type: 'audio/wav' }), currentVoice.id + '-changed-voice.wav');
+        toast('WAV downloaded ✔');
+      } else {
+        exportCompressedAudio(chans, fileAudioBuffer.sampleRate, currentVoice.id + '-changed-voice.webm');
+      }
+    } catch (e) { toast('Export failed: ' + e.message); }
+    if (btn) { btn.disabled = false; btn.textContent = savedTxt; }
   }
   /* -------------------------- VIDEO mode -------------------------- */
   function loadVideoFile(file) {
@@ -495,60 +518,40 @@
   function videoPreview() {
     var ve = document.getElementById('videoEl');
     if (!ve.src) { toast('Load a video file first.'); return; }
-    if (videoAudioBuffer) {
-      toast('Rendering changed voice…');
-      setTimeout(function () {
-        try {
-          var buf = renderToBuffer(videoAudioBuffer, currentVoice);
-          master.gain.value = volumeValue();
-          ve.muted = true; // original audio off — we play the changed voice instead
-          playBuffer(buf);
-          ve.play();
-        } catch (e) { toast('Render failed: ' + e.message); }
-      }, 30);
-    } else {
-      // fallback: live-route the video element audio through the realtime graph
-      ve.muted = false;
-      startLiveVideoRealtime(ve);
-      ve.play();
-    }
+    previewMediaLive(ve);
   }
-  function videoExport() {
+  async function videoExport() {
     var ve = document.getElementById('videoEl');
     if (!ve.src) { toast('Load a video file first.'); return; }
-    if (videoAudioBuffer && (!ve.captureStream)) {
-      toast('This browser can\u2019t save videos. Use Chrome/Firefox.');
-      return;
-    }
-    toast('Rendering video… (this plays the video once)');
-    setTimeout(function () { runVideoExport(ve); }, 30);
+    if (!ve.captureStream) { toast('This browser can\u2019t save videos. Use Chrome/Firefox.'); return; }
+    toast('Preparing changed video…');
+    if (!videoAudioBuffer) { exportVideoRealtime(ve); return; }
+    var btn = (typeof $ === 'function') ? $('videoExport') : null;
+    var savedTxt = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Rendering 0%'; }
+    try {
+      var chans = await renderChannelsAsync(channelsFromBuffer(videoAudioBuffer), currentVoice, videoAudioBuffer.sampleRate, currentExportOpts(),
+        function (p) { if (btn) btn.textContent = 'Rendering ' + Math.max(0, Math.min(100, Math.round(p * 100))) + '%'; });
+      if (btn) btn.textContent = 'Encoding…';
+      var buf = ctx.createBuffer(chans.length, chans[0].length, videoAudioBuffer.sampleRate);
+      chans.forEach(function (ch, c2) { buf.copyToChannel(ch, c2); });
+      runVideoExportBuffer(ve, buf);
+    } catch (e) { toast('Video render failed: ' + e.message); }
+    if (btn) { btn.disabled = false; btn.textContent = savedTxt; }
   }
 
-  function runVideoExport(ve) {
-    if (!videoAudioBuffer) {
-      // realtime capture: route video element audio through live graph + record
-      exportVideoRealtime(ve);
-      return;
-    }
-    var buf;
-    try { buf = renderToBuffer(videoAudioBuffer, currentVoice); }
-    catch (e) { toast('Render failed: ' + e.message); return; }
+  function runVideoExportBuffer(ve, buf) {
     ve.muted = true;
     var dest = ctx.createMediaStreamDestination();
     var s = ctx.createBufferSource();
     s.buffer = buf; s.connect(dest);
-    // grab the video frames track
     var videoTrack = ve.captureStream ? ve.captureStream().getVideoTracks()[0] : null;
     if (!videoTrack) { toast('Video capture not supported in this browser.'); return; }
     var combined = new MediaStream([videoTrack, dest.stream.getAudioTracks()[0]]);
     var rec = new MediaRecorder(combined, { mimeType: 'video/webm' });
     var chunks = [];
     rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
-    rec.onstop = function () {
-      var blob = new Blob(chunks, { type: 'video/webm' });
-      download(blob, currentVoice.id + ('-changed-voice.webm'));
-      toast('Video saved as WebM ✔');
-    };
+    rec.onstop = function () { download(new Blob(chunks, { type: 'video/webm' }), currentVoice.id + '-changed-voice.webm'); toast('Video saved as WebM \u2714'); };
     rec.start();
     ve.currentTime = 0;
     s.start();
@@ -633,6 +636,97 @@
     var o = { fadeIn: optFadeIn, fadeOut: optFadeOut, normalize: optNormalize, noiseStrength: noiseStrength };
     if (extra) for (var k in extra) o[k] = extra[k];
     return o;
+  }
+
+  /* ---------- fast, NON-blocking chunked renderer for export ----------
+   * The old path rendered the entire file synchronously (freezing the UI).
+   * This streams the file in segments: it feeds persistent WSOLA/EQ/noise
+   * processors, drains each segment into the output, YIELDS to the browser
+   * between segments, and reports progress — so the page stays smooth and
+   * the user can keep changing things while it runs.
+   * ------------------------------------------------------------------- */
+  function OfflineChan(voice, sr, opts) {
+    this.sonic = new VP.Sonic(1);
+    this.base = effectivePitch(voice);
+    this.sonic.pitch = this.base;
+    this.eq = eqForVoicePlusFx(voice, sr);
+    this.noise = (opts.noiseStrength && NJ)
+      ? new NJ.NoiseReducer({ sampleRate: sr, overSub: NJ.overSubFor(noiseStrengthFrac()), gateRatio: NJ.gateFor(noiseStrengthFrac()) })
+      : null;
+    this.vib = voice.vibrato || null;
+    this.sr = sr;
+    this.t = 0;
+  }
+  OfflineChan.prototype.feed = function (seg) {
+    var x = seg;
+    if (this.noise) x = this.noise.process(x);
+    if (this.vib) {
+      var depth = this.vib.depth / 100;
+      this.sonic.pitch = this.base * Math.pow(2, depth * Math.sin(2 * Math.PI * this.vib.rate * this.t) / 12);
+    } else {
+      this.sonic.pitch = this.base;
+    }
+    this.sonic.feed(x);
+    this.t += x.length / this.sr;
+  };
+  OfflineChan.prototype.settle = function () {
+    var g = 0;
+    while (g++ < 12 && this.sonic.input.frameCount > 0) {
+      var bi = this.sonic.input.frameCount;
+      this.sonic.processOnce();
+      if (this.sonic.input.frameCount === bi) break;
+    }
+  };
+  OfflineChan.prototype.take = function (n) {
+    var avail = this.sonic.output.frameCount;
+    if (avail <= 0) return null;
+    var k = Math.min(avail, n);
+    var buf = new Float32Array(k);
+    var base = this.sonic.output._start(), vec = this.sonic.output.vector;
+    for (var i = 0; i < k; i++) { var v = vec[base + i]; buf[i] = (v === v) ? v : 0; }
+    this.sonic.output.receive(k);
+    for (var b = 0; b < this.eq.length; b++) this.eq[b].process(buf);
+    return buf;
+  };
+  async function renderChannelsAsync(origChans, voice, sr, opts, onProgress) {
+    var N = origChans.length || 0;
+    var total = N ? origChans[0].length : 0;
+    if (!total) return origChans.map(function (c) { return c.slice(); });
+    opts = opts || {};
+    var out = [], chans = [], c;
+    for (c = 0; c < N; c++) { out.push(new Float32Array(total)); chans.push(new OfflineChan(voice, sr, opts, c)); }
+    var SEG = Math.max(128, Math.round(sr * 0.5));
+    var head = 0, outPos = 0, safety = 0;
+    var maxIter = Math.ceil(total / SEG) + 4;
+    while (outPos < total && safety++ < maxIter) {
+      var feedN = Math.min(SEG, total - head);
+      if (feedN > 0) { for (c = 0; c < N; c++) chans[c].feed(origChans[c].subarray(head, head + feedN)); head += feedN; }
+      for (c = 0; c < N; c++) chans[c].settle();
+      var dr = SEG;
+      for (c = 0; c < N; c++) dr = Math.min(dr, chans[c].sonic.output.frameCount);
+      dr = Math.min(dr, total - outPos);
+      if (dr <= 0) {
+        var big = 0;
+        for (c = 0; c < N; c++) big += chans[c].sonic.output.frameCount;
+        if (head >= total && big <= 0) break;
+      } else {
+        for (c = 0; c < N; c++) { var blk = chans[c].take(dr); if (blk && blk.length) out[c].set(blk, outPos); }
+        outPos += dr;
+        if (onProgress) onProgress(outPos / total);
+      }
+      if (safety % 2 === 0) await new Promise(function (r) { setTimeout(r, 0); });
+    }
+    if (opts.fadeIn || opts.fadeOut) EQJS.fadeChannels(out, opts.fadeIn || 0, opts.fadeOut || 0, sr);
+    normalizeExport(out, opts.normalize);
+    return out;
+  }
+  function normalizeExport(out, doNorm) {
+    if (!out.length) return;
+    var peak = 0, i;
+    for (var c = 0; c < out.length; c++) for (i = 0; i < out[c].length; i++) { var a = Math.abs(out[c][i]); if (a > peak) peak = a; }
+    var target = 0.96;
+    if (doNorm) { EQJS.normalizeChannels(out, target); return; }
+    if (peak > 1e-6 && peak > target) { var gi = target / peak; for (c = 0; c < out.length; c++) for (i = 0; i < out[c].length; i++) out[c][i] *= gi; }
   }
 
   /* ---------------- background noise cancellation ---------------- */
