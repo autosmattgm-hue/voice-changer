@@ -325,9 +325,9 @@ export class AuthService {
     };
   }
 
-  async loginWithFirebase(idToken) {
+  async loginWithFirebase(idToken, options = {}) {
     const { verifyFirebaseIdToken } = await import("../config/firebase.js");
-    const identity = await verifyFirebaseIdToken(idToken);
+    const identity = options.preVerifiedIdentity || await verifyFirebaseIdToken(idToken);
     const email = identity.email;
     const phone = identity.phoneNumber;
     if (!email && !phone) {
@@ -356,6 +356,9 @@ export class AuthService {
       throw new AppError("Login service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
     }
     if (!stored) {
+      if (typeof options.beforeCreate === "function") {
+        await options.beforeCreate(email || phone || "");
+      }
       try {
         stored = await this.users.create({
           id: `firebase:${identity.uid}`,

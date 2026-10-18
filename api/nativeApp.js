@@ -417,7 +417,15 @@ const routes = [
     method: "POST",
     regex: /^\/api\/auth\/firebase$/,
     keys: [],
-    handler: async ({ body }) => authService.loginWithFirebase(validate(authSchemas.firebaseSession, body).idToken)
+    handler: async ({ req, body }) => {
+      const { idToken } = validate(authSchemas.firebaseSession, body);
+      const { verifyFirebaseIdToken } = await import("./config/firebase.js");
+      const identity = await verifyFirebaseIdToken(idToken);
+      return authService.loginWithFirebase(idToken, {
+        preVerifiedIdentity: identity,
+        beforeCreate: (emailOrPhone) => checkSignupAbuse(req, { email: emailOrPhone })
+      });
+    }
   },
   {
     method: "POST",
