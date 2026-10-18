@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { env } from "../config/env.js";
 import { AppError } from "../utils/errors.js";
 import { isCreatorQuestion, creatorAnswer, identityLine } from "../utils/brand.js";
+import { hasRealContent, visibleWordCount } from "../utils/siteContent.js";
 
 const aiCache = new Map();
 const modelCooldowns = new Map();
@@ -18,6 +19,8 @@ const DEFAULT_MODELS = [
   "nvidia/nemotron-3.5-lightning-30b-a3b"
 ];
 const DEAD_MODELS = new Set([
+  // 410 Gone — reached end of life 2026-10-15; confirmed via live probe.
+  "moonshotai/kimi-k3",
   "deepseek-ai/deepseek-v4-flash",
   "deepseek-ai/deepseek-v4-flash-0731",
   "deepseek-ai/deepseek-v4-pro",
@@ -716,7 +719,10 @@ export class NvidiaService {
     ], { temperature: 0.85, maxTokens, timeoutMs: Math.max(60000, env.nvidia.websiteTimeoutMs || 90000) });
     let result = await request(4000);
     let content = String(result.content || "");
-    if (content.replace(/<!--PAGE-->/gi, "").trim().length < 2600) {
+    // Retry when the build is thin by EITHER measure: short total length, or —
+    // the failure mode that shipped empty sites — lots of CSS but almost no
+    // visible words. A style-only response is a failed build, so re-ask once.
+    if (content.replace(/<!--PAGE-->/gi, "").trim().length < 2600 || visibleWordCount(content) < 180) {
       try {
         const retry = await request(5200, "Previous attempt was cut short — write FULLY complete pages this time with every section finished. Separate each page with <!--PAGE--> and end cleanly.");
         if (String(retry.content || "").length > content.length) { result = retry; content = String(retry.content || ""); }
@@ -725,7 +731,9 @@ export class NvidiaService {
     const fragments = content.split(/<!--PAGE-->/i).map((s) => this.cleanFragment(s)).filter(Boolean);
     const pages = pageSpecs.map((spec, i) => ({
       ...spec,
-      body: fragments[i] && fragments[i].length > 40 ? fragments[i] : this.fallbackPageFragment(spec, lead, hero, gallery, i === 0),
+      // Require real visible content (heading + prose), not just a CSS block, so
+      // a style-only fragment can never ship as an empty page.
+      body: hasRealContent(fragments[i]) ? fragments[i] : this.fallbackPageFragment(spec, lead, hero, gallery, i === 0),
     }));
     const html = this.assembleMultiPage(pages, business, accent);
     return { ...result, html, pageCount: pages.length };
