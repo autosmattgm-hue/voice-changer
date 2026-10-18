@@ -1,0 +1,7 @@
+empty-body        -> 422 "Invalid request payload." (expect 422)
+bad-format        -> 422 "Invalid request payload." (expect 422)
+phone-ok          -> 200 name=Phone Tester token=true (expect 200)
+phone-spaced      -> 200 token=true (expect 200)
+wrong-password    -> 401 "Invalid phone number or password." (expect 401)
+unknown-phone     -> 401 "Invalid phone number or password." (expect 401)
+email-unknown     -> 401 (expect 401 or 503; any non-422 = email schema ok)

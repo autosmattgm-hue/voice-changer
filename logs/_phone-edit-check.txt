@@ -1,0 +1,9 @@
+CHECK api/utils/schemas.js exit=0 
+CHECK api/services/authService.js exit=0 
+CHECK api/nativeApp.js exit=0 
+CHECK js/firebase-auth.js exit=0 
+CHECK js/app.js exit=0 
+CHECK sw.js exit=0 
+--- smoke ---
+smoke exit=0
+
