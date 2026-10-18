@@ -1,0 +1,15 @@
+
+=== analyzeLead === status=- 9043ms
+{"model":"openai/gpt-oss-20b","content":"Opportunity: High local search demand for dental services; potential for AI-powered appointment booking; SEO improvement can drive new patient acquisition.\nProblems: No mobile site, no SSL, no contact form; low conversion rate; limited online presence; missing local citations.\nOffer: Full website redesign with mobile, SSL, integrated contact form; local SEO audit; AI chatbot for appointment scheduling; content strategy for oral health topics.\nFirst Outreach Angle: \"We can double your online appo"}
+
+=== writeOutreach === status=- 11357ms
+{"model":"openai/gpt-oss-20b","content":"Subject: Quick SEO & Web Fix for Bright Smiles Dental\n\nHi [Name],\n\nI noticed Bright Smiles Dental’s site is missing mobile optimization, SSL, and a contact form—critical for patient trust and local search. Our team can audit your website in 30 minutes and show you how to boost online visibility and appointment bookings.\n\nLet’s schedule a quick call to review the audit and discuss a tailored plan. Click the link below to book a 15‑minute slot.\n\nBook your paid audit now: https://calendly.com/youra"}
+
+=== proposalPack === status=- 20005ms
+{"status":503,"code":"NVIDIA_TIMEOUT","message":"NVIDIA AI timed out. Please try again in a moment."}
+
+=== tycoonChat === status=- 11052ms
+{"model":"openai/gpt-oss-20b","content":"What to say (copy‑paste script)\n\nHi Bright Smiles Dental team,\nThis is [Your Name] from MAT LEADS AI PRO X. I’ve done a quick audit of your website and see three high‑impact fixes that can boost patient bookings by 15‑20% in the next 30 days:\n1. Mobile‑friendly design – you’re missing 30% of local traffic.\n2. SSL & secure contact form – builds trust and improves Google ranking.\n3. AI‑powered appointment booking widget – converts clicks into appointments instantly.\n\nI propose a complete redesign "}
+
+=== chat === status=- 20005ms
+{"status":503,"code":"NVIDIA_TIMEOUT","message":"NVIDIA AI timed out. Please try again in a moment."}

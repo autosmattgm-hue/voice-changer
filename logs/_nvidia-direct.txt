@@ -1,0 +1,2 @@
+configured=true
+OK provider=nvidia model=openai/gpt-oss-20b content=Hello, how can I help?

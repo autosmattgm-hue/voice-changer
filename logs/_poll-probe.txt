@@ -1,0 +1,6 @@
+DENIED/ERR openai/gpt-5.4-nano => POLLINATIONS_MODEL_DENIED Pollinations key is not allowed to use any of: openai/gpt-5.4-nano, openai/gpt-5-nano, ope
+DENIED/ERR openai/gpt-oss-20b => POLLINATIONS_MODEL_DENIED Pollinations key is not allowed to use any of: openai/gpt-oss-20b, openai/gpt-5-nano, goog
+DENIED/ERR openai/gpt-4o-mini => POLLINATIONS_MODEL_DENIED Pollinations key is not allowed to use any of: openai/gpt-4o-mini, openai/gpt-5-nano, open
+DENIED/ERR mistralai/mistral-small-3.2 => POLLINATIONS_MODEL_DENIED Pollinations key is not allowed to use any of: mistralai/mistral-small-3.2, openai/gpt-5-n
+DENIED/ERR google/gemini-3-flash-preview => POLLINATIONS_MODEL_DENIED Pollinations key is not allowed to use any of: google/gemini-3-flash-preview, openai/gpt-5
+DONE

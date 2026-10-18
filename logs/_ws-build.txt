@@ -1,0 +1,30 @@
+﻿    let aiError = "";
+    let pageCount = parseInt(options.pages, 10) || 1;
+    // AI rule: Pollinations builds the site (cheap/free tier, no per-model activation).
+    // NVIDIA stays available as an opt-in override via options.provider === "nvidia" only.
+    const preferNvidia = String(options.provider || "").toLowerCase() === "nvidia";
+    const builders = preferNvidia
+      ? [{ name: "nvidia", run: () => this.nvidia.buildWebsite(lead, options) }]
+      : [
+        { name: "pollinations", run: () => this.pollinations.buildWebsite(lead, options) },
+        ...(this.nvidia.configured() ? [{ name: "nvidia", run: () => this.nvidia.buildWebsite(lead, options) }] : []),
+      ];
+    const reasons = [];
+    let built = null;
+    for (const builder of builders) {
+      try {
+        const result = await builder.run();
+        if (result.pageCount) pageCount = result.pageCount;
+        if (result.html && /<\/html>/i.test(result.html) && result.html.length > 800) {
+          html = result.html;
+          provider = result.provider || builder.name;
+          model = result.model;
+          built = result;
+          break;
+        }
+        reasons.push(`${builder.name}: AI build was incomplete â€” asking the next provider.`);
+      } catch (e) {
+        reasons.push(`${builder.name}: ${String(e?.message || "AI request failed").slice(0, 220)}`);
+      }
+    }
+    if (!built) {

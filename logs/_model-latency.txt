@@ -1,0 +1,6 @@
+z-ai/glm-5.3-flash => OK 44026ms finish=stop content="OK"
+openai/gpt-oss-20b => OK 2606ms finish=stop content="OK"
+moonshotai/kimi-k3 => HTTP 410 409ms :: {"type":"about:blank","title":"Gone","status":410,"detail":"The model 'moonshotai/kimi-k3' has reached its end of life on 2026-10-15T08:00:00Z and is no longer available."}
+
+z-ai/glm-5.3 => ERR 45014ms :: AbortError This operation was aborted
+DONE

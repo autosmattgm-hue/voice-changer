@@ -1,0 +1,31 @@
+﻿
+// Live-per-probe (Oct 2026): these exist; your key returns 403 until activated on
+// https://build.nvidia.com/<model> ("Get API Key"). Dead IDs never get called.
+const DEFAULT_MODELS = [
+  "moonshotai/kimi-k3",
+  "openai/gpt-oss-20b",
+  "z-ai/glm-5.3-flash",
+  "z-ai/glm-5.3",
+  "nvidia/nemotron-3.5-lightning-30b-a3b"
+];
+const DEAD_MODELS = new Set([
+  "deepseek-ai/deepseek-v4-flash",
+  "deepseek-ai/deepseek-v4-flash-0731",
+  "deepseek-ai/deepseek-v4-pro",
+  "deepseek-ai/deepseek-v4.1-flash",
+  "meta/llama-3.1-8b-instruct",
+  "meta/llama-3.1-8b",
+  "meta/llama-3.1-70b-instruct",
+  "meta/llama-3.2-1b-instruct",
+  "meta/llama-3.2-3b-instruct",
+  "meta/llama-3.3-70b-instruct",
+  "meta/llama-4-maverick-17b-128e-instruct",
+  "moonshotai/kimi-k2-instruct",
+  "moonshotai/kimi-k2-thinking",
+  "qwen/qwen3-next-80b-a3b-instruct",
+  "qwen/qwen3-next-80b-a3b-thinking",
+  "qwen/qwen2.5-coder-32b-instruct",
+  "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+  "nvidia/nemotron-3-nano-30b-a3b",
+  "nvidia/nemotron-nano-9b-v2",
+  "openai/gpt-oss-120b",

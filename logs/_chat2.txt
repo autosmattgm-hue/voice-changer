@@ -1,0 +1,4 @@
+﻿STATUS=200
+CONTENTLEN=213
+BODY=[{"configured":true,"provider":"nvidia","model":"openai/gpt-oss-20b","content":"AI console works.","usage":{"prompt_tokens":236,"total_tokens":255,"completion_tokens":19,"prompt_tokens_details":null},"cached":true}]
+HDR_CT=213

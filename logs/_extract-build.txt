@@ -1,0 +1,49 @@
+﻿  async buildWebsite(lead = {}, options = {}) {
+    const imgs = options.images || {};
+    const heroImg = String(imgs.hero || "").trim();
+    const galleryImgs = Array.isArray(imgs.gallery) ? imgs.gallery.map((g) => String(g || "").trim()).filter(Boolean).slice(0, 6) : [];
+    const seedWord = String(lead.businessType || lead.category || options.businessName || "business").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 24) || "business";
+    const autoHero = `https://picsum.photos/seed/${encodeURIComponent(seedWord)}/1600/900`;
+    const autoGallery = [1, 2, 3].map((n) => `https://picsum.photos/seed/${encodeURIComponent(seedWord + "-" + n)}/800/600`);
+    const hero = heroImg || autoHero;
+    const gallery = galleryImgs.length ? galleryImgs : autoGallery;
+    const accentMap = { emerald: "#22c55e", blue: "#2563eb", gold: "#d4af37", rose: "#e11d48", teal: "#14b8a6", purple: "#7c3aed", orange: "#f97316" };
+    const accent = accentMap[options.palette] || "#22c55e";
+    const pageCount = Math.min(4, Math.max(1, parseInt(options.pages, 10) || 1));
+    const allSpecs = [
+      { id: "home", title: "Home", focus: "a full-width hero image + headline + call button, a short intro, a 3-item highlights row, and the gallery images in one responsive row" },
+      { id: "about", title: "About", focus: "our story, why choose us, trust points and a values/team section" },
+      { id: "services", title: "Services", focus: "a detailed services grid (4-6 services with short descriptions) plus a packages/pricing row" },
+      { id: "contact", title: "Contact", focus: "a contact form (name, email, message), a click-to-call button, address and hours" },
+    ];
+    const pageSpecs = allSpecs.slice(0, pageCount);
+    const business = String(lead.name || options.businessName || "Your Business");
+    const brief = JSON.stringify({
+      business, type: lead.businessType || lead.category, address: lead.address,
+      phone: lead.phone, email: lead.email, style: options.style || "modern",
+      colors: options.palette || "emerald", images: { hero, gallery }
+    }).slice(0, 1500);
+    // ONE request generates ALL pages as fragments separated by <!--PAGE--> so we
+    // stay inside the model's token/time budget. The shell + navigation are
+    // assembled in code, so the site always renders and the pages always switch.
+    const request = (maxTokens, note) => this.completeRaw([
+      { role: "system", content: `You are MAT LEADS Studio, an award-winning web design studio whose output rivals Claude's best sites. Output ONLY the inner content for a ${pageCount}-page business website. PRO STANDARD: generous whitespace, oversized display headlines, eyebrow kickers with letter-spacing, gradient or image hero bands with overlay, elevated cards (radius 16-20px, soft shadows, hover lift), trust chips, stats with big numerals, numbered process steps, testimonial band on Home ONLY labelled sample with no invented names, FAQ accordion with <details>/<summary>, sticky mobile call bar, closing CTA band with gradient. RULES: (1) Separate each page with the exact marker <!--PAGE--> on its own line, and emit exactly ${pageCount} page(s) in this order: ${pageSpecs.map((p) => p.title).join(", ")}. (2) Do NOT output <!doctype>, <html>, <head>, <body> or <nav> â€” only the page content. (3) You MUST open with ONE single-line <style> block defining your OWN fresh classes for hero/cards/buttons/stats/faq/cta (never reuse generic .hero-band/.card); keep it under ~60 declarations. (4) Use the exact image URLs from the brief in real <img> tags with loading=lazy and descriptive alt text; never leave src empty; never emit placeholder grey boxes. (5) Every page opens with a HERO: eyebrow kicker, one bold benefit-led headline, one supporting sentence, TWO buttons; then vary the middle (stats row, process steps, image+text split, pricing teasers, sample testimonial band, FAQ accordion) with a DIFFERENT order and emphasis each build. (6) Copy: warm, confident, benefit-led, short sentences; NEVER invent awards, reviews, licenses, addresses or numbers â€” use neutral placeholders or omit. (7) FULL LENGTH: every page complete, each at least ~1200 characters of body content; NEVER truncate. (8) No markdown, no explanations, no code fences.` },
+      { role: "user", content: `Build the ${pageCount} page section(s) for: ${brief}. Page focuses: ${pageSpecs.map((p) => `${p.title} = ${p.focus}`).join("; ")}. Hero uses images.hero; put images.gallery URLs in an <img> row on the Home page. Separate every page with <!--PAGE-->. ${note || ""}` }
+    ], { temperature: 0.85, maxTokens, timeoutMs: Math.max(60000, env.nvidia.websiteTimeoutMs || 90000) });
+    let result = await request(4000);
+    let content = String(result.content || "");
+    if (content.replace(/<!--PAGE-->/gi, "").trim().length < 2600) {
+      try {
+        const retry = await request(5200, "Previous attempt was cut short â€” write FULLY complete pages this time with every section finished. Separate each page with <!--PAGE--> and end cleanly.");
+        if (String(retry.content || "").length > content.length) { result = retry; content = String(retry.content || ""); }
+      } catch { /* keep first attempt */ }
+    }
+    const fragments = content.split(/<!--PAGE-->/i).map((s) => this.cleanFragment(s)).filter(Boolean);
+    const pages = pageSpecs.map((spec, i) => ({
+      ...spec,
+      body: fragments[i] && fragments[i].length > 40 ? fragments[i] : this.fallbackPageFragment(spec, lead, hero, gallery, i === 0),
+    }));
+    const html = this.assembleMultiPage(pages, business, accent);
+    return { ...result, html, pageCount: pages.length };
+  }
+

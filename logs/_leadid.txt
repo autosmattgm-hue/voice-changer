@@ -1,0 +1,3 @@
+﻿LEADS_TYPE=PSCustomObject
+LEAD_ID=
+LEAD_NAME=
