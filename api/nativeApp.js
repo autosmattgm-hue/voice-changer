@@ -294,6 +294,23 @@ function matchRoute(method, pathname, pattern) {
 const routes = [
   {
     method: "GET",
+    regex: /^\/api\/config$/,
+    keys: [],
+    handler: async () => ({
+      firebase: {
+        apiKey: env.firebase.apiKey || env.firebase.webApiKey || "",
+        authDomain: env.firebase.authDomain || "",
+        databaseURL: env.firebase.databaseUrl || "",
+        projectId: env.firebase.projectId || "",
+        storageBucket: env.firebase.storageBucket || "",
+        messagingSenderId: env.firebase.messagingSenderId || "",
+        appId: env.firebase.appId || "",
+        configured: Boolean((env.firebase.apiKey || env.firebase.webApiKey) && env.firebase.projectId)
+      }
+    })
+  },
+  {
+    method: "GET",
     regex: /^\/api\/health$/,
     keys: [],
     handler: async () => ({

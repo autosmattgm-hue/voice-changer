@@ -1,5 +1,36 @@
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
+import { apiFetch, setSession } from "./api.js";
+
+const FALLBACK_CONFIG = {
+  apiKey: "AIzaSyA0nRrFw0WGjwfrJb-mnzFreR62hw8iLNw",
+  authDomain: "mat-lead-c0ca4.firebaseapp.com",
+  databaseURL: "https://mat-lead-c0ca4-default-rtdb.firebaseio.com",
+  projectId: "mat-lead-c0ca4",
+  storageBucket: "mat-lead-c0ca4.firebasestorage.app",
+  messagingSenderId: "826518752424",
+  appId: "1:826518752424:web:dbb47dd6ea98a028a6069d"
+};
+
+let firebaseConfig = { ...FALLBACK_CONFIG };
+try {
+  const res = await fetch("/api/config", { headers: { Accept: "application/json" } });
+  if (res.ok) {
+    const data = await res.json();
+    if (data?.firebase?.configured) {
+      firebaseConfig = {
+        apiKey: data.firebase.apiKey,
+        authDomain: data.firebase.authDomain,
+        databaseURL: data.firebase.databaseURL,
+        projectId: data.firebase.projectId,
+        storageBucket: data.firebase.storageBucket,
+        messagingSenderId: data.firebase.messagingSenderId,
+        appId: data.firebase.appId
+      };
+    }
+  }
+} catch {}
+
+const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+const {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
@@ -9,18 +40,7 @@ import {
   sendPasswordResetEmail,
   createUserWithEmailAndPassword,
   onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { apiFetch, setSession } from "./api.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA0nRrFw0WGjwfrJb-mnzFreR62hw8iLNw",
-  authDomain: "mat-lead-c0ca4.firebaseapp.com",
-  databaseURL: "https://mat-lead-c0ca4-default-rtdb.firebaseio.com",
-  projectId: "mat-lead-c0ca4",
-  storageBucket: "mat-lead-c0ca4.firebasestorage.app",
-  messagingSenderId: "826518752424",
-  appId: "1:826518752424:web:dbb47dd6ea98a028a6069d"
-};
+} = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
 
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
