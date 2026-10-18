@@ -1278,7 +1278,7 @@ th {
 .google-icon { flex: 0 0 auto; }
 .auth-code-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 8px;
 }
 .auth-code-row input { min-width: 0; }
@@ -1676,3 +1676,7 @@ label:has([data-ai-website-toggle]) {
 .loading-row .spinner {
   margin: 0;
 }
+
+/* The hidden attribute must win over class display rules (.field, .btn etc.)
+   so hidden auth fields and panels actually disappear when toggled. */
+[hidden] { display: none !important; }

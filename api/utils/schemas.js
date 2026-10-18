@@ -112,16 +112,33 @@ export const authSchemas = {
     email: stringField(input, "email", { required: true, email: true, max: 255 }).toLowerCase(),
     password: stringField(input, "password", { required: true, min: 8, max: 128 })
   })),
-  login: schema((input) => ({
-    email: stringField(input, "email", { required: true, email: true, max: 255 }).toLowerCase(),
-    password: stringField(input, "password", { required: true, min: 8, max: 128 })
-  })),
+  login: schema((input) => {
+    const password = stringField(input, "password", { required: true, min: 8, max: 128 });
+    const phone = stringField(input, "phone", { max: 30 }).replace(/[\s\-().]/g, "");
+    const email = stringField(input, "email", { max: 255 }).toLowerCase();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw validationError({ email: ["Must be a valid email"] });
+    }
+    if (phone && !/^\+\d{7,15}$/.test(phone)) {
+      throw validationError({ phone: ["Enter a valid phone number in international format, e.g. +2348012345678."] });
+    }
+    if (!email && !phone) {
+      throw validationError({ email: ["Enter your email or phone number."] });
+    }
+    return { email, phone, password };
+  }),
   refresh: schema((input) => ({
     refreshToken: stringField(input, "refreshToken", { required: true, min: 20, max: 4000 })
   })),
-  firebaseSession: schema((input) => ({
-    idToken: stringField(input, "idToken", { required: true, min: 10, max: 8000 })
-  }))
+  firebaseSession: schema((input) => {
+    const idToken = stringField(input, "idToken", { required: true, min: 10, max: 8000 });
+    const name = stringField(input, "name", { max: 120, truncate: true });
+    const password = stringField(input, "password", { max: 128 });
+    if (password && password.length < 8) {
+      throw validationError({ password: ["Must be at least 8 characters"] });
+    }
+    return { idToken, name, password };
+  })
 };
 
 export const profileSchema = schema((input) => ({

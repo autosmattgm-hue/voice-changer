@@ -232,10 +232,59 @@ export class AuthService {
     };
   }
 
+  async loginWithPhone(phone, password) {
+    if (!/^\+\d{7,15}$/.test(phone)) {
+      throw new AppError("Enter a valid phone number in international format, e.g. +2348012345678.", 422, "VALIDATION_ERROR");
+    }
+    let users;
+    try {
+      users = await this.users.list({
+        where: [{ field: "phone", op: "==", value: phone }],
+        limit: 1
+      });
+    } catch {
+      throw new AppError("Login service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
+    }
+    const user = users[0];
+    if (!user || !user.passwordHash) {
+      throw new AppError("Invalid phone number or password.", 401, "INVALID_CREDENTIALS");
+    }
+    const valid = await verifyPassword(password, user.passwordHash);
+    if (!valid) throw new AppError("Invalid phone number or password.", 401, "INVALID_CREDENTIALS");
+
+    const entitledUser = applyAdminEntitlements({
+      uid: user.uid || user.id,
+      name: user.name,
+      email: user.email || "",
+      phone: user.phone || phone,
+      role: user.role || "user",
+      ...planFields(storedPlanKey(user)),
+      billingStatus: storedBillingStatus(user),
+      trialSearchesUsed: Number(user.trialSearchesUsed || 0),
+      permissions: user.permissions,
+      entitlements: storedEntitlements(user)
+    });
+
+    return {
+      user: entitledUser,
+      accessToken: signAccessToken(entitledUser),
+      refreshToken: signRefreshToken({
+        uid: user.uid || user.id,
+        email: user.email || "",
+        role: user.role || "user",
+        tokenVersion: user.tokenVersion || 1
+      })
+    };
+  }
+
   async login(input = {}) {
     const { email, password } = input;
-    if (!email || !password) {
-      throw new AppError("Email and password are required.", 422, "VALIDATION_ERROR");
+    const phone = String(input.phone || "").trim().replace(/[\s\-().]/g, "");
+    if ((!email && !phone) || !password) {
+      throw new AppError("Email (or phone number) and password are required.", 422, "VALIDATION_ERROR");
+    }
+    if (phone && !email) {
+      return this.loginWithPhone(phone, password);
     }
     const normalizedEmail = String(email).toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(normalizedEmail)) {
@@ -328,6 +377,7 @@ export class AuthService {
   async loginWithFirebase(idToken, options = {}) {
     const { verifyFirebaseIdToken } = await import("../config/firebase.js");
     const identity = options.preVerifiedIdentity || await verifyFirebaseIdToken(idToken);
+    const profile = options.profile || {};
     const email = identity.email;
     const phone = identity.phoneNumber;
     if (!email && !phone) {
@@ -359,12 +409,14 @@ export class AuthService {
       if (typeof options.beforeCreate === "function") {
         await options.beforeCreate(email || phone || "");
       }
+      const passwordHash = profile.password ? await hashPassword(profile.password) : undefined;
       try {
         stored = await this.users.create({
           id: `firebase:${identity.uid}`,
-          name: identity.displayName || (email ? email.split("@")[0] : phone),
+          name: profile.name || identity.displayName || (email ? email.split("@")[0] : phone),
           email: email || "",
           phone: phone || "",
+          ...(passwordHash ? { passwordHash } : {}),
           role: "user",
           tokenVersion: 1,
           firebaseUid: identity.uid,
@@ -374,11 +426,25 @@ export class AuthService {
       } catch {
         throw new AppError("Signup service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
       }
-    } else if (identity.emailVerified && !stored.emailVerified && email) {
-      try {
-        stored = await this.users.update(stored.id, { emailVerified: true, firebaseUid: stored.firebaseUid || identity.uid });
-      } catch {
-        stored = { ...stored, emailVerified: true };
+    } else {
+      const updates = {};
+      if (identity.emailVerified && !stored.emailVerified && email) {
+        updates.emailVerified = true;
+        updates.firebaseUid = stored.firebaseUid || identity.uid;
+      }
+      // The caller proved control of this Firebase identity (verified ID token),
+      // so they may attach a password — e.g. phone sign-up collected one — which
+      // enables phone+password login later. Only fills a missing hash.
+      if (profile.password && !stored.passwordHash) {
+        updates.passwordHash = await hashPassword(profile.password);
+      }
+      if (profile.name && !stored.name) updates.name = profile.name;
+      if (Object.keys(updates).length) {
+        try {
+          stored = await this.users.update(stored.id, updates);
+        } catch {
+          stored = { ...stored, ...updates };
+        }
       }
     }
     const sessionUser = applyAdminEntitlements({

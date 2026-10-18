@@ -61,11 +61,11 @@ function ensureRecaptcha(containerId = "recaptcha-container") {
   return recaptcha;
 }
 
-export async function sessionWithBackend(firebaseUser) {
+export async function sessionWithBackend(firebaseUser, extra = {}) {
   const idToken = await firebaseUser.getIdToken(true);
   const result = await apiFetch("/api/auth/firebase", {
     method: "POST",
-    body: JSON.stringify({ idToken })
+    body: JSON.stringify({ idToken, ...extra })
   });
   setSession(result);
   return result;
@@ -96,7 +96,7 @@ export async function registerWithEmail(name, email, password, status) {
       await sendEmailVerification(credential.user);
     } catch {}
     if (status) status.textContent = "Verification email sent — finalizing your workspace...";
-    await sessionWithBackend(credential.user);
+    await sessionWithBackend(credential.user, { name: name || "", password });
     try {
       const ref = new URLSearchParams(window.location.search).get("ref") || localStorage.getItem("mat_referral_code");
       if (ref) {
@@ -135,11 +135,11 @@ export async function sendPhoneCode(phoneNumber, status) {
   }
 }
 
-export async function confirmPhoneCode(confirmation, code, status) {
+export async function confirmPhoneCode(confirmation, code, status, extra = {}) {
   try {
     if (status) status.textContent = "Verifying code...";
     const credential = await confirmation.confirm(code);
-    const result = await sessionWithBackend(credential.user);
+    const result = await sessionWithBackend(credential.user, extra);
     if (status) status.textContent = "Phone verified. Redirecting...";
     const next = new URLSearchParams(window.location.search).get("next");
     window.location.href = next && next.startsWith("/") ? next : "/dashboard.html";
