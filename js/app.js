@@ -28,119 +28,12 @@ async function trackReferral() {
   } catch {}
 }
 
-// Shared phone sign-in state: [data-phone-toggle] swaps the form between email
-// and phone modes, and the SMS confirmation survives across taps (Send code →
-// submit) during phone registration.
-let phoneMode = false;
-let phoneConfirmation = null;
-
-function applyAuthMode(form) {
-  const mode = phoneMode ? "phone" : "email";
-  form.querySelectorAll("[data-auth-when]").forEach((wrap) => {
-    const show = wrap.dataset.authWhen === "always" || wrap.dataset.authWhen === mode;
-    wrap.hidden = !show;
-    wrap.querySelectorAll("input").forEach((input) => {
-      // The SMS code is validated in JS — it only becomes required after a code is sent.
-      if (input.id !== "smsCode") input.required = show;
-    });
-  });
-
-  const toggle = form.querySelector("[data-phone-toggle]");
-  if (toggle) {
-    toggle.textContent = phoneMode
-      ? toggle.dataset.labelPhoneMode || "Use email instead"
-      : toggle.dataset.labelEmailMode || "Use phone instead";
-  }
-
-  if (!phoneMode) {
-    phoneConfirmation = null;
-    const codeInput = form.querySelector("#smsCode");
-    if (codeInput) codeInput.value = "";
-  }
-
-  const status = document.querySelector("[data-form-status]");
-  if (status) {
-    status.textContent = phoneMode
-      ? form.dataset.authForm === "register"
-        ? "Enter your phone number and password, then confirm the SMS code we text you."
-        : "Enter your phone number and password to sign in."
-      : form.dataset.statusDefault || "";
-  }
-
-  if (phoneMode) form.querySelector("#phone")?.focus();
-}
-
-async function handlePhoneSubmit(form, mode, status) {
-  const phone = String(form.querySelector("#phone")?.value || "").trim().replace(/[\s\-().]/g, "");
-  const password = String(form.querySelector("#password")?.value || "");
-
-  if (!/^\+\d{7,15}$/.test(phone)) {
-    if (status) status.textContent = "Enter your phone number in international format, e.g. +2348012345678.";
-    return;
-  }
-  if (password.length < 8) {
-    if (status) status.textContent = "Password must be at least 8 characters.";
-    return;
-  }
-
-  if (mode === "login") {
-    if (status) status.textContent = "Signing in...";
-    try {
-      const result = await apiFetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ phone, password })
-      });
-      setSession(result);
-      if (status) status.textContent = "Success. Redirecting...";
-      redirectAfterAuth();
-    } catch (error) {
-      if (status) status.textContent = error.message;
-    }
-    return;
-  }
-
-  // Registration: the first submit sends the SMS code; the second verifies it
-  // and creates the account (the password is stored for phone+password login).
-  if (!phoneConfirmation) {
-    if (status) status.textContent = "Sending SMS code...";
-    try {
-      const { sendPhoneCode } = await loadFirebaseAuth();
-      phoneConfirmation = await sendPhoneCode(phone, status);
-      form.querySelector("#smsCode")?.focus();
-    } catch (error) {
-      if (status && !String(status.textContent).toLowerCase().includes("code sent")) {
-        status.textContent = error?.message || "Could not send the code. Please try again.";
-      }
-    }
-    return;
-  }
-
-  const code = String(form.querySelector("#smsCode")?.value || "").trim();
-  if (!code) {
-    if (status) status.textContent = "Enter the code from the SMS.";
-    return;
-  }
-  try {
-    const { confirmPhoneCode } = await loadFirebaseAuth();
-    await confirmPhoneCode(phoneConfirmation, code, status, {
-      name: String(form.querySelector("#name")?.value || "").trim(),
-      password
-    });
-  } catch (error) {
-    if (status && !String(status.textContent).includes("Redirecting")) {
-      status.textContent = error?.message || "Verification failed. Please try again.";
-    }
-  }
-}
-
 function initAuthForm() {
   const form = document.querySelector("[data-auth-form]");
   if (!form) return;
 
   const mode = form.dataset.authForm;
   const status = document.querySelector("[data-form-status]");
-  // Keep the original notice text so toggling back from phone mode can restore it.
-  if (status) form.dataset.statusDefault = status.textContent;
 
   const googleBtn = document.querySelector("[data-google-auth]");
   if (googleBtn) {
@@ -162,11 +55,6 @@ function initAuthForm() {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    if (phoneMode) {
-      await handlePhoneSubmit(form, mode, status);
-      return;
-    }
 
     if (status) status.textContent = "Submitting...";
 
@@ -219,45 +107,6 @@ function initAuthForm() {
   });
 }
 
-function initPhoneAuth() {
-  const form = document.querySelector("[data-auth-form]");
-  if (!form) return;
-  const status = document.querySelector("[data-form-status]");
-  const phoneInput = form.querySelector("#phone");
-  const codeInput = form.querySelector("#smsCode");
-  const sendBtn = form.querySelector("[data-phone-send]");
-  const toggle = form.querySelector("[data-phone-toggle]");
-
-  if (toggle) {
-    toggle.addEventListener("click", () => {
-      phoneMode = !phoneMode;
-      applyAuthMode(form);
-    });
-  }
-
-  if (sendBtn) {
-    sendBtn.addEventListener("click", async () => {
-      const phone = String(phoneInput?.value || "").trim().replace(/[\s\-().]/g, "");
-      if (!phone) {
-        if (status) status.textContent = "Enter your phone number first (international format).";
-        return;
-      }
-      sendBtn.disabled = true;
-      try {
-        const { sendPhoneCode } = await loadFirebaseAuth();
-        phoneConfirmation = await sendPhoneCode(phone, status);
-        codeInput?.focus();
-      } catch (error) {
-        if (status && !String(status.textContent).toLowerCase().includes("code sent")) {
-          status.textContent = error?.message || "Could not send the code. Please try again.";
-        }
-      } finally {
-        sendBtn.disabled = false;
-      }
-    });
-  }
-}
-
 function initForgotPassword() {
   const form = document.querySelector("[data-forgot-form]");
   if (!form) return;
@@ -293,7 +142,6 @@ function initLogout() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAuthForm();
-  initPhoneAuth();
   initForgotPassword();
   initVerifyBanner();
   initLogout();

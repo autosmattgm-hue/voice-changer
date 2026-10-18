@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-13T22:36:02.181Z",
+  "updatedAt": "2026-10-18T19:06:23.131Z",
   "collections": {
     "aiWebsites": [
       {
@@ -1233,6 +1233,60 @@
           "upgradeRequiredAfterTrial": true
         },
         "emailVerified": false
+      },
+      {
+        "uid": "6RExXKpthgekesw9dSTymQKnopT2",
+        "name": "Smoke Tester",
+        "email": "smoke-1792350299410@example.com",
+        "passwordHash": "scrypt$de3e0a40663712d055a91b4701094252$da0b56356a03cab02d4bc2ee0c7f497bfb6bf1a3129d0047febd6f0322953815c36ec035db11408902699831f115e126a64d5d231f918a75a4baee7579aa266c",
+        "role": "user",
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 1,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 1,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": false,
+        "tokenVersion": 1,
+        "id": "6RExXKpthgekesw9dSTymQKnopT2",
+        "updatedAt": "2026-10-18T19:05:20.787Z",
+        "createdAt": "2026-10-18T19:05:01.064Z"
+      },
+      {
+        "uid": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "name": "Smoke Tester",
+        "email": "smoke-1792350352247@example.com",
+        "passwordHash": "scrypt$7687708d1df1957b3ae7e6871affbaa6$25681efd62d4ad7c3c2df4ed3aed9cc76d319c510168059a8b43ebcdca9de863dd739337099549a471d4f9fd087b88f91fb6dc6df8b91def97875bb9ffc76938",
+        "role": "user",
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 1,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 1,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": false,
+        "tokenVersion": 1,
+        "id": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "updatedAt": "2026-10-18T19:06:12.379Z",
+        "createdAt": "2026-10-18T19:05:53.363Z"
       }
     ],
     "leads": [
@@ -13619,13 +13673,13 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "8c44d0d9-9deb-449f-89f4-b01484433016",
-        "discoveredAt": "2026-10-09T07:24:55.141Z",
-        "updatedAt": "2026-10-09T07:25:11.849Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:19.288Z",
         "createdAt": "2026-10-09T07:24:55.141Z",
-        "ownerId": "8c44d0d9-9deb-449f-89f4-b01484433016",
+        "ownerId": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
         "stage": "Contacted",
-        "savedAt": "2026-10-09T07:25:10.561Z"
+        "savedAt": "2026-10-18T19:06:16.713Z"
       },
       {
         "id": "photon-node-7320697313",
@@ -13754,9 +13808,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "8c44d0d9-9deb-449f-89f4-b01484433016",
-        "discoveredAt": "2026-10-09T07:24:55.141Z",
-        "updatedAt": "2026-10-09T07:24:55.141Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -13886,9 +13940,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "8c44d0d9-9deb-449f-89f4-b01484433016",
-        "discoveredAt": "2026-10-09T07:24:55.141Z",
-        "updatedAt": "2026-10-09T07:24:55.141Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14018,9 +14072,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "8c44d0d9-9deb-449f-89f4-b01484433016",
-        "discoveredAt": "2026-10-09T07:24:55.141Z",
-        "updatedAt": "2026-10-09T07:24:55.141Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14152,9 +14206,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "8c44d0d9-9deb-449f-89f4-b01484433016",
-        "discoveredAt": "2026-10-09T07:24:55.141Z",
-        "updatedAt": "2026-10-09T07:24:55.141Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -17205,6 +17259,68 @@
         "id": "06e952f1-1de2-45ff-8023-94058bd299f4",
         "createdAt": "2026-10-13T22:35:59.248Z",
         "updatedAt": "2026-10-13T22:35:59.248Z"
+      },
+      {
+        "actor": "smoke-1792350299410@example.com",
+        "action": "lead_search",
+        "query": {
+          "country": "",
+          "countries": [],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "businesses",
+          "businessTypes": [],
+          "mapLink": "https://www.google.com/maps/@13.4053888,-16.6887424,11z?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 10,
+          "searchDepth": "deep",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 5,
+        "id": "5078b2dc-4588-4ff0-a0db-822adaa3824f",
+        "createdAt": "2026-10-18T19:05:23.862Z",
+        "updatedAt": "2026-10-18T19:05:23.862Z"
+      },
+      {
+        "actor": "smoke-1792350352247@example.com",
+        "action": "lead_search",
+        "query": {
+          "country": "",
+          "countries": [],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "businesses",
+          "businessTypes": [],
+          "mapLink": "https://www.google.com/maps/@13.4053888,-16.6887424,11z?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 10,
+          "searchDepth": "deep",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 5,
+        "id": "6cfb8e5a-bafb-4a3b-ac70-765851c7aafc",
+        "createdAt": "2026-10-18T19:06:14.438Z",
+        "updatedAt": "2026-10-18T19:06:14.438Z"
       }
     ],
     "activities": [
@@ -17234,6 +17350,24 @@
         "id": "99ca5b44-2751-4a9b-a7e9-e508ddab9691",
         "createdAt": "2026-10-09T07:25:13.926Z",
         "updatedAt": "2026-10-09T07:25:13.926Z"
+      },
+      {
+        "leadId": "photon-node-8209452111",
+        "actor": "smoke-1792350299410@example.com",
+        "action": "stage_updated",
+        "stage": "Contacted",
+        "id": "e1c80872-d9ed-4cc1-8845-4e281d035770",
+        "createdAt": "2026-10-18T19:05:31.966Z",
+        "updatedAt": "2026-10-18T19:05:31.966Z"
+      },
+      {
+        "leadId": "photon-node-8209452111",
+        "actor": "smoke-1792350352247@example.com",
+        "action": "stage_updated",
+        "stage": "Contacted",
+        "id": "4c22ab0a-0cbd-44aa-9d03-f2022d8dc281",
+        "createdAt": "2026-10-18T19:06:23.131Z",
+        "updatedAt": "2026-10-18T19:06:23.131Z"
       }
     ],
     "checkoutSessions": [

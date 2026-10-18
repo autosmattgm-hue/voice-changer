@@ -164,17 +164,20 @@ function securityHeaders(extra = {}) {
   return {
     "Content-Security-Policy": [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // Firebase SDK ships from gstatic; browser auth also talks to googleapis.
+      "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
-      "connect-src 'self'",
-      "frame-src 'self' https://www.google.com https://maps.google.com",
+      "connect-src 'self' https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com",
+      "frame-src 'self' https://www.google.com https://maps.google.com https://accounts.google.com https://*.firebaseapp.com",
       "font-src 'self' data:",
       "object-src 'none'",
       "base-uri 'self'",
       "frame-ancestors 'self'"
     ].join("; "),
-    "Cross-Origin-Opener-Policy": "same-origin",
+    // "same-origin" severs window.opener for the Google sign-in popup, which
+    // breaks Firebase signInWithPopup — it requires same-origin-allow-popups.
+    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "X-Content-Type-Options": "nosniff",
     "X-Permitted-Cross-Domain-Policies": "none",

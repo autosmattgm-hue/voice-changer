@@ -1,0 +1,34 @@
+{
+  "updatedAt": "2026-10-18T19:10:12.844Z",
+  "collections": {
+    "users": [
+      {
+        "uid": "l4YTwRj4OvdPBRAq1O2I5XChaBY2",
+        "name": "E2E Tester",
+        "email": "e2e-1439507471@example.com",
+        "passwordHash": "scrypt$ac568117310a4f619f8609cfe70261b9$79cf7f3be84949ca0f1ade62e85177240033fc53f6510dee8e1432ed6c21a4afe0ed7c4593759b76b9f91e867a10ffb5c003e7a80349cbcc62584b4571de7bf2",
+        "role": "user",
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 0,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 0,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": false,
+        "tokenVersion": 1,
+        "id": "l4YTwRj4OvdPBRAq1O2I5XChaBY2",
+        "updatedAt": "2026-10-18T19:10:12.831Z",
+        "createdAt": "2026-10-18T19:10:12.831Z"
+      }
+    ]
+  }
+}

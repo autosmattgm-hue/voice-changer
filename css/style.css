@@ -1276,12 +1276,6 @@ th {
   color: #1f2430;
 }
 .google-icon { flex: 0 0 auto; }
-.auth-code-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-}
-.auth-code-row input { min-width: 0; }
 .auth-link {
   display: block;
   text-align: center;

@@ -160,27 +160,8 @@ export class AuthService {
     }
     let user;
 
-    if (isFirebaseAuthConfigured()) {
-      const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${env.firebase.webApiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: normalizedEmail,
-          password,
-          returnSecureToken: true
-        })
-      });
-      if (!response.ok) throw new AppError("Unable to create Firebase account.", 400, "FIREBASE_SIGNUP_FAILED");
-      const payload = await response.json();
-      user = {
-        uid: payload.localId,
-        name,
-        email: normalizedEmail,
-        role: "user",
-        idToken: payload.idToken,
-        firebaseRefreshToken: payload.refreshToken
-      };
-    } else {
+    const passwordHash = await hashPassword(password);
+    const createLocalAccount = async () => {
       let existing;
       try {
         existing = await this.users.list({
@@ -190,27 +171,76 @@ export class AuthService {
       } catch {
         throw new AppError("Signup service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
       }
-      if (existing.length) throw new AppError("Account already exists.", 409, "ACCOUNT_EXISTS");
-      const passwordHash = await hashPassword(password);
+      if (existing.length) throw new AppError("An account with this email already exists. Try logging in instead.", 409, "ACCOUNT_EXISTS");
       try {
-        user = await this.users.create({ name, email: normalizedEmail, passwordHash, role: "user", tokenVersion: 1 });
+        return await this.users.create({ name, email: normalizedEmail, passwordHash, role: "user", tokenVersion: 1 });
       } catch {
         throw new AppError("Signup service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
       }
+    };
+
+    if (isFirebaseAuthConfigured()) {
+      let response;
+      try {
+        response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${env.firebase.webApiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: normalizedEmail,
+            password,
+            returnSecureToken: true
+          })
+        });
+      } catch {
+        throw new AppError("Signup service is temporarily unavailable. Please try again.", 503, "AUTH_UPSTREAM_UNAVAILABLE");
+      }
+      if (response.ok) {
+        const payload = await response.json();
+        user = {
+          uid: payload.localId,
+          name,
+          email: normalizedEmail,
+          passwordHash,
+          role: "user",
+          idToken: payload.idToken,
+          firebaseRefreshToken: payload.refreshToken
+        };
+      } else {
+        const failure = await response.json().catch(() => ({}));
+        const firebaseCode = String(failure?.error?.message || "");
+        if (firebaseCode.includes("EMAIL_EXISTS")) {
+          throw new AppError("An account with this email already exists. Try logging in instead.", 409, "ACCOUNT_EXISTS");
+        }
+        const firebaseNotUsable = response.status === 400 && /OPERATION_NOT_ALLOWED|API_KEY_INVALID|CONFIGURATION_NOT_FOUND|INVALID_EMAIL/.test(firebaseCode);
+        if (!firebaseNotUsable) {
+          throw new AppError("Unable to create Firebase account.", 400, "FIREBASE_SIGNUP_FAILED");
+        }
+        // Firebase email/password isn't usable for this project yet — create
+        // the account in the backend store so signup + login keep working.
+        user = await createLocalAccount();
+      }
+    } else {
+      user = await createLocalAccount();
     }
 
-    await this.users.upsert(user.uid || user.id, {
-      uid: user.uid || user.id,
-      name,
-      email: normalizedEmail,
-      role: user.role,
-      ...planFields("trial"),
-      billingStatus: "trial",
-      trialSearchesUsed: 0,
-      entitlements: trialEntitlements(0),
-      emailVerified: false,
-      tokenVersion: user.tokenVersion || 1
-    });
+    try {
+      await this.users.upsert(user.uid || user.id, {
+        uid: user.uid || user.id,
+        name,
+        email: normalizedEmail,
+        passwordHash: user.passwordHash || passwordHash,
+        role: user.role,
+        ...planFields("trial"),
+        billingStatus: "trial",
+        trialSearchesUsed: 0,
+        entitlements: trialEntitlements(0),
+        emailVerified: false,
+        tokenVersion: user.tokenVersion || 1
+      });
+    } catch {
+      // Profile persistence is best-effort — the account already exists, so a
+      // broken user store must not turn a successful signup into a 500.
+    }
 
     const sessionUser = applyAdminEntitlements({
       uid: user.uid || user.id,
@@ -232,59 +262,10 @@ export class AuthService {
     };
   }
 
-  async loginWithPhone(phone, password) {
-    if (!/^\+\d{7,15}$/.test(phone)) {
-      throw new AppError("Enter a valid phone number in international format, e.g. +2348012345678.", 422, "VALIDATION_ERROR");
-    }
-    let users;
-    try {
-      users = await this.users.list({
-        where: [{ field: "phone", op: "==", value: phone }],
-        limit: 1
-      });
-    } catch {
-      throw new AppError("Login service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
-    }
-    const user = users[0];
-    if (!user || !user.passwordHash) {
-      throw new AppError("Invalid phone number or password.", 401, "INVALID_CREDENTIALS");
-    }
-    const valid = await verifyPassword(password, user.passwordHash);
-    if (!valid) throw new AppError("Invalid phone number or password.", 401, "INVALID_CREDENTIALS");
-
-    const entitledUser = applyAdminEntitlements({
-      uid: user.uid || user.id,
-      name: user.name,
-      email: user.email || "",
-      phone: user.phone || phone,
-      role: user.role || "user",
-      ...planFields(storedPlanKey(user)),
-      billingStatus: storedBillingStatus(user),
-      trialSearchesUsed: Number(user.trialSearchesUsed || 0),
-      permissions: user.permissions,
-      entitlements: storedEntitlements(user)
-    });
-
-    return {
-      user: entitledUser,
-      accessToken: signAccessToken(entitledUser),
-      refreshToken: signRefreshToken({
-        uid: user.uid || user.id,
-        email: user.email || "",
-        role: user.role || "user",
-        tokenVersion: user.tokenVersion || 1
-      })
-    };
-  }
-
   async login(input = {}) {
     const { email, password } = input;
-    const phone = String(input.phone || "").trim().replace(/[\s\-().]/g, "");
-    if ((!email && !phone) || !password) {
-      throw new AppError("Email (or phone number) and password are required.", 422, "VALIDATION_ERROR");
-    }
-    if (phone && !email) {
-      return this.loginWithPhone(phone, password);
+    if (!email || !password) {
+      throw new AppError("Email and password are required.", 422, "VALIDATION_ERROR");
     }
     const normalizedEmail = String(email).toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(normalizedEmail)) {
@@ -293,6 +274,37 @@ export class AuthService {
 
     if (this.isOwnerLogin(normalizedEmail, password)) {
       return this.ownerSession();
+    }
+
+    // Backend-created accounts carry a local scrypt hash — verify it first so
+    // sign-in keeps working even if Firebase is unreachable or misconfigured.
+    let localUser = null;
+    try {
+      const found = await this.users.list({
+        where: [{ field: "email", op: "==", value: normalizedEmail }],
+        limit: 1
+      });
+      localUser = found[0] || null;
+    } catch {
+      throw new AppError("Login service is temporarily unavailable. Please try again.", 503, "AUTH_STORE_UNAVAILABLE");
+    }
+    if (localUser?.passwordHash && await verifyPassword(password, localUser.passwordHash)) {
+      const sessionUser = applyAdminEntitlements({
+        uid: localUser.uid || localUser.id,
+        name: localUser.name,
+        email: normalizedEmail,
+        role: localUser.role || "user",
+        ...planFields(storedPlanKey(localUser)),
+        billingStatus: storedBillingStatus(localUser),
+        trialSearchesUsed: Number(localUser.trialSearchesUsed || 0),
+        permissions: localUser.permissions,
+        entitlements: storedEntitlements(localUser)
+      });
+      return {
+        user: sessionUser,
+        accessToken: signAccessToken(sessionUser),
+        refreshToken: signRefreshToken({ uid: localUser.uid || localUser.id, email: normalizedEmail, role: localUser.role || "user", tokenVersion: localUser.tokenVersion || 1 })
+      };
     }
 
     if (env.firebase.webApiKey) {
@@ -313,7 +325,15 @@ export class AuthService {
 
       if (!response.ok) throw new AppError("Invalid email or password.", 401, "INVALID_CREDENTIALS");
       const payload = await response.json();
-      const storedUser = await this.users.findById(payload.localId);
+      // Profile enrichment only — a broken or unconfigured user store must
+      // never turn an already-verified Firebase login into a 500.
+      let storedUser = null;
+      try {
+        storedUser = await this.users.findById(payload.localId);
+      } catch {
+        storedUser = null;
+      }
+      if (!storedUser) storedUser = localUser;
       const user = applyAdminEntitlements({
         uid: payload.localId,
         name: storedUser?.name || "",

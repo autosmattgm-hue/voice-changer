@@ -34,8 +34,6 @@ const {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithPhoneNumber,
-  RecaptchaVerifier,
   sendEmailVerification,
   sendPasswordResetEmail,
   createUserWithEmailAndPassword,
@@ -45,21 +43,6 @@ const {
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
-
-let recaptcha = null;
-
-function ensureRecaptcha(containerId = "recaptcha-container") {
-  let container = document.getElementById(containerId);
-  if (!container) {
-    container = document.createElement("div");
-    container.id = containerId;
-    document.body.appendChild(container);
-  }
-  if (!recaptcha) {
-    recaptcha = new RecaptchaVerifier(auth, containerId, { size: "invisible" });
-  }
-  return recaptcha;
-}
 
 export async function sessionWithBackend(firebaseUser, extra = {}) {
   const idToken = await firebaseUser.getIdToken(true);
@@ -120,36 +103,6 @@ export async function sendVerificationEmail(status) {
   if (status) status.textContent = "Verification email sent. Check your inbox and spam folder.";
 }
 
-export async function sendPhoneCode(phoneNumber, status) {
-  try {
-    if (status) status.textContent = "Sending SMS code...";
-    const verifier = ensureRecaptcha();
-    const confirmation = await signInWithPhoneNumber(auth, phoneNumber, verifier);
-    if (status) status.textContent = "SMS code sent. Enter it below.";
-    return confirmation;
-  } catch (error) {
-    try { recaptcha?.clear(); } catch {}
-    recaptcha = null;
-    if (status) status.textContent = friendlyFirebaseError(error);
-    throw error;
-  }
-}
-
-export async function confirmPhoneCode(confirmation, code, status, extra = {}) {
-  try {
-    if (status) status.textContent = "Verifying code...";
-    const credential = await confirmation.confirm(code);
-    const result = await sessionWithBackend(credential.user, extra);
-    if (status) status.textContent = "Phone verified. Redirecting...";
-    const next = new URLSearchParams(window.location.search).get("next");
-    window.location.href = next && next.startsWith("/") ? next : "/dashboard.html";
-    return result;
-  } catch (error) {
-    if (status) status.textContent = friendlyFirebaseError(error);
-    throw error;
-  }
-}
-
 export async function sendPasswordReset(email, status) {
   try {
     if (status) status.textContent = "Sending reset email...";
@@ -192,9 +145,6 @@ function friendlyFirebaseError(error) {
   const code = String(error?.code || "");
   if (code.includes("popup-closed-by-user") || code.includes("cancelled-popup-request")) return "Google sign-in was closed before finishing. Try again.";
   if (code.includes("too-many-requests")) return "Too many attempts. Wait a few minutes and try again.";
-  if (code.includes("invalid-phone-number")) return "That phone number looks invalid. Use full international format, e.g. +2348012345678.";
-  if (code.includes("invalid-verification-code")) return "That SMS code is wrong. Check the latest message and try again.";
-  if (code.includes("code-expired")) return "That SMS code expired. Request a new one.";
   if (code.includes("email-already-in-use")) return "An account with this email already exists. Try logging in instead.";
   if (code.includes("weak-password")) return "Password is too weak. Use at least 8 characters.";
   if (code.includes("user-not-found") || code.includes("wrong-password") || code.includes("invalid-credential")) return "Invalid email or password.";
