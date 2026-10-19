@@ -19,6 +19,7 @@ async function req(path, { method = "GET", body, token } = {}) {
 function brief(label, r) {
   const s = typeof r.body === "string" ? r.body : JSON.stringify(r.body);
   console.log(`\n=== ${label} === status=${r.status} ${r.ms}ms`);
+  if (r.error) console.log(`FETCH ERROR: ${r.error}`);
   console.log((s || "(empty)").slice(0, 600));
 }
 
