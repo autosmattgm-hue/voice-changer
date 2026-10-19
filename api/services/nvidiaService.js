@@ -8,11 +8,15 @@ const aiCache = new Map();
 const modelCooldowns = new Map();
 const MAX_CACHE_ENTRIES = 200;
 const MODEL_COOLDOWN_MS = 5 * 60 * 1000;
+// A timeout is usually transient load, not a dead model. Cooling the only fast
+// model for 5 minutes after one slow response cascades into every later call
+// (they get pushed onto the ~44s fallbacks and time out too), so transient
+// failures get a short cooldown instead.
+const TRANSIENT_COOLDOWN_MS = 30 * 1000;
 
 // Live-per-probe (Oct 2026): these exist; your key returns 403 until activated on
 // https://build.nvidia.com/<model> ("Get API Key"). Dead IDs never get called.
 const DEFAULT_MODELS = [
-  "moonshotai/kimi-k3",
   "openai/gpt-oss-20b",
   "z-ai/glm-5.3-flash",
   "z-ai/glm-5.3",
@@ -297,8 +301,8 @@ function markProviderFailure(error) {
   };
 }
 
-function coolDownModel(model) {
-  modelCooldowns.set(model, Date.now() + MODEL_COOLDOWN_MS);
+function coolDownModel(model, ms = MODEL_COOLDOWN_MS) {
+  modelCooldowns.set(model, Date.now() + ms);
 }
 
 export class NvidiaService {
@@ -367,7 +371,9 @@ export class NvidiaService {
     const deadlineAt = Date.now() + requestBudget(timeoutMs, 24000);
     for (let index = 0; index < queue.length; index += 1) {
       const model = queue[index];
-      const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, queue.length - index, 12000);
+      // 17s per-attempt cap: gpt-oss-20b runs 9-11s on real business prompts, so
+      // the old 12s cap cut it off mid-answer and forced a needless fallback.
+      const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, queue.length - index, 17000);
       if (!attemptTimeoutMs) break;
       const requestPayload = { ...basePayload, ...modelRequestOptions(model), model, top_p: modelTopP(model, topP) };
       const cacheKey = !stream && cacheTtlMs > 0 ? cacheKeyFor(requestPayload) : "";
@@ -394,7 +400,9 @@ export class NvidiaService {
           : error;
         clearTimeout(timeout);
         if (isRetryableNvidiaFailure(lastError)) {
-          coolDownModel(model);
+          // A transient timeout cools the model briefly; a dead/retired ID gets
+          // the full 5-minute ban so we don't lock out the only fast model.
+          coolDownModel(model, lastError?.code === "NVIDIA_TIMEOUT" ? TRANSIENT_COOLDOWN_MS : MODEL_COOLDOWN_MS);
           continue;
         }
         throw lastError;
@@ -417,7 +425,9 @@ export class NvidiaService {
           continue;
         }
         if (isRetryableNvidiaFailure(lastError)) {
-          coolDownModel(model);
+          // 429/5xx are transient — short cool so a rate-limit blip doesn't
+          // sideline the fast primary for 5 minutes and starve later calls.
+          coolDownModel(model, TRANSIENT_COOLDOWN_MS);
           continue;
         }
         throw lastError;
@@ -581,7 +591,10 @@ export class NvidiaService {
     let lastError = null;
     for (let index = 0; index < websiteModels.length; index += 1) {
       const model = websiteModels[index];
-      const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, websiteModels.length - index, 46000);
+      // Website builds emit ALL pages in one response, so the primary model needs
+      // almost the entire budget (~43s observed, with variance). The old 46s cap
+      // was too tight and a single slow build timed out and killed the site.
+      const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, websiteModels.length - index, 51000);
       if (!attemptTimeoutMs) break;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), attemptTimeoutMs);
@@ -634,7 +647,7 @@ export class NvidiaService {
         clearTimeout(timeout);
         lastError = error?.name === "AbortError" ? new AppError(`NVIDIA model ${model} timed out.`, 504, "NVIDIA_TIMEOUT") : error;
         if (isRetryableNvidiaFailure(lastError)) {
-          coolDownModel(model);
+          coolDownModel(model, lastError?.code === "NVIDIA_TIMEOUT" ? TRANSIENT_COOLDOWN_MS : MODEL_COOLDOWN_MS);
           continue;
         }
         throw lastError;
@@ -678,7 +691,7 @@ export class NvidiaService {
     const e = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     const card = (h, p) => `<div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px"><h3 style="margin:.1em 0 .3em">${e(h)}</h3><p style="margin:0;color:#475569">${e(p)}</p></div>`;
     const gal = gallery.slice(0, 3).map((u) => `<img src="${e(u)}" alt="${e(name)}" style="width:100%;height:180px;object-fit:cover;border-radius:12px">`).join("");
-    if (isHome) return `<img src="${e(hero)}" alt="${e(name)}" style="width:100%;max-height:440px;object-fit:cover;display:block"><div class="wrap" style="text-align:center"><p style="letter-spacing:2px;text-transform:uppercase;font-size:12px;color:#64748b;margin:0">${e(type)}</p><h1 style="font-size:clamp(2rem,5vw,3.2rem);margin:.25em 0">${e(name)}</h1><p style="max-width:640px;margin:0 auto 20px;color:#475569">A trusted ${e(type.toLowerCase())} delivering quality, reliability and friendly service.${address ? ` Visit us at ${e(address)}.` : ""}</p>${phone ? `<a href="tel:${e(phone)}" style="display:inline-block;padding:13px 24px;border-radius:10px;background:#22c55e;color:#06281a;font-weight:700;text-decoration:none">Call ${e(phone)}</a>` : ""}</div><div class="wrap"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">${gal || card("Welcome", "We are glad you found us.")}</div></div>`;
+    if (isHome) return `<img src="${e(hero)}" alt="${e(name)} — professional ${e(type)}" style="width:100%;max-height:440px;object-fit:cover;display:block"><div class="wrap" style="text-align:center"><p style="letter-spacing:3px;text-transform:uppercase;font-size:12px;color:#64748b;margin:18px 0 0;font-weight:700">${e(type)}</p><h1 style="font-size:clamp(2rem,5.4vw,3.4rem);margin:.2em 0;color:#0f172a">${e(name)}</h1><p style="max-width:660px;margin:0 auto;color:#475569;font-size:1.08rem;line-height:1.6">Professional, reliable ${e(type.toLowerCase())} you can count on. Clear pricing, fast response, and work we stand behind — so getting started is easy.${address ? ` Find us at ${e(address)}.` : ""}</p><div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">${phone ? `<a href="tel:${e(phone)}" style="padding:14px 28px;border-radius:12px;background:#16a34a;color:#fff;font-weight:700;text-decoration:none;box-shadow:0 8px 20px rgba(22,163,74,.28)">Call ${e(phone)}</a>` : ""}<a href="#contact" style="padding:14px 28px;border-radius:12px;background:#0f172a;color:#fff;font-weight:700;text-decoration:none">Get a free quote</a></div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px">${["Licensed & insured", "Fast, friendly service", "Free, no-obligation quotes", "Proudly local"].map((c) => `<span style="background:#eef2f7;border:1px solid #e2e8f0;color:#334155;padding:8px 15px;border-radius:999px;font-size:.84rem;font-weight:600">${e(c)}</span>`).join("")}</div></div><div class="wrap"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:6px">${card("Quality you can trust", "Careful work and honest advice on every single job.")}${card("Clear, upfront pricing", "Know the cost before we begin — no hidden fees.")}${card("Here when you need us", "Quick response and friendly support after the job.")}</div>${gal ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:22px">${gal}</div>` : ""}</div>`;
     if (spec.id === "about") return `<div class="wrap"><h2>About ${e(name)}</h2><p>We are a dedicated ${e(type.toLowerCase())} committed to quality and honest service. Our experienced team treats every customer like a neighbour.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px">${card("Trusted", "Loved by local customers.")}${card("Experienced", "Years of hands-on expertise.")}${card("Fair pricing", "Transparent, no surprises.")}</div></div>`;
     if (spec.id === "services") return `<div class="wrap"><h2>Our Services</h2><p>Everything you need, done right the first time.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px">${card("Service One", "Professional work delivered on time.")}${card("Service Two", "Solutions tailored to your needs.")}${card("Service Three", "Great value, every single time.")}${card("Service Four", "Friendly support before and after.")}</div></div>`;
     if (spec.id === "contact") return `<div class="wrap"><h2>Contact Us</h2><p>${phone ? `Call <a href="tel:${e(phone)}"><strong>${e(phone)}</strong></a>. ` : ""}${email ? `Email <a href="mailto:${e(email)}">${e(email)}</a>. ` : ""}${address ? e(address) : ""}</p><form style="display:grid;gap:10px;max-width:520px;margin-top:12px"><input placeholder="Your name" style="padding:12px;border:1px solid #cbd5e1;border-radius:10px"><input type="email" placeholder="Your email" style="padding:12px;border:1px solid #cbd5e1;border-radius:10px"><textarea rows="4" placeholder="How can we help?" style="padding:12px;border:1px solid #cbd5e1;border-radius:10px"></textarea><button type="submit" style="padding:13px 24px;border:0;border-radius:10px;background:#22c55e;color:#06281a;font-weight:700">Send message</button></form></div>`;

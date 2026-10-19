@@ -75,7 +75,7 @@ export const env = {
     model: process.env.NVIDIA_MODEL || "openai/gpt-oss-20b",
     modelFallbacks: list(process.env.NVIDIA_MODEL_FALLBACKS, ["z-ai/glm-5.3-flash", "z-ai/glm-5.3"]),
     websiteModel: process.env.NVIDIA_WEBSITE_MODEL || "openai/gpt-oss-20b",
-    websiteFallbacks: list(process.env.NVIDIA_WEBSITE_FALLBACKS, ["z-ai/glm-5.3-flash", "moonshotai/kimi-k3"]),
+    websiteFallbacks: list(process.env.NVIDIA_WEBSITE_FALLBACKS, ["z-ai/glm-5.3-flash", "z-ai/glm-5.3"]),
     tycoonModel: process.env.NVIDIA_TYCOON_MODEL || "openai/gpt-oss-20b",
     // Interactive budget: 12s was too tight for two model attempts. 20s lets a
     // fast model answer and still leaves room for one fallback attempt.
