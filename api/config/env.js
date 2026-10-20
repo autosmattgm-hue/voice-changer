@@ -104,6 +104,16 @@ export const env = {
       agency: process.env.PAYPAL_AGENCY_PAYMENT_LINK || "https://www.paypal.com/ncp/payment/SY3RYMGDZ9A7E"
     }
   },
+  email: {
+    // Verification mail is delivered through the Resend or SendGrid HTTPS APIs
+    // (no npm packages). Without a key the flow still runs: the verification
+    // link is returned to the client instead of being mailed.
+    resendApiKey: process.env.RESEND_API_KEY || "",
+    sendgridApiKey: process.env.SENDGRID_API_KEY || "",
+    from: process.env.EMAIL_FROM || "",
+    // EMAIL_VERIFICATION=off lets signups skip the verify step (tests/dev).
+    verificationRequired: String(process.env.EMAIL_VERIFICATION || "required").toLowerCase() !== "off"
+  },
   rateLimit: {
     windowMs: number(process.env.RATE_LIMIT_WINDOW_MS, 60000),
     max: number(process.env.RATE_LIMIT_MAX, 120)

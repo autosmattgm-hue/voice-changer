@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T00:37:14.134Z",
+  "updatedAt": "2026-10-20T06:42:40.661Z",
   "collections": {
     "aiWebsites": [
       {
@@ -1395,6 +1395,38 @@
         "id": "eD8Iq6oxSKPTypWAgtXKLVfy4Pi1",
         "updatedAt": "2026-10-18T23:56:46.473Z",
         "createdAt": "2026-10-18T23:56:24.832Z"
+      },
+      {
+        "uid": "b74febef-8e92-44b1-b87b-42083b7d8f82",
+        "id": "b74febef-8e92-44b1-b87b-42083b7d8f82",
+        "name": "E2E Tester",
+        "email": "e2e-1792478549851@example.com",
+        "passwordHash": "scrypt$5c1e694d4578351e5a95f72ea0a4045b$e016b68524b8869f158bec50693532852bca8bd981d0af7d8a0c0444978a1016ac860f77204b70f4d9205299058e0264c09c43a5538dafd97dffcb0357cf96e5",
+        "role": "user",
+        "tokenVersion": 1,
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 0,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 0,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": true,
+        "verificationRequired": true,
+        "createdAt": "2026-10-20T06:42:31.850Z",
+        "updatedAt": "2026-10-20T06:42:40.661Z",
+        "verificationToken": "",
+        "verificationTokenExpiresAt": 0,
+        "verificationSentAt": "2026-10-20T06:42:34.861Z",
+        "emailVerifiedAt": "2026-10-20T06:42:40.661Z"
       }
     ],
     "leads": [

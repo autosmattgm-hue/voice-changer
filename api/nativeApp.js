@@ -158,6 +158,7 @@ const publicFiles = new Set([
   "/sitemap.xml",
   "/faq.html",
   "/forgot-password.html",
+  "/verify-email.html",
   "/favicon.ico"
 ]);
 const publicFolders = ["/css/", "/js/", "/assets/", "/components/", "/features/"];
@@ -417,6 +418,18 @@ const routes = [
     regex: /^\/api\/auth\/login$/,
     keys: [],
     handler: async ({ body }) => authService.login(validate(authSchemas.login, body))
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/verify-email$/,
+    keys: [],
+    handler: async ({ body }) => authService.verifyEmail(validate(authSchemas.verifyEmail, body).token)
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/resend-verification$/,
+    keys: [],
+    handler: async ({ body }) => authService.resendVerification(validate(authSchemas.resendVerification, body).email)
   },
   {
     method: "POST",

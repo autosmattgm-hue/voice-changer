@@ -143,7 +143,7 @@ export function isFirebaseAuthConfigured() {
 export async function verifyFirebaseIdToken(idToken) {
   if (!env.firebase.webApiKey) {
     const { AppError } = await import("../utils/errors.js");
-    throw new AppError("Google sign-in is not configured yet. Add FIREBASE_WEB_API_KEY in hosting env vars.", 503, "FIREBASE_AUTH_NOT_CONFIGURED");
+    throw new AppError("Google sign-in is unavailable right now. Please sign in with your email and password instead.", 503, "GOOGLE_SIGNIN_NOT_CONFIGURED");
   }
   let response;
   try {

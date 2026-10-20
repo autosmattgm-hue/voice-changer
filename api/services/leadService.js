@@ -98,10 +98,13 @@ function isTrialUser(user = {}) {
 function trialUsage(user = {}) {
   const trialPlan = getPlan("trial");
   const used = Math.max(0, Number(user.trialSearchesUsed || user.entitlements?.trialSearchesUsed || 0));
+  // Referral sign-ups add bonus lead-search credits on top of the trial plan.
+  const bonus = Math.max(0, Number(user.bonusSearchCredits || 0));
+  const searchLimit = trialPlan.trialSearchLimit + bonus;
   return {
     used,
-    remaining: Math.max(0, trialPlan.trialSearchLimit - used),
-    searchLimit: trialPlan.trialSearchLimit,
+    remaining: Math.max(0, searchLimit - used),
+    searchLimit,
     leadLimit: trialPlan.trialLeadLimit
   };
 }
@@ -1005,7 +1008,7 @@ export class LeadService {
     const usage = trialUsage(user);
     if (usage.remaining <= 0) {
       throw new AppError(
-        "Your free trial includes 2 lead searches with up to 5 leads each. Subscribe to unlock more lead searches.",
+        `Your free trial includes ${usage.searchLimit} lead searches with up to ${usage.leadLimit} leads each. Subscribe to unlock more lead searches.`,
         402,
         "TRIAL_LIMIT_REACHED",
         { trial: usage, upgradeUrl: "/pricing.html" }

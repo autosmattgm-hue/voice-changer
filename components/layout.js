@@ -27,9 +27,36 @@ const navItems = [
   { href: "/analytics.html", label: "Analytics", icon: "A" },
   { href: "/pricing.html", label: "Pricing", icon: "$" },
   { href: "/profile.html", label: "Profile", icon: "F" },
-  { href: "/settings.html", label: "Settings", icon: "S" },
-  { href: "/admin.html", label: "Admin", icon: "M" }
+  { href: "/settings.html", label: "Settings", icon: "S" }
+  // Admin link is injected only for admin accounts — see syncAdminNavItem().
 ];
+
+function isAdminAccount(user) {
+  return String(user?.role || "").toLowerCase() === "admin";
+}
+
+function adminLinkMarkup() {
+  const active = document.body.dataset.page || "";
+  return `
+    <a href="/admin.html" class="${active === "admin" ? "active" : ""}">
+      <span aria-hidden="true">M</span>
+      <span>Admin</span>
+    </a>
+  `;
+}
+
+// The Admin entry exists only while the signed-in account is an admin —
+// normal users never see it, and it disappears the moment role changes.
+function syncAdminNavItem(user) {
+  const nav = document.querySelector("#sidebar nav");
+  if (!nav) return;
+  const existing = nav.querySelector('a[href="/admin.html"]');
+  if (isAdminAccount(user)) {
+    if (!existing) nav.insertAdjacentHTML("beforeend", adminLinkMarkup());
+  } else if (existing) {
+    existing.remove();
+  }
+}
 
 function brandMarkup() {
   return `
@@ -122,6 +149,14 @@ function initAppShell() {
     </nav>
   `;
 
+  // Admin nav is role-gated: rendered immediately when the cached account is
+  // an admin, otherwise injected later once /api/auth/me confirms the role.
+  let cachedUser = null;
+  try { cachedUser = JSON.parse(localStorage.getItem("mat_user") || "null"); } catch {}
+  if (isAdminAccount(cachedUser)) {
+    sidebar.querySelector("nav")?.insertAdjacentHTML("beforeend", adminLinkMarkup());
+  }
+
   const workspace = shell.querySelector(".workspace");
   const topbar = document.createElement("header");
   topbar.className = "topbar";
@@ -172,6 +207,7 @@ async function initSessionBadge() {
 
   if (!hasStoredSession()) {
     target.textContent = "Login required to access the workspace.";
+    syncAdminNavItem(null);
     return;
   }
 
@@ -180,6 +216,7 @@ async function initSessionBadge() {
     const user = result.user;
     localStorage.setItem("mat_user", JSON.stringify(user));
     target.textContent = sessionText(user);
+    syncAdminNavItem(user);
   } catch {
     target.textContent = "Workspace session active.";
   }
