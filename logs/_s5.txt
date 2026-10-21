@@ -1,0 +1,61 @@
+ 820 |       if (!ref) return { tracked: false };
+ 821 |       return { tracked: true, referral: await earnService.trackSignup(user, ref) };
+ 822 |     }
+ 823 |   },
+ 824 |   {
+ 825 |     method: "GET",
+ 826 |     regex: /^\/api\/gigs$/,
+ 827 |     keys: [],
+ 828 |     handler: async ({ req }) => ({ gigs: await gigService.list(await getUser(req)) })
+ 829 |   },
+ 830 |   {
+ 831 |     method: "POST",
+ 832 |     regex: /^\/api\/gigs$/,
+ 833 |     keys: [],
+ 834 |     handler: async ({ req, body }) => gigService.create(await getUser(req), validate(gigSchemas.create, body)),
+ 835 |     status: 201
+ 836 |   },
+ 837 |   {
+ 838 |     method: "POST",
+ 839 |     regex: /^\/api\/gigs\/([^/]+)\/claim$/,
+ 840 |     keys: ["id"],
+ 841 |     handler: async ({ req, params }) => gigService.claim(await getUser(req), params.id)
+ 842 |   }
+ 843 | ];
+ 844 | 
+ 845 | async function handleApi(req, res, url) {
+ 846 |   rateLimit(req);
+ 847 |   const body = await readJson(req);
+ 848 |   for (const route of routes) {
+ 849 |     const params = matchRoute(req.method, url.pathname, route);
+ 850 |     if (!params) continue;
+ 851 |     const payload = await route.handler({ req, body, params, url });
+ 852 |     return json(res, route.status || 200, payload);
+ 853 |   }
+ 854 |   throw new AppError(`Route not found: ${req.method} ${url.pathname}`, 404, "NOT_FOUND");
+ 855 | }
+ 856 | 
+ 857 | async function serveStatic(req, res, url) {
+ 858 |   if (!["GET", "HEAD"].includes(req.method)) {
+ 859 |     throw new AppError("Method not allowed.", 405, "METHOD_NOT_ALLOWED");
+ 860 |   }
+ 861 | 
+ 862 |   const requested = url.pathname === "/" ? "/index.html" : url.pathname;
+ 863 |   const isPublic = publicFiles.has(url.pathname) || publicFiles.has(requested) || publicFolders.some((folder) => requested.startsWith(folder));
+ 864 |   if (!isPublic || requested.includes("..") || requested.startsWith("/.")) {
+ 865 |     throw new AppError("File not found.", 404, "STATIC_NOT_FOUND");
+ 866 |   }
+ 867 | 
+ 868 |   const safePath = path.normalize(decodeURIComponent(requested)).replace(/^(\.\.[/\\])+/, "");
+ 869 |   const absolute = path.resolve(projectRoot, `.${safePath}`);
+ 870 |   if (!absolute.startsWith(projectRoot)) throw new AppError("File not allowed.", 403, "STATIC_FORBIDDEN");
+ 871 | 
+ 872 |   let filePath = absolute;
+ 873 |   try {
+ 874 |     const stats = await fs.stat(filePath);
+ 875 |     if (stats.isDirectory()) filePath = path.join(filePath, "index.html");
+ 876 |   } catch {
+ 877 |     if (!path.extname(filePath)) filePath = `${filePath}.html`;
+ 878 |   }
+ 879 | 
+ 880 |   try {

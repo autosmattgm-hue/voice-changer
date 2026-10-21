@@ -1,0 +1,91 @@
+ 600 |     }
+ 601 |   },
+ 602 |   {
+ 603 |     method: "POST",
+ 604 |     regex: /^\/api\/ai\/tycoon$/,
+ 605 |     keys: [],
+ 606 |     handler: async ({ req, body }) => {
+ 607 |       const user = await getUser(req);
+ 608 |       requireProAi(user);
+ 609 |       const payload = validate(aiSchemas.tycoon, body);
+ 610 |       let lead = payload.lead && Object.keys(payload.lead).length ? payload.lead : null;
+ 611 |       if (!lead && payload.leadId) lead = await leadService.getById(payload.leadId);
+ 612 |       return nvidiaService.tycoonChat(payload.prompt, { lead: lead || {}, user: user.email || "" });
+ 613 |     }
+ 614 |   },
+ 615 |   {
+ 616 |     method: "POST",
+ 617 |     regex: /^\/api\/ai\/websites$/,
+ 618 |     keys: [],
+ 619 |     handler: async ({ req, body }) => {
+ 620 |       const user = await getUser(req);
+ 621 |       requireProAi(user);
+ 622 |       const payload = validate(aiSchemas.websiteBuild, body);
+ 623 |       let lead = payload.lead && Object.keys(payload.lead).length ? payload.lead : null;
+ 624 |       if (!lead && payload.leadId) lead = await leadService.getById(payload.leadId);
+ 625 |       if (!lead) lead = { id: payload.leadId || "lead", name: payload.businessName || "Business" };
+ 626 |       const result = await websiteService.build({ lead, options: { businessName: payload.businessName, style: payload.style, palette: payload.palette, pages: payload.pages || 1, images: payload.images || {}, design: payload.design, tone: payload.tone, services: payload.services, cta: payload.cta, about: payload.about, language: payload.language, followBrief: payload.followBrief }, user });
+ 627 |       return { websiteId: result.website.id, shareToken: result.website.shareToken, shareUrl: `/s/${result.website.shareToken}`, studioUrl: `/website-studio.html?id=${encodeURIComponent(result.website.id)}`, website: result.website };
+ 628 |     }
+ 629 |   },
+ 630 |   {
+ 631 |     method: "PATCH",
+ 632 |     regex: /^\/api\/ai\/websites\/([^/]+)$/,
+ 633 |     keys: ["id"],
+ 634 |     handler: async ({ req, body, params }) => {
+ 635 |       const user = await getUser(req);
+ 636 |       requireProAi(user);
+ 637 |       const payload = validate(aiSchemas.websiteRefine, { ...body, websiteId: params.id });
+ 638 |       const result = await websiteService.refine({ id: params.id, instruction: payload.instruction, user });
+ 639 |       return { websiteId: result.website.id, shareToken: result.website.shareToken, shareUrl: `/s/${result.website.shareToken}`, website: result.website };
+ 640 |     }
+ 641 |   },
+ 642 |   {
+ 643 |     method: "POST",
+ 644 |     regex: /^\/api\/ai\/websites\/([^/]+)\/html$/,
+ 645 |     keys: ["id"],
+ 646 |     handler: async ({ req, body, params }) => {
+ 647 |       const user = await getUser(req);
+ 648 |       requireProAi(user);
+ 649 |       const payload = validate(aiSchemas.websiteHtml, body);
+ 650 |       return websiteService.saveHtml(params.id, payload.html, user);
+ 651 |     }
+ 652 |   },
+ 653 |   {
+ 654 |     method: "GET",
+ 655 |     regex: /^\/api\/ai\/websites$/,
+ 656 |     keys: [],
+ 657 |     handler: async ({ req }) => {
+ 658 |       const user = await getUser(req);
+ 659 |       requireProAi(user);
+ 660 |       const websites = await websiteService.listForUser(user);
+ 661 |       return { websites };
+ 662 |     }
+ 663 |   },
+ 664 |   {
+ 665 |     method: "GET",
+ 666 |     regex: /^\/api\/ai\/websites\/([^/]+)$/,
+ 667 |     keys: ["id"],
+ 668 |     handler: async ({ req, params }) => {
+ 669 |       const user = await getUser(req);
+ 670 |       const website = await websiteService.getById(params.id);
+ 671 |       if (!website) throw new AppError("Website not found.", 404, "WEBSITE_NOT_FOUND");
+ 672 |       if (String(website.ownerId || "") !== String(user?.uid || "") && String(user?.role || "").toLowerCase() !== "admin") {
+ 673 |         throw new AppError("You can only open your own websites.", 403, "FORBIDDEN");
+ 674 |       }
+ 675 |       return { website, shareUrl: `/s/${website.shareToken}`, studioUrl: `/website-studio.html?id=${encodeURIComponent(website.id)}` };
+ 676 |     }
+ 677 |   },
+ 678 |   {
+ 679 |     method: "GET",
+ 680 |     regex: /^\/api\/s\/([^/]+)$/,
+ 681 |     keys: ["token"],
+ 682 |     handler: async ({ params }) => {
+ 683 |       const website = await websiteService.getByToken(params.token);
+ 684 |       if (!website) throw new AppError("Shared website not found.", 404, "WEBSITE_NOT_FOUND");
+ 685 |       return { website, html: website.html };
+ 686 |     }
+ 687 |   },
+ 688 |   {
+ 689 |     method: "GET",
+ 690 |     regex: /^\/api\/crm\/leads$/,

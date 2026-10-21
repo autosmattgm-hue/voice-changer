@@ -1,0 +1,69 @@
+ 460 |     const autoHero = "https://picsum.photos/seed/" + encodeURIComponent(seedWord) + "/1600/900";
+ 461 |     const autoGallery = [1, 2, 3].map((n) => "https://picsum.photos/seed/" + encodeURIComponent(seedWord + "-" + n) + "/800/600");
+ 462 |     const hero = heroImg || autoHero;
+ 463 |     const gallery = galleryImgs.length ? galleryImgs : autoGallery;
+ 464 |     const accentMap = { emerald: "#22c55e", blue: "#2563eb", gold: "#d4af37", rose: "#e11d48", teal: "#14b8a6", purple: "#7c3aed", orange: "#f97316" };
+ 465 |     const accent = accentMap[options.palette] || "#22c55e";
+ 466 |     const pageCount = Math.min(4, Math.max(1, parseInt(options.pages, 10) || 1));
+ 467 |     const allSpecs = [
+ 468 |       { id: "home", title: "Home", focus: "hero band with headline + dual CTA, trust-signal strip, 3-4 card highlights grid, gallery image row, sample testimonial band, FAQ accordion, closing CTA band" },
+ 469 |       { id: "about", title: "About", focus: "brand story, why-choose-us cards, values list, process steps (contact > quote > work > support), commitment note" },
+ 470 |       { id: "services", title: "Services", focus: "4-6 service cards with benefit copy, simple packages/pricing row, FAQ, closing CTA band" },
+ 471 |       { id: "contact", title: "Contact", focus: "click-to-call + message CTA buttons, contact form (name, email, message), address, hours, map placeholder, FAQ" }
+ 472 |     ];
+ 473 |     const pageSpecs = allSpecs.slice(0, pageCount);
+ 474 |     const business = String(lead.name || options.businessName || "Your Business");
+ 475 |     const archList = POLLINATIONS.MODELS.DESIGN_ARCHETYPES;
+ 476 |     const archWanted = String(options.design || "").trim().toLowerCase();
+ 477 |     const archFound = archList.find((a) => String(a.id || "").toLowerCase() === archWanted || String(a.label || "").toLowerCase() === archWanted);
+ 478 |     const briefObedient = options.followBrief !== false;
+ 479 |     const archPick = briefObedient ? (archFound || archList[Math.floor(Math.random() * archList.length)]) : archList[Math.floor(Math.random() * archList.length)];
+ 480 |     const designDirection = this.pickDesignSystem(options.style, options.palette) + " Design archetype this build: " + archPick.label + " (" + archPick.vibe + "). " + (briefObedient ? "STRICT BRIEF MODE: obey every design/style/page/EXTRA instruction exactly — the user ticked Follow, so fidelity to their brief outranks novelty." : "FREE PRO MODE: the user unticked Follow — ignore rigid brief constraints and freely design the single best website for this specific business type and audience: choose the most persuasive sections, the strongest offer framing, and the highest-converting layout you know. Commit fully to that archetype's vibe — a returning customer must see a visibly different design, not the same template with new words.");
+ 481 |     const varietySeed = Math.floor(Math.random() * 9000) + 1000;
+ 482 |     const layoutVariants = ["split hero (text left, image right)", "full-bleed image hero with overlay headline", "centered type hero with image band below"];
+ 483 |     const layoutPick = layoutVariants[varietySeed % layoutVariants.length];
+ 484 |     const briefExtra = [];
+ 485 |     const bx = (v, n) => String(v || "").trim().slice(0, n);
+ 486 |     if (bx(options.design, 40)) briefExtra.push("DESIGN=" + bx(options.design, 40));
+ 487 |     if (bx(options.tone, 40)) briefExtra.push("TONE=" + bx(options.tone, 40));
+ 488 |     if (bx(options.services, 900)) briefExtra.push("SERVICES=" + bx(options.services, 900));
+ 489 |     if (bx(options.cta, 140)) briefExtra.push("CTA=" + bx(options.cta, 140));
+ 490 |     if (bx(options.about, 900)) briefExtra.push("ABOUT=" + bx(options.about, 900));
+ 491 |     if (bx(options.language, 40)) briefExtra.push("LANGUAGE=" + bx(options.language, 40));
+ 492 |     const brief = JSON.stringify({ business, type: lead.businessType || lead.category, address: lead.address, phone: lead.phone, email: lead.email, style: options.style || "modern", colors: options.palette || "emerald", images: { hero, gallery } }).slice(0, 1500) + (briefExtra.length ? " EXTRA:" + briefExtra.join("|") : "");
+ 493 |     const request = (maxTokens, note) => {
+ 494 |       const system = "You are MAT LEADS Studio, an award-winning web design studio whose output rivals Claude's best sites. Output ONLY the inner content for a " + pageCount + "-page business website. DESIGN SYSTEM (obey exactly): " + designDirection + " HERO LAYOUT THIS TIME: " + layoutPick + " (variation #" + varietySeed + " - this build must feel unmistakably different from any previous one). PRO STANDARD: generous whitespace, oversized display headlines (clamp 2.4rem-4rem), eyebrow kickers with letter-spacing, gradient or image hero bands with overlay, glass or elevated cards (radius 16-20px, soft shadows, hover lift), trust chips, stats with big numerals, numbered process steps, alternating image/text rows, pricing teasers, testimonial band on Home ONLY labelled sample with no invented names, FAQ accordion with <details>/<summary>, sticky mobile call bar, closing CTA band with gradient. RULES: (1) Separate each page with the exact marker <!--PAGE--> on its own line, and emit exactly " + pageCount + " page(s) in this order: " + pageSpecs.map((p) => p.title).join(", ") + ". (2) Do NOT output <!doctype>, <html>, <head>, <body> or <nav> — only the page content. (3) You MUST open with ONE single-line <style> block defining your OWN fresh classes for hero/cards/buttons/stats/faq/cta (never reuse generic .hero-band/.card, never invent clashing globals); keep it under ~60 declarations. (4) Use the exact image URLs from the brief in real <img> tags with loading=lazy and descriptive alt text; never leave src empty. Never emit placeholder grey boxes — every image slot gets a real URL from the brief or an https picsum seed image. (5) Every page opens with a HERO: eyebrow kicker, one bold benefit-led headline worded DIFFERENTLY from typical templates, one supporting sentence, TWO buttons. Then vary the middle: pick a DIFFERENT order and DIFFERENT emphasis each build (stats row, process steps, image+text split, pricing teasers, testimonial band on Home ONLY labelled sample with no fake names, FAQ accordion with <details>/<summary>), and a closing CTA band that does not copy previous closings. (6) Copy must feel customer-taste: follow the brief TONE when given (default warm, confident, benefit-led), short sentences, and NEVER repeat the same headline twice. Build service cards from the brief SERVICES list when given — one card per service with a 1-line benefit and a mini-CTA button. Use the brief CTA text on hero and closing buttons when given. Weave the brief ABOUT story into the Home trust area and the About page. Write the whole site in the brief LANGUAGE when given. NEVER invent awards, reviews, licenses, addresses or numbers not in the brief - use neutral placeholders or omit. (7) FULL LENGTH: use the generous token budget — every page complete with all sections finished, each page at least ~1200 characters of body content. NEVER stop mid-section, NEVER truncate. (8) No markdown, no explanations, no code fences.";
+ 495 |       const user = "Build the " + pageCount + " page section(s) for: " + brief + ". Page focuses: " + pageSpecs.map((p) => p.title + " = " + p.focus).join("; ") + ". Hero uses images.hero; put images.gallery URLs in an <img> row on the Home page. Variation #" + varietySeed + " with " + layoutPick + ". Separate every page with <!--PAGE-->. " + (note || "");
+ 496 |       return this.text([{ role: "system", content: system }, { role: "user", content: user }], { temperature: 0.85, maxTokens, timeoutMs: Math.max(60000, 120000), model: process.env.POLLINATIONS_WEBSITE_MODEL || POLLINATIONS.MODELS.WEBSITE_DEFAULT, fallbackModels: POLLINATIONS.MODELS.WEBSITE_FALLBACKS });
+ 497 |     };
+ 498 |     let result = await request(POLLINATIONS.MODELS.WEBSITE_TOKENS_FIRST);
+ 499 |     let content = String(result.content || "");
+ 500 |     if (content.replace(/<!--PAGE-->/gi, "").trim().length < POLLINATIONS.MODELS.WEBSITE_MIN_TOTAL_CHARS || visibleWordCount(content) < POLLINATIONS.MODELS.WEBSITE_MIN_VISIBLE_WORDS) {
+ 501 |       try {
+ 502 |         const retry = await request(POLLINATIONS.MODELS.WEBSITE_TOKENS_RETRY, "Previous attempt was cut short — write FULLY complete pages this time with every section finished, " + layoutPick + " hero, fresh class names, varied section order. Separate each page with <!--PAGE--> and end cleanly.");
+ 503 |         if (String(retry.content || "").length > content.length) {
+ 504 |           result = retry;
+ 505 |           content = String(retry.content || "");
+ 506 |         }
+ 507 |       } catch {
+ 508 |         /* keep first attempt */
+ 509 |       }
+ 510 |     }
+ 511 |     const fragments = content.split(/<!--PAGE-->/i).map((s) => s.trim()).filter(Boolean);
+ 512 |     const pages = pageSpecs.map((spec, i) => ({ ...spec, body: hasRealContent(fragments[i]) ? fragments[i] : this.fallbackPageFragment(spec, lead, hero, gallery, i === 0, archPick.id) }));
+ 513 |     return { ...result, html: this.assembleMultiPage(pages, business, accent, archPick.id), pageCount: pages.length };
+ 514 |   }
+ 515 | 
+ 516 |   refineWebsite(currentHtml, instruction, meta = {}) {
+ 517 |     const instructions = [
+ 518 |       { role: "system", content: "You are an elite website editor AI. Return ONLY the complete updated HTML file with inline CSS/JS." },
+ 519 |       { role: "user", content: "Current site for " + (meta.businessName || meta.leadName || "business") + ":\n" + String(currentHtml || "").slice(0, 6000) + "\n\nRequested change: " + String(instruction || "").slice(0, 800) + "\n\nReturn only the full updated HTML." }
+ 520 |     ];
+ 521 |     return this.text(instructions, { temperature: 0.3, maxTokens: 1100, timeoutMs: 18000 })
+ 522 |       .then((r) => ({ ...r, html: r.content }))
+ 523 |       .catch((error) => {
+ 524 |         throw publicPollinationsError(error);
+ 525 |       });
+ 526 |   }
+ 527 | }
+ 528 | 

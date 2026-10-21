@@ -1,0 +1,35 @@
+ai-body.txt                                     pollinations=2
+api\config\env.js                               NVIDIA/nim=15  pollinations=6  genurl=1  key-leak=2
+api\controllers\aiController.js                 NVIDIA/nim=6
+api\controllers\healthController.js             NVIDIA/nim=4
+api\nativeApp.js                                NVIDIA/nim=28
+api\services\leadService.js                     NVIDIA/nim=4
+api\services\nvidiaService.js                   NVIDIA/nim=96
+api\services\pollinationsService.js             pollinations=89  genurl=1  key-leak=4
+api\services\websiteService.js                  NVIDIA/nim=15  pollinations=21  key-leak=4
+components\layout.js                            NVIDIA/nim=1
+config\app.config.json                          NVIDIA/nim=1
+data\local-store.json                           NVIDIA/nim=47  pollinations=4  key-leak=1
+fix-pollinations.mjs                            pollinations=22  key-leak=4
+fix-pollinations2.mjs                           pollinations=22  key-leak=4
+index.html                                      NVIDIA/nim=1
+js\admin.js                                     NVIDIA/nim=2
+js\business-ai.js                               NVIDIA/nim=1
+js\leads.js                                     NVIDIA/nim=1
+js\settings.js                                  NVIDIA/nim=6
+llm-grant-hits.txt                              pollinations=5
+llm-sec-534.txt                                 pollinations=7  genurl=1
+llm-sec-account.txt                             pollinations=4
+llm.txt                                         NVIDIA/nim=6  pollinations=338  genurl=60  key-leak=17
+migrate-ai-1.mjs                                pollinations=6  key-leak=2
+package.json                                    NVIDIA/nim=1
+README.md                                       NVIDIA/nim=15
+run-fix.ps1                                     pollinations=2
+settings.html                                   NVIDIA/nim=2
+test-auth.ps1                                   pollinations=2  genurl=2  key-leak=1
+test-matrix.ps1                                 pollinations=1  genurl=1  key-leak=1
+test-models.ps1                                 pollinations=1  genurl=1  key-leak=1
+test-quick.ps1                                  pollinations=1  genurl=1  key-leak=1
+utils\ai-direct.js                              NVIDIA/nim=4
+utils\scan-ai.mjs                               NVIDIA/nim=4  pollinations=4  key-leak=1
+www-health.txt                                  NVIDIA/nim=1

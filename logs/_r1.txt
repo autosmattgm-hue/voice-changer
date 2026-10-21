@@ -1,0 +1,197 @@
+﻿--- billing-success.js ---
+import { apiFetch, byId, hasUsableToken, redirectToLogin, setCurrentUser, setToken } from "./api.js";
+
+const PENDING_PAYPAL_CHECKOUT_KEY = "mat_pending_paypal_checkout";
+
+// What each plan unlocks â€” shown on the subscribed-successfully screen.
+const PLAN_PERKS = {
+  starter: [
+    "Google Maps lead search pipeline",
+    "Saved leads with IDs + CRM board",
+    "Proposals, outreach and reports"
+  ],
+  professional: [
+    "Everything in Starter",
+    "Website Studio â€” AI sites + builder",
+    "Business AI Tycoon closing assistant",
+    "AI outreach, reports and automations"
+  ],
+  growth_plus: [
+    "Everything in Professional",
+    "Higher monthly lead limits",
+    "Priority AI speed for busy hours",
+    "Advanced exports and team hand-off"
+  ],
+  agency: [
+    "Everything in Growth Plus",
+    "Agency-scale lead limits",
+    "Priority support",
+    "All pro tools unlocked, no caps"
+  ]
+};
+
+function readPendingCheckout() {
+  try {
+    return JSON.parse(localStorage.getItem(PENDING_PAYPAL_CHECKOUT_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function setText(selector, message) {
+  const node = document.querySelector(selector);
+  if (node) node.textContent = message;
+}
+
+function setStatus(message, state = "info") {
+  const target = byId("data-billing-status") || document.querySelector("[data-billing-status]");
+  if (!target) return;
+  target.textContent = message;
+  target.classList.toggle("error", state === "error");
+  target.classList.toggle("success", state === "success");
+}
+
+function setTitle(title, icon) {
+  const titleNode = document.querySelector("[data-billing-title]");
+  const iconNode = document.querySelector("[data-billing-icon]");
+  if (titleNode) titleNode.textContent = title;
+  if (iconNode) iconNode.textContent = icon;
+}
+
+function showPerks(planKey) {
+  const list = byId("planPerks");
+  if (!list) return;
+  const perks = PLAN_PERKS[planKey];
+  if (!perks || !perks.length) return;
+  list.innerHTML = perks.map((perk) => `<li>${perk}</li>`).join("");
+  list.hidden = false;
+  list.style.display = "block";
+}
+
+function paymentReturnPayload() {
+  const params = new URLSearchParams(window.location.search);
+  const pending = readPendingCheckout();
+
+  return {
+    plan: pending?.plan || params.get("plan") || "",
+    sessionId: pending?.sessionId || params.get("session") || "",
+    paypalToken: params.get("token") || "",
+    payerId: params.get("PayerID") || params.get("payerId") || "",
+    transactionId: params.get("tx") || params.get("transaction_id") || params.get("paymentId") || ""
+  };
+}
+
+function showCancelled() {
+  setTitle("Payment cancelled", "â†©ï¸");
+  setStatus("No charge was made. Your current plan is unchanged â€” start checkout again whenever you're ready.", "info");
+  const pill = document.querySelector("[data-billing-plan-pill]");
+  if (pill) pill.textContent = "Cancelled";
+  const dash = document.querySelector("[data-go-dashboard]");
+  if (dash) dash.hidden = true;
+  const pricing = document.querySelector("[data-back-pricing]");
+  if (pricing) pricing.textContent = "Back to Pricing";
+}
+
+async function confirmPaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("checkout") === "cancelled") {
+    showCancelled();
+    return;
+  }
+
+  if (!hasUsableToken()) {
+    redirectToLogin();
+    return;
+  }
+
+  const payload = paymentReturnPayload();
+  if (!payload.plan || !payload.sessionId) {
+    setTitle("Payment not found", "âš ï¸");
+    setStatus("We could not find the checkout session for this payment. Please return to pricing and start checkout again.", "error");
+    return;
+  }
+
+  try {
+    const result = await apiFetch("/api/billing/paypal/confirm", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    if (result.accessToken) setToken(result.accessToken);
+    if (result.user) setCurrentUser(result.user);
+    localStorage.removeItem(PENDING_PAYPAL_CHECKOUT_KEY);
+
+    const planKey = result.plan?.key || result.user?.subscription || payload.plan;
+    const planName = result.plan?.name || result.user?.planName || "Your plan";
+
+    // ðŸŽ‰ Subscribed successfully â€” show the plan, its unlocks, then continue.
+    const pill = document.querySelector("[data-billing-plan-pill]");
+    if (pill) pill.textContent = planName;
+    setTitle("Subscribed successfully", "âœ…");
+    setStatus(`${planName} is active. Every feature in your plan is unlocked â€” taking you to your dashboardâ€¦`, "success");
+    showPerks(planKey);
+
+    setTimeout(() => {
+      window.location.href = `/dashboard.html?subscribed=${encodeURIComponent(planKey)}`;
+    }, 2600);
+  } catch (error) {
+    setTitle("Payment confirmation needed", "âš ï¸");
+    setStatus(error.message || "Payment confirmation failed. Please contact support with your PayPal receipt.", "error");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", confirmPaymentReturn);
+
+--- earn.js ---
+import { apiFetch, byId, requireAuth } from "./api.js";
+
+let referralLink = "";
+function money(c) { return `$${(Number(c || 0) / 100).toFixed(2)}`; }
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!requireAuth()) return;
+  try {
+    const [ref, offers, invoices, payouts] = await Promise.all([
+      apiFetch("/api/earn/referral"),
+      apiFetch("/api/earn/offers"),
+      apiFetch("/api/earn/invoices"),
+      apiFetch("/api/earn/payouts")
+    ]);
+    referralLink = new URL(ref.linkPath, window.location.origin).href;
+    const creditAwards = ref.rows.reduce((sum, row) => sum + Number(row.searchCreditsAwarded || 0), 0);
+    byId("refBox").innerHTML = `<strong>${ref.code}</strong><br>${referralLink}<br><span>You get <strong>2 lead-search credits</strong> for every new user who signs up and verifies through your link.</span><br>Credits earned: <strong>${creditAwards}</strong> â€¢ Pending ${money(ref.pendingCents)} â€¢ Earned ${money(ref.paidCents)} â€¢ ${ref.rows.length} referral(s)`;
+    byId("earnMetrics").innerHTML = [
+      ["Referral pending", money(ref.pendingCents)],
+      ["Referral earned", money(ref.paidCents)],
+      ["Search credits earned", String(creditAwards)],
+      ["Open invoices", String(invoices.invoices.filter((i) => i.status !== "paid").length)],
+      ["Paid invoices", money(invoices.invoices.filter((i) => i.status === "paid").reduce((s, i) => s + Number(i.amountCents || 0), 0))]
+    ].map(([k, v]) => `<article class="metric"><span>${k}</span><strong>${v}</strong></article>`).join("");
+    byId("invOffer").innerHTML = offers.map((o) => `<option value="${o.key}">${o.name} â€” $${o.priceUsd}</option>`).join("");
+    byId("invOffer").addEventListener("change", (e) => {
+      const o = offers.find((x) => x.key === e.target.value);
+      if (o) byId("invAmount").value = o.priceUsd;
+    });
+    if (offers[0]) byId("invAmount").value = offers[0].priceUsd;
+    byId("invoiceList").innerHTML = invoices.invoices.map((i) => `<div class="audit-item"><span>${i.offerName} â€¢ ${i.clientName || i.leadName} â€¢ ${money(i.amountCents)} â€¢ ${i.status}</span><strong><a href="${i.payLink}">Pay link</a></strong></div>`).join("") || `<div class="empty-state">No invoices yet.</div>`;
+    byId("payoutMsg").textContent = payouts.payouts.length ? `${payouts.payouts.length} payout request(s). Latest: ${payouts.payouts[0].status}` : "Payouts are reviewed by admin.";
+  } catch (e) {
+    if (byId("refBox")) byId("refBox").textContent = e.message;
+  }
+  byId("copyRef")?.addEventListener("click", async () => { if (referralLink) await navigator.clipboard.writeText(referralLink); });
+  byId("shareRefWa")?.addEventListener("click", () => { if (referralLink) window.open(`https://wa.me/?text=${encodeURIComponent("Join me here: " + referralLink)}`, "_blank"); });
+  byId("invoiceForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+      const r = await apiFetch("/api/earn/invoices", { method: "POST", body: JSON.stringify({ offerKey: byId("invOffer").value, amountUsd: Number(byId("invAmount").value), leadName: byId("invLead").value, clientName: byId("invClient").value, clientEmail: byId("invEmail").value, notes: byId("invNotes").value }) });
+      byId("invMsg").innerHTML = `Invoice created: <a href="${r.invoice.payLink}"><strong>${r.invoice.payLink}</strong></a>`;
+    } catch (err) { byId("invMsg").textContent = err.message; }
+  });
+  byId("payoutForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch("/api/earn/payouts", { method: "POST", body: JSON.stringify({ amountUsd: Number(byId("payoutAmount").value), destination: byId("payoutDest").value }) });
+      byId("payoutMsg").textContent = "Payout requested.";
+    } catch (err) { byId("payoutMsg").textContent = err.message; }
+  });
+});
+

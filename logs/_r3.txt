@@ -1,0 +1,144 @@
+﻿=== FIREBASE word in errors ===
+
+js\admin.js:38:      '<div class="audit-item"><span>Firebase Firestore</span>' + statusPill(integrations.firebase) + '</div>',
+js\api.js:7:  "/api/auth/firebase",
+js\app.js:3:function loadFirebaseAuth() {
+js\app.js:4:  return import("./firebase-auth.js");
+js\app.js:25:        const { signInWithGoogle } = await loadFirebaseAuth();
+js\app.js:116:      const { sendPasswordReset } = await loadFirebaseAuth();
+js\app.js:126:  loadFirebaseAuth()
+js\firebase-auth.js:5:  authDomain: "mat-lead-c0ca4.firebaseapp.com",
+js\firebase-auth.js:6:  databaseURL: "https://mat-lead-c0ca4-default-rtdb.firebaseio.com",
+js\firebase-auth.js:8:  storageBucket: "mat-lead-c0ca4.firebasestorage.app",
+js\firebase-auth.js:13:let firebaseConfig = { ...FALLBACK_CONFIG };
+js\firebase-auth.js:18:    if (data?.firebase?.configured) {
+js\firebase-auth.js:19:      firebaseConfig = {
+js\firebase-auth.js:20:        apiKey: data.firebase.apiKey,
+js\firebase-auth.js:21:        authDomain: data.firebase.authDomain,
+js\firebase-auth.js:22:        databaseURL: data.firebase.databaseURL,
+js\firebase-auth.js:23:        projectId: data.firebase.projectId,
+js\firebase-auth.js:24:        storageBucket: data.firebase.storageBucket,
+js\firebase-auth.js:25:        messagingSenderId: data.firebase.messagingSenderId,
+js\firebase-auth.js:26:        appId: data.firebase.appId
+js\firebase-auth.js:32:const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+js\firebase-auth.js:41:} = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
+js\firebase-auth.js:43:const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+js\firebase-auth.js:47:export async function sessionWithBackend(firebaseUser, extra = {}) {
+js\firebase-auth.js:48:  const idToken = await firebaseUser.getIdToken(true);
+js\firebase-auth.js:49:  const result = await apiFetch("/api/auth/firebase", {
+js\firebase-auth.js:156:  if (!raw || /firebase|auth\/[a-z-]+/i.test(raw)) return "Something went wrong. Please try again.";
+api\config\env.js:55:  firebase: {
+api\config\env.js:56:    // Client SDK values (safe to expose to the browser - restricted in Firebase Console).
+api\config\env.js:57:    apiKey: process.env.FIREBASE_API_KEY || "",
+api\config\env.js:58:    authDomain: process.env.FIREBASE_AUTH_DOMAIN || "",
+api\config\env.js:59:    projectId: process.env.FIREBASE_PROJECT_ID || "",
+api\config\env.js:60:    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
+api\config\env.js:61:    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "",
+api\config\env.js:62:    appId: process.env.FIREBASE_APP_ID || "",
+api\config\env.js:63:    databaseUrl: process.env.FIREBASE_DATABASE_URL || "",
+api\config\env.js:65:    clientEmail: process.env.FIREBASE_CLIENT_EMAIL || "",
+api\config\env.js:66:    privateKey: (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
+api\config\env.js:67:    webApiKey: process.env.FIREBASE_WEB_API_KEY || process.env.FIREBASE_API_KEY || ""
+api\config\env.js:137:    ["FIREBASE_PROJECT_ID", env.firebase.projectId],
+api\config\env.js:138:    ["FIREBASE_CLIENT_EMAIL", env.firebase.clientEmail],
+api\config\env.js:139:    ["FIREBASE_PRIVATE_KEY", env.firebase.privateKey]
+api\config\firebase.js:5:// A malformed FIREBASE_PRIVATE_KEY paste (missing \n escaping, stray quotes)
+api\config\firebase.js:11:    env.firebase.projectId &&
+api\config\firebase.js:12:    env.firebase.clientEmail &&
+api\config\firebase.js:13:    normalizedPrivateKey(env.firebase.privateKey)
+api\config\firebase.js:29:  const signature = signer.sign(privateKey || env.firebase.privateKey, "base64url");
+api\config\firebase.js:37:  const privateKey = normalizedPrivateKey(env.firebase.privateKey);
+api\config\firebase.js:38:  if (!privateKey || !env.firebase.clientEmail || !env.firebase.projectId) {
+api\config\firebase.js:42:    iss: env.firebase.clientEmail,
+api\config\firebase.js:75:  return `https://firestore.googleapis.com/v1/projects/${env.firebase.projectId}/databases/(default)/documents/${escapedCollection}${escapedId}`;
+api\config\firebase.js:124:export function isFirebaseConfigured() {
+api\config\firebase.js:139:export function isFirebaseAuthConfigured() {
+api\config\firebase.js:140:  return Boolean(env.firebase.webApiKey);
+api\config\firebase.js:143:export async function verifyFirebaseIdToken(idToken) {
+api\config\firebase.js:144:  if (!env.firebase.webApiKey) {
+api\config\firebase.js:150:    response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${env.firebase.webApiKey}`, {
+api\config\firebase.js:159:    throw new AppError("That Google sign-in token is invalid or expired. Please try again.", 401, "INVALID_FIREBASE_TOKEN");
+api\config\firebase.js:164:    throw new AppError("That Google sign-in token is invalid or expired. Please try again.", 401, "INVALID_FIREBASE_TOKEN");
+api\controllers\healthController.js:2:import { isFirebaseConfigured } from "../config/firebase.js";
+api\controllers\healthController.js:6:    firebase: isFirebaseConfigured(),
+api\controllers\healthController.js:16:  if (!integrations.firebase) missingRequiredForLiveOperation.push("Firebase Firestore");
+api\repositories\firestoreRepository.js:4:import { firestoreClient } from "../config/firebase.js";
+api\services\authService.js:114:    firebaseRefreshToken,
+api\services\authService.js:350:    // sign-in keeps working even if Firebase is unreachable or misconfigured.
+api\services\authService.js:381:    if (env.firebase.webApiKey) {
+api\services\authService.js:384:        response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${env.firebase.webApiKey}`, {
+api\services\authService.js:400:      // never turn an already-verified Firebase login into a 500.
+api\services\authService.js:423:        firebaseRefreshToken: payload.refreshToken,
+api\services\authService.js:470:  async loginWithFirebase(idToken, options = {}) {
+api\services\authService.js:471:    const { verifyFirebaseIdToken } = await import("../config/firebase.js");
+api\services\authService.js:472:    const identity = options.preVerifiedIdentity || await verifyFirebaseIdToken(idToken);
+api\services\authService.js:477:      throw new AppError("This Google sign-in has no email or phone number attached.", 422, "FIREBASE_IDENTITY_INCOMPLETE");
+api\services\authService.js:496:        stored = await this.users.findById(`firebase:${identity.uid}`);
+api\services\authService.js:508:          id: `firebase:${identity.uid}`,
+api\services\authService.js:515:          firebaseUid: identity.uid,
+api\services\authService.js:526:        updates.firebaseUid = stored.firebaseUid || identity.uid;
+api\services\authService.js:528:      // The caller proved control of this Firebase identity (verified ID token),
+api\services\authService.js:544:      uid: stored.id || `firebase:${identity.uid}`,
+api\utils\schemas.js:129:  firebaseSession: schema((input) => {
+
+
+
+=== trackSignup calls ===
+
+api\services\authService.js:193:        emailVerified: !verificationRequired,
+api\services\authService.js:195:        ...(ref ? { pendingReferralCode: ref } : {})
+api\services\authService.js:214:        emailVerified: true
+api\services\authService.js:216:      if (ref) await this.awardReferralSignup(sessionUser, ref);
+api\services\authService.js:227:      user: publicUser({ ...baseUser, emailVerified: false }),
+api\services\authService.js:242:        emailVerified: false,
+api\services\authService.js:257:  assertEmailVerified(user = {}) {
+api\services\authService.js:258:    if (!user?.verificationRequired || user?.emailVerified) return;
+api\services\authService.js:267:  async awardReferralSignup(user, refCode) {
+api\services\authService.js:268:    if (!refCode) return;
+api\services\authService.js:271:      await new EarnService().trackSignup(user, String(refCode).slice(0, 40));
+api\services\authService.js:273:      console.warn(`[auth] referral award skipped: ${error?.message || error}`);
+api\services\authService.js:296:        emailVerified: true,
+api\services\authService.js:297:        emailVerifiedAt: new Date().toISOString(),
+api\services\authService.js:304:    const refCode = String(match.pendingReferralCode || "").trim();
+api\services\authService.js:305:    if (refCode) {
+api\services\authService.js:306:      await this.awardReferralSignup({ uid, email: match.email || "", name: match.name || "" }, refCode);
+api\services\authService.js:307:      try { await this.users.upsert(uid, { pendingReferralCode: "" }); } catch {}
+api\services\authService.js:326:    if (!found || found.emailVerified) return neutral;
+api\services\authService.js:362:      this.assertEmailVerified(localUser);
+api\services\authService.js:408:      this.assertEmailVerified(storedUser);
+api\services\authService.js:449:    this.assertEmailVerified(user);
+api\services\authService.js:517:          emailVerified: identity.emailVerified
+api\services\authService.js:524:      if (identity.emailVerified && !stored.emailVerified && email) {
+api\services\authService.js:525:        updates.emailVerified = true;
+api\services\authService.js:553:      emailVerified: Boolean(stored.emailVerified ?? identity.emailVerified)
+api\services\authService.js:635:      emailVerified: Boolean(source.emailVerified),
+api\nativeApp.js:763:    regex: /^\/api\/earn\/referral$/,
+api\nativeApp.js:767:      const data = await earnService.myReferral(user);
+api\nativeApp.js:821:      return { tracked: true, referral: await earnService.trackSignup(user, ref) };
+js\app.js:49:        const ref = new URLSearchParams(window.location.search).get("ref") || localStorage.getItem("mat_referral_code") || "";
+js\app.js:55:          try { localStorage.removeItem("mat_referral_code"); } catch {}
+
+
+
+=== verify-email gate ===
+
+api\middleware\auth.js:35:function verifyJwt(token, secret) {
+api\middleware\auth.js:77:export async function verifyAccessToken(token) {
+api\middleware\auth.js:78:  const decoded = verifyJwt(token, env.jwtSecret);
+api\middleware\auth.js:97:export async function verifyRefreshToken(token) {
+api\middleware\auth.js:98:  const decoded = verifyJwt(token, env.jwtRefreshSecret);
+api\middleware\auth.js:118:    req.user = await verifyAccessToken(token);
+api\nativeApp.js:19:import { verifyAccessToken } from "./middleware/auth.js";
+api\nativeApp.js:162:  "/verify-email.html",
+api\nativeApp.js:282:    return await verifyAccessToken(token);
+api\nativeApp.js:425:    regex: /^\/api\/auth\/verify-email$/,
+api\nativeApp.js:427:    handler: async ({ body }) => authService.verifyEmail(validate(authSchemas.verifyEmail, body).token)
+api\nativeApp.js:431:    regex: /^\/api\/auth\/resend-verification$/,
+api\nativeApp.js:433:    handler: async ({ body }) => authService.resendVerification(validate(authSchemas.resendVerification, body).email)
+api\nativeApp.js:441:      const { verifyFirebaseIdToken } = await import("./config/firebase.js");
+api\nativeApp.js:442:      const identity = await verifyFirebaseIdToken(idToken);
+api\nativeApp.js:524:        : status.verification === "failed"
+api\nativeApp.js:526:          : status.verification === "verified"
+
+
+

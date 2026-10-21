@@ -1,0 +1,171 @@
+  40 |       { id: "noir-gold", label: "Noir gold", palette: "bg #09090b text #fafafa surface #18181b accent gold #eab308", fonts: "Playfair serif + Inter, letter-spaced eyebrows", hero: "black hero, gold rule, centered luxury headline", sections: "image+text split first, then stats, then testimonial" },
+  41 |       { id: "fresh-saas", label: "Fresh SaaS", palette: "bg #ffffff text #1e1b4b surface #eef2ff accent indigo #6366f1 + mint #6ee7b7", fonts: "Inter, pill badges, soft shadows", hero: "centered SaaS hero with pill badge + product-style image", sections: "trust row, features grid, then FAQ" },
+  42 |       { id: "rustic-bold", label: "Rustic bold", palette: "bg #1c0a00 text #fff7ed surface #431407 accent orange #f97316", fonts: "Anton condensed headlines + Inter body", hero: "full-bleed dark photo hero with huge condensed headline", sections: "stats band first, then services, then big CTA" }
+  43 |     ],
+  44 |     IMAGE_DEFAULT: "black-forest-labs/flux.1-schnell",
+  45 |     VIDEO_DEFAULT: "google/veo-3.1-fast",
+  46 |     EMBEDDING_DEFAULT: "openai/text-embedding-3-small",
+  47 |     AUDIO_VOICE_DEFAULT: "nova",
+  48 |     TTS_MODEL_DEFAULT: "openai/tts-1",
+  49 |     STT_MODEL_DEFAULT: "openai/whisper-large-v3",
+  50 |     TRANSCRIBE_MODEL_DEFAULT: "openai/gpt-transcribe",
+  51 |     THREE_D_MODEL_DEFAULT: "microsoft/trellis-2",
+  52 |   },
+  53 |   TEXT_CHAT: "/v1/chat/completions",
+  54 |   IMAGE: "/image",
+  55 |   AUDIO: "/audio",
+  56 |   VIDEO: "/video",
+  57 |   THREE_D: "/3d",
+  58 |   EMBEDDINGS: "/v1/embeddings",
+  59 |   MODELS_LIST: "/v1/models",
+  60 | };
+  61 | 
+  62 | const PROVIDER = "pollinations";
+  63 | 
+  64 | // Per-archetype shell themes — the nav, page background, footer and fonts
+  65 | // change with the picked design archetype so no two builds share one look.
+  66 | const SHELL_THEMES = {
+  67 |   "luxe-dark": { bg: "#0c0a09", ink: "#fafaf9", nav: "#0c0a09", navInk: "#e7e5e4", active: "#d4a437", activeInk: "#0c0a09", fonts: "Fraunces,Georgia,serif", foot: "#0c0a09", footInk: "#a8a29e" },
+  68 |   "editorial": { bg: "#faf7f2", ink: "#1c1917", nav: "#faf7f2", navInk: "#44403c", active: "#1c1917", activeInk: "#faf7f2", fonts: "Newsreader,Georgia,serif", foot: "#1c1917", footInk: "#d6d3d1" },
+  69 |   "bold-agency": { bg: "#ffffff", ink: "#0f172a", nav: "#4f46e5", navInk: "#e0e7ff", active: "#bef264", activeInk: "#0f172a", fonts: "'Space Grotesk',Inter,system-ui,sans-serif", foot: "#0f172a", footInk: "#cbd5e1" },
+  70 |   "minimal-swiss": { bg: "#ffffff", ink: "#111111", nav: "#ffffff", navInk: "#525252", active: "#dc2626", activeInk: "#ffffff", fonts: "Inter,Helvetica,Arial,sans-serif", foot: "#111111", footInk: "#d4d4d4" },
+  71 |   "warm-artisan": { bg: "#fffbeb", ink: "#431407", nav: "#fffbeb", navInk: "#92400e", active: "#ea580c", activeInk: "#fffbeb", fonts: "'DM Serif Display',Georgia,serif", foot: "#431407", footInk: "#fed7aa" },
+  72 |   "glass-modern": { bg: "linear-gradient(160deg,#0f172a,#312e81)", ink: "#f8fafc", nav: "rgba(15,23,42,.85)", navInk: "#c7d2fe", active: "#22d3ee", activeInk: "#0f172a", fonts: "Outfit,Inter,system-ui,sans-serif", foot: "#0f172a", footInk: "#a5b4fc" },
+  73 |   "split-story": { bg: "#f8fafc", ink: "#0f172a", nav: "#0f766e", navInk: "#ccfbf1", active: "#ffffff", activeInk: "#0f766e", fonts: "Merriweather,Georgia,serif", foot: "#042f2e", footInk: "#99f6e4" },
+  74 |   "compact-local": { bg: "#ffffff", ink: "#0f172a", nav: "#16a34a", navInk: "#f0fdf4", active: "#ffffff", activeInk: "#16a34a", fonts: "'Public Sans',Inter,system-ui,sans-serif", foot: "#052e16", footInk: "#bbf7d0" },
+  75 |   "ocean-clean": { bg: "#f0fdfa", ink: "#042f2e", nav: "#0f766e", navInk: "#ccfbf1", active: "#14b8a6", activeInk: "#042f2e", fonts: "'Plus Jakarta Sans',Inter,system-ui,sans-serif", foot: "#042f2e", footInk: "#99f6e4" },
+  76 |   "noir-gold": { bg: "#09090b", ink: "#fafafa", nav: "#09090b", navInk: "#d4d4d8", active: "#eab308", activeInk: "#09090b", fonts: "'Playfair Display',Georgia,serif", foot: "#09090b", footInk: "#a1a1aa" },
+  77 |   "fresh-saas": { bg: "#ffffff", ink: "#1e1b4b", nav: "#eef2ff", navInk: "#4338ca", active: "#6366f1", activeInk: "#ffffff", fonts: "Inter,system-ui,sans-serif", foot: "#1e1b4b", footInk: "#c7d2fe" },
+  78 |   "rustic-bold": { bg: "#1c0a00", ink: "#fff7ed", nav: "#1c0a00", navInk: "#fdba74", active: "#f97316", activeInk: "#1c0a00", fonts: "Anton,Impact,sans-serif", foot: "#1c0a00", footInk: "#fdba74" },
+  79 |   "modern": { bg: "#f8fafc", ink: "#0f172a", nav: "rgba(255,255,255,.94)", navInk: "#334155", active: "#0f172a", activeInk: "#ffffff", fonts: "Inter,system-ui,Arial,sans-serif", foot: "#0f172a", footInk: "#cbd5e1" }
+  80 | };
+  81 | 
+  82 | 
+  83 | function publicPollinationsError(error) {
+  84 |   if (error instanceof AppError) return error;
+  85 |   const m = String(error?.message || "").toLowerCase();
+  86 |   if (m.includes("end of life") || m.includes("end-of-life") || m.includes("decommissioned") || m.includes("retired") || m.includes("no longer supported") || m.includes("not found")) {
+  87 |     return new AppError("The AI provider endpoint is no longer available. Check POLLINATIONS_API_KEY and retry.", 503, "POLLINATIONS_EOL");
+  88 |   }
+  89 |   if (m.includes("401") || m.includes("403") || m.includes("unauthorized") || m.includes("forbidden")) {
+  90 |     return new AppError("The AI provider key is missing or invalid. Add POLLINATIONS_API_KEY to .env and restart.", 503, "POLLINATIONS_AUTH_FAILED");
+  91 |   }
+  92 |   if (m.includes("402") || m.includes("quota") || m.includes("insufficient") || m.includes("credit")) {
+  93 |     return new AppError("The AI provider free quota is exceeded. Add a valid key or check your balance.", 503, "POLLINATIONS_QUOTA_EXCEEDED");
+  94 |   }
+  95 |   if (m.includes("429") || m.includes("rate limit") || m.includes("too many requests")) {
+  96 |     return new AppError("The AI provider is rate-limiting this request. Pause and retry.", 503, "POLLINATIONS_RATE_LIMITED");
+  97 |   }
+  98 |   if (String(error?.name || "").toLowerCase() === "aborterror" || /timed out/i.test(String(error?.message || ""))) {
+  99 |     return new AppError("The AI provider timed out. Please retry.", 504, "POLLINATIONS_TIMEOUT");
+ 100 |   }
+ 101 |   if (m.includes("404") || m.includes("not found") || m.includes("model not found") || m.includes("endpoint not found")) {
+ 102 |     return new AppError("The AI provider returned a 404. Check the configured model and retry.", 503, "POLLINATIONS_NOT_FOUND");
+ 103 |   }
+ 104 |   return new AppError("The AI provider request failed. Click Generate again to retry.", 503, "POLLINATIONS_UNAVAILABLE");
+ 105 | }
+ 106 | 
+ 107 | function fetchJson(url, options) {
+ 108 |   return fetch(url, options).then(async (response) => {
+ 109 |     const text = await response.text();
+ 110 |     let payload = null;
+ 111 |     const ct = response.headers.get("content-type") || "";
+ 112 |     if (ct.includes("application/json")) {
+ 113 |       try {
+ 114 |         payload = JSON.parse(text);
+ 115 |       } catch {
+ 116 |         payload = { raw: text };
+ 117 |       }
+ 118 |     } else {
+ 119 |       payload = { raw: text };
+ 120 |     }
+ 121 |     if (!response.ok) {
+ 122 |       const status = response.status;
+ 123 |       const message = status === 401 || status === 403 ? "Unauthorized" : text ? String(text).slice(0, 200) : "Request failed";
+ 124 |       const error = new Error(message);
+ 125 |       error.name = "POLLINATIONS_" + status;
+ 126 |       error.status = status;
+ 127 |       error.code = "POLLINATIONS_" + status;
+ 128 |       throw error;
+ 129 |     }
+ 130 |     return payload;
+ 131 |   });
+ 132 | }
+ 133 | 
+ 134 | export class PollinationsService {
+ 135 |   constructor() {
+ 136 |     this.refreshConfig();
+ 137 |   }
+ 138 | 
+ 139 |   refreshConfig() {
+ 140 |     this.baseUrl = String(env.pollinations.baseUrl || POLLINATIONS.GEN_BASE).replace(/\/$/, "");
+ 141 |     this.configured = Boolean(env.pollinations.apiKey);
+ 142 |     return this;
+ 143 |   }
+ 144 | 
+ 145 |   configured() {
+ 146 |     return Boolean(env.pollinations.apiKey);
+ 147 |   }
+ 148 | 
+ 149 |   setKey(key) {
+ 150 |     if (key) env.pollinations.apiKey = key;
+ 151 |     this.refreshConfig();
+ 152 |   }
+ 153 | 
+ 154 |   authHeaders(extra = {}) {
+ 155 |     const key = env.pollinations.apiKey;
+ 156 |     return { ...(key ? { Authorization: "Bearer " + key } : {}), ...extra };
+ 157 |   }
+ 158 | 
+ 159 |   resolveTextModels(requested, fallbackPool) {
+ 160 |     const models = [requested, ...(Array.isArray(fallbackPool) ? fallbackPool : [])]
+ 161 |       .map((m) => String(m || "").trim())
+ 162 |       .filter(Boolean);
+ 163 |     return [...new Set(models)].slice(0, 7);
+ 164 |   }
+ 165 | 
+ 166 |   async send(domain, payload = {}, options = {}) {
+ 167 |     if (!this.configured) {
+ 168 |       throw new AppError("Real AI requires POLLINATIONS_API_KEY in .env.", 503, "POLLINATIONS_NOT_CONFIGURED");
+ 169 |     }
+ 170 |     switch (domain) {
+ 171 |       case "text":
+ 172 |         return this.text(payload, options);
+ 173 |       case "image":
+ 174 |         return this.image(payload, options);
+ 175 |       case "audio":
+ 176 |         return this.audio(payload, options);
+ 177 |       case "video":
+ 178 |         return this.video(payload, options);
+ 179 |       case "3d":
+ 180 |         return this._3d(payload, options);
+ 181 |       case "embeddings":
+ 182 |         return this.embeddings(payload, options);
+ 183 |       default:
+ 184 |         throw new AppError("Unknown AI domain: " + domain, 400, "POLLINATIONS_INVALID_DOMAIN");
+ 185 |     }
+ 186 |   }
+ 187 | 
+ 188 |   async text(messages, options = {}) {
+ 189 |     const {
+ 190 |       temperature = 0.5,
+ 191 |       maxTokens = 2000,
+ 192 |       topP = 1,
+ 193 |       model = process.env.POLLINATIONS_TEXT_MODEL || POLLINATIONS.MODELS.TEXT_DEFAULT,
+ 194 |       fallbackModels = POLLINATIONS.MODELS.TEXT_FALLBACKS,
+ 195 |       timeoutMs = 60000,
+ 196 |       safe = undefined,
+ 197 |     } = options;
+ 198 |     const cleanMessages = Array.isArray(messages) ? messages : [{ role: "user", content: String(messages ?? "") }];
+ 199 |     // Creator-identity questions are answered locally: guaranteed correct,
+ 200 |     // zero token cost, works even when the upstream key has no model access.
+ 201 |     const lastUser = [...cleanMessages].reverse().find((m) => m && m.role === "user");
+ 202 |     if (lastUser && isCreatorQuestion(lastUser.content)) {
+ 203 |       const a = creatorAnswer();
+ 204 |       return { provider: PROVIDER, model: "brand-identity", content: a.content, usage: null, cached: false, intent: a.intent };
+ 205 |     }
+ 206 |     const queue = this.resolveTextModels(model, fallbackModels);
+ 207 |     const safety = safe === undefined || safe === null || safe === false || safe === 0 ? {} : { safe: Array.isArray(safe) ? safe.join(",") : String(safe) };
+ 208 |     let lastError = null;
+ 209 |     const deniedModels = [];
+ 210 |     for (const attempt of queue) {

@@ -1,0 +1,39 @@
+﻿=== /api/ai routes ===
+
+api\nativeApp.js:518:    regex: /^\/api\/ai\/status$/,
+api\nativeApp.js:542:    regex: /^\/api\/ai\/debug$/,
+api\nativeApp.js:558:    regex: /^\/api\/ai\/chat$/,
+api\nativeApp.js:568:    regex: /^\/api\/ai\/analyze$/,
+api\nativeApp.js:580:    regex: /^\/api\/ai\/outreach$/,
+api\nativeApp.js:592:    regex: /^\/api\/ai\/proposal$/,
+api\nativeApp.js:604:    regex: /^\/api\/ai\/tycoon$/,
+api\nativeApp.js:617:    regex: /^\/api\/ai\/websites$/,
+api\nativeApp.js:632:    regex: /^\/api\/ai\/websites\/([^/]+)$/,
+api\nativeApp.js:644:    regex: /^\/api\/ai\/websites\/([^/]+)\/html$/,
+api\nativeApp.js:655:    regex: /^\/api\/ai\/websites$/,
+api\nativeApp.js:666:    regex: /^\/api\/ai\/websites\/([^/]+)$/,
+
+
+
+=== aiController ===
+import { LeadService } from "../services/leadService.js";
+import { NvidiaService } from "../services/nvidiaService.js";
+import { AppError } from "../utils/errors.js";
+
+const leads = new LeadService();
+const nvidia = new NvidiaService();
+
+export async function analyzeLead(req, res) {
+  const lead = await leads.getById(req.body.leadId);
+  if (!lead) throw new AppError("Lead not found.", 404, "LEAD_NOT_FOUND");
+  const result = await nvidia.analyzeLead(lead);
+  res.json(result);
+}
+
+export async function writeOutreach(req, res) {
+  const lead = await leads.getById(req.body.leadId);
+  if (!lead) throw new AppError("Lead not found.", 404, "LEAD_NOT_FOUND");
+  const result = await nvidia.writeOutreach(lead, req.body.type);
+  res.json(result);
+}
+

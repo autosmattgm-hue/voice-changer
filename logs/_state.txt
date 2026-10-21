@@ -1,0 +1,40 @@
+﻿=== TOOLS.HTML ===
+
+Lines Words Characters Property
+----- ----- ---------- --------
+   58                          
+
+
+
+=== TOOLS.JS ===
+
+Lines Words Characters Property
+----- ----- ---------- --------
+  259                          
+
+
+
+=== STUDIO HTML ===
+
+Lines Words Characters Property
+----- ----- ---------- --------
+   86                          
+
+
+
+=== STUDIO JS ===
+
+Lines Words Characters Property
+----- ----- ---------- --------
+  677                          
+
+
+
+=== EDITOR JS ===
+
+Lines Words Characters Property
+----- ----- ---------- --------
+  801                          
+
+
+

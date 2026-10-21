@@ -1,0 +1,70 @@
+﻿=== tool count ===
+20
+=== tool ids ===
+offer-builder/Sales, service-pricing/Pricing, profit-calculator/Pricing, hourly-rate/Pricing, proposal-scope/Client Delivery, cold-email/Outreach, whatsapp-opener/Outreach, follow-up/Outreach, discovery-questions/Sales, meeting-agenda/Client Delivery, project-brief/Client Delivery, invoice-description/Client Delivery, onboarding-checklist/Client Delivery, content-calendar/Marketing, social-caption/Marketing, hashtag-pack/Marketing, cta-generator/Marketing, testimonial-request/Retention, competitor-review/Research, daily-revenue-plan/Planning
+=== wsx css ===
+61
+=== editor css ===
+44
+=== editor html head ===
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Website Editor | MAT LEADS AI PRO X</title>
+    <meta name="description" content="Edit your generated website visually â€” text, images, colours, pages, navigation and SEO â€” with no code required.">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body data-page="website-editor">
+    <div class="app-layout" data-app-shell>
+      <main class="workspace">
+        <div class="wed-shell">
+          <header class="wed-top">
+            <div class="wed-top-left">
+              <a class="wed-back" href="/website-studio.html" title="Back to Website Studio">â† Studio</a>
+              <div>
+                <h1>Website Editor</h1>
+                <p class="sub" id="wedSiteName">Loading your siteâ€¦</p>
+              </div>
+            </div>
+            <div class="wed-top-actions">
+              <span class="plan-pill" id="wedPlan">Pro</span>
+              <div class="wed-device">
+                <button type="button" id="wedDesktop" class="on">Desktop</button>
+                <button type="button" id="wedMobile">Mobile</button>
+              </div>
+              <button class="btn btn-secondary" type="button" id="wedUndo" title="Undo the last change">â†¶ Undo</button>
+              <button class="btn btn-secondary" type="button" id="wedPreview">Preview</button>
+              <button class="btn btn-primary" type="button" id="wedSave">Save &amp; publish</button>
+            </div>
+          </header>
+
+          <div class="wed-grid">
+            <aside class="wed-panel" aria-label="Editor controls">
+              <nav class="wed-tabs" role="tablist">
+                <button type="button" class="wed-tab on" data-wed-tab="content" role="tab">Content</button>
+                <button type="button" class="wed-tab" data-wed-tab="pages" role="tab">Pages</button>
+                <button type="button" class="wed-tab" data-wed-tab="style" role="tab">Style</button>
+                <button type="button" class="wed-tab" data-wed-tab="nav" role="tab">Menu</button>
+                <button type="button" class="wed-tab" data-wed-tab="seo" role="tab">SEO</button>
+              </nav>
+
+              <div class="wed-tabpanes">
+                <section class="wed-pane on" data-wed-pane="content">
+                  <p class="wed-hint">Click any text in the preview to edit it, or use the fields below.</p>
+
+                  <label class="wed-field">
+                    <span>Business name</span>
+                    <input type="text" id="wedBusinessName" placeholder="Lakeside Dental">
+                  </label>
+                  <label class="wed-field">
+                    <span>Tagline / headline</span>
+                    <input type="text" id="wedHeadline" placeholder="A confident headline for the hero">
+                  </label>
+                  <label class="wed-field">
+                    <span>Intro paragraph</span>
+                    <textarea id="wedIntro" rows="3" placeholder="One or two sentences about the business."></textarea>
+

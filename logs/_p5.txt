@@ -1,0 +1,60 @@
+  76 |   "noir-gold": { bg: "#09090b", ink: "#fafafa", nav: "#09090b", navInk: "#d4d4d8", active: "#eab308", activeInk: "#09090b", fonts: "'Playfair Display',Georgia,serif", foot: "#09090b", footInk: "#a1a1aa" },
+  77 |   "fresh-saas": { bg: "#ffffff", ink: "#1e1b4b", nav: "#eef2ff", navInk: "#4338ca", active: "#6366f1", activeInk: "#ffffff", fonts: "Inter,system-ui,sans-serif", foot: "#1e1b4b", footInk: "#c7d2fe" },
+  78 |   "rustic-bold": { bg: "#1c0a00", ink: "#fff7ed", nav: "#1c0a00", navInk: "#fdba74", active: "#f97316", activeInk: "#1c0a00", fonts: "Anton,Impact,sans-serif", foot: "#1c0a00", footInk: "#fdba74" },
+  79 |   "modern": { bg: "#f8fafc", ink: "#0f172a", nav: "rgba(255,255,255,.94)", navInk: "#334155", active: "#0f172a", activeInk: "#ffffff", fonts: "Inter,system-ui,Arial,sans-serif", foot: "#0f172a", footInk: "#cbd5e1" }
+  80 | };
+  81 | 
+  82 | 
+  83 | function publicPollinationsError(error) {
+  84 |   if (error instanceof AppError) return error;
+  85 |   const m = String(error?.message || "").toLowerCase();
+  86 |   if (m.includes("end of life") || m.includes("end-of-life") || m.includes("decommissioned") || m.includes("retired") || m.includes("no longer supported") || m.includes("not found")) {
+  87 |     return new AppError("The AI provider endpoint is no longer available. Check POLLINATIONS_API_KEY and retry.", 503, "POLLINATIONS_EOL");
+  88 |   }
+  89 |   if (m.includes("401") || m.includes("403") || m.includes("unauthorized") || m.includes("forbidden")) {
+  90 |     return new AppError("The AI provider key is missing or invalid. Add POLLINATIONS_API_KEY to .env and restart.", 503, "POLLINATIONS_AUTH_FAILED");
+  91 |   }
+  92 |   if (m.includes("402") || m.includes("quota") || m.includes("insufficient") || m.includes("credit")) {
+  93 |     return new AppError("The AI provider free quota is exceeded. Add a valid key or check your balance.", 503, "POLLINATIONS_QUOTA_EXCEEDED");
+  94 |   }
+  95 |   if (m.includes("429") || m.includes("rate limit") || m.includes("too many requests")) {
+  96 |     return new AppError("The AI provider is rate-limiting this request. Pause and retry.", 503, "POLLINATIONS_RATE_LIMITED");
+  97 |   }
+  98 |   if (String(error?.name || "").toLowerCase() === "aborterror" || /timed out/i.test(String(error?.message || ""))) {
+  99 |     return new AppError("The AI provider timed out. Please retry.", 504, "POLLINATIONS_TIMEOUT");
+ 100 |   }
+ 101 |   if (m.includes("404") || m.includes("not found") || m.includes("model not found") || m.includes("endpoint not found")) {
+ 102 |     return new AppError("The AI provider returned a 404. Check the configured model and retry.", 503, "POLLINATIONS_NOT_FOUND");
+ 103 |   }
+ 104 |   return new AppError("The AI provider request failed. Click Generate again to retry.", 503, "POLLINATIONS_UNAVAILABLE");
+ 105 | }
+ 106 | 
+ 107 | function fetchJson(url, options) {
+ 108 |   return fetch(url, options).then(async (response) => {
+ 109 |     const text = await response.text();
+ 110 |     let payload = null;
+ 111 |     const ct = response.headers.get("content-type") || "";
+ 112 |     if (ct.includes("application/json")) {
+ 113 |       try {
+ 114 |         payload = JSON.parse(text);
+ 115 |       } catch {
+ 116 |         payload = { raw: text };
+ 117 |       }
+ 118 |     } else {
+ 119 |       payload = { raw: text };
+ 120 |     }
+ 121 |     if (!response.ok) {
+ 122 |       const status = response.status;
+ 123 |       const message = status === 401 || status === 403 ? "Unauthorized" : text ? String(text).slice(0, 200) : "Request failed";
+ 124 |       const error = new Error(message);
+ 125 |       error.name = "POLLINATIONS_" + status;
+ 126 |       error.status = status;
+ 127 |       error.code = "POLLINATIONS_" + status;
+ 128 |       throw error;
+ 129 |     }
+ 130 |     return payload;
+ 131 |   });
+ 132 | }
+ 133 | 
+ 134 | export class PollinationsService {
+ 135 |   constructor() {

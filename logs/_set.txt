@@ -1,0 +1,71 @@
+  30 |   target.classList.toggle("error", state === "error");
+  31 | }
+  32 | 
+  33 | function setAiConnectionStatus(message, state) {
+  34 |   const target = byId("aiConnectionStatus");
+  35 |   if (!target) return;
+  36 |   target.textContent = message;
+  37 |   target.classList.toggle("success", state === "success");
+  38 |   target.classList.toggle("error", state === "error");
+  39 | }
+  40 | 
+  41 | async function loadAiConnectionStatus() {
+  42 |   try {
+  43 |     const status = await apiFetch("/api/ai/status");
+  44 |     if (!status.configured) {
+  45 |       setAiConnectionStatus(status.hint || "NVIDIA_API_KEY is missing.", "error");
+  46 |       return;
+  47 |     }
+  48 |     if (status.verification === "verified") {
+  49 |       setAiConnectionStatus(`Connected. Last verified: ${new Date(status.lastSuccessAt).toLocaleString()}.`, "success");
+  50 |       return;
+  51 |     }
+  52 |     if (status.verification === "failed") {
+  53 |       setAiConnectionStatus(status.hint || "NVIDIA AI connection failed.", "error");
+  54 |       return;
+  55 |     }
+  56 |     setAiConnectionStatus("NVIDIA AI is configured but has not been tested in this server session.");
+  57 |   } catch (error) {
+  58 |     setAiConnectionStatus(error.message, "error");
+  59 |   }
+  60 | }
+  61 | 
+  62 | async function testAiConnection() {
+  63 |   const button = byId("testAiConnection");
+  64 |   if (!button) return;
+  65 |   const original = button.textContent;
+  66 |   button.disabled = true;
+  67 |   button.textContent = "Testing...";
+  68 |   setAiConnectionStatus("Sending a safe provider test...");
+  69 |   try {
+  70 |     const result = await apiFetch("/api/ai/debug", {
+  71 |       method: "POST",
+  72 |       body: JSON.stringify({ prompt: "Reply with exactly: NVIDIA connection verified." })
+  73 |     });
+  74 |     if (result.ok && result.provider === "nvidia") {
+  75 |       setAiConnectionStatus(`Connected to ${result.model} in ${result.ms}ms.`, "success");
+  76 |     } else {
+  77 |       setAiConnectionStatus(result.error || "NVIDIA AI test failed.", "error");
+  78 |     }
+  79 |   } catch (error) {
+  80 |     setAiConnectionStatus(error.message, "error");
+  81 |   } finally {
+  82 |     button.disabled = false;
+  83 |     button.textContent = original;
+  84 |   }
+  85 | }
+  86 | 
+  87 | function val(id) {
+  88 |   var el = byId(id);
+  89 |   if (!el) return;
+  90 |   if (el.type === "checkbox") return el.checked;
+  91 |   return el.value || "";
+  92 | }
+  93 | 
+  94 | function setVal(id, value, fallback) {
+  95 |   var el = byId(id);
+  96 |   if (!el) return;
+  97 |   if (el.type === "checkbox") {
+  98 |     el.checked = value != null ? Boolean(value) : Boolean(fallback);
+  99 |   } else {
+ 100 |     el.value = value != null ? String(value) : String(fallback || "");

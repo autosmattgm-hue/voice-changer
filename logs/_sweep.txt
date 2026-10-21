@@ -1,0 +1,35 @@
+KEY len=19
+z-ai/glm-5.3-flash                       OK      1911ms   c="OK" r="The user wants me to reply wit"
+z-ai/glm-5.3                             DENIED  422ms    c="The API key used for this request isn't " r=""
+z-ai/glm-5.2                             DENIED  433ms    c="The API key used for this request isn't " r=""
+z-ai/glm-4.6                             HTTP400 387ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"z-ai/glm-4.6\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:24.069Z"},"status":400}
+z-ai/glm-4.5-air                         HTTP400 374ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"z-ai/glm-4.5-air\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:25.588Z"},"status":400}
+openai/gpt-5.4-nano                      DENIED  758ms    c="The API key used for this request isn't " r=""
+openai/gpt-5-nano                        DENIED  384ms    c="The API key used for this request isn't " r=""
+openai/gpt-oss-20b                       DENIED  462ms    c="The API key used for this request isn't " r=""
+openai/gpt-4o-mini                       DENIED  1536ms   c="The API key used for this request isn't " r=""
+openai/gpt-4.1-mini                      HTTP400 403ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"openai/gpt-4.1-mini\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:35.409Z"},"status":400}
+qwen/qwen3-coder-30b-a3b-instruct        DENIED  388ms    c="The API key used for this request isn't " r=""
+qwen/qwen3-235b-a22b                     HTTP400 313ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"qwen/qwen3-235b-a22b\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:38.622Z"},"status":400}
+qwen/qwen3-8b                            HTTP400 412ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"qwen/qwen3-8b\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:40.248Z"},"status":400}
+mistralai/mistral-small-3.2              DENIED  383ms    c="The API key used for this request isn't " r=""
+mistralai/mistral-large-2411             HTTP400 354ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"mistralai/mistral-large-2411\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:43.587Z"},"status":400}
+meta/llama-3.3-70b-instruct              DENIED  483ms    c="The API key used for this request isn't " r=""
+moonshotai/kimi-k2.6                     DENIED  392ms    c="The API key used for this request isn't " r=""
+moonshotai/kimi-k2-thinking              HTTP400 721ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"moonshotai/kimi-k2-thinking\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:48.786Z"},"status":400}
+google/gemini-3-flash-preview            DENIED  1207ms   c="The API key used for this request isn't " r=""
+google/gemini-2.5-flash                  HTTP400 942ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"google/gemini-2.5-flash\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:53.391Z"},"status":400}
+deepseek-ai/deepseek-v3.2                HTTP400 424ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"deepseek-ai/deepseek-v3.2\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:55.012Z"},"status":400}
+nvidia/nemotron-3.5-lightning-30b-a3b    HTTP400 325ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Invalid model or alias: \"nvidia/nemotron-3.5-lightning-30b-a3b\". Must be a valid model name or alias.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:56.632Z"},"status":400}
+openai/text-embedding-3-small            HTTP400 610ms    c="" r=""
+      RAW: {"success":false,"error":{"message":"Model \"openai/text-embedding-3-small\" is a embeddings model and cannot be used on the text endpoint. Use the embeddings endpoint instead.","code":"BAD_REQUEST","timestamp":"2026-10-21T21:06:58.522Z"},"status":400}

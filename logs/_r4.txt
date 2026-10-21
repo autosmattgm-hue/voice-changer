@@ -1,0 +1,41 @@
+﻿=== openBuilder ===
+
+> js\website-studio.js:536:function openBuilder() {
+  js\website-studio.js:537:  if (!websiteId) {
+  js\website-studio.js:538:    setStatus("Build the site first, then open the editor.");
+  js\website-studio.js:539:    return;
+  js\website-studio.js:540:  }
+  js\website-studio.js:541:  window.location.href = `/website-editor.html?id=${encodeURIComponent(websiteId)}`;
+  js\website-studio.js:542:}
+  js\website-studio.js:543:
+  js\website-studio.js:544:// ---------- composer ----------
+  js\website-studio.js:545:function submitMessage(text) {
+  js\website-studio.js:546:  const message = String(text ?? byId("wsxInput")?.value ?? "").trim();
+  js\website-studio.js:547:  if (!message || busy) return;
+  js\website-studio.js:548:  const input = byId("wsxInput");
+  js\website-studio.js:549:  if (input) {
+  js\website-studio.js:550:    input.value = "";
+> js\website-studio.js:587:  byId("studioEditManual")?.addEventListener("click", openBuilder);
+  js\website-studio.js:588:}
+  js\website-studio.js:589:
+  js\website-studio.js:590:function bindLeadPicker() {
+  js\website-studio.js:591:  const select = byId("wsxLeadSelect");
+  js\website-studio.js:592:  if (!select) return;
+  js\website-studio.js:593:  select.addEventListener("change", () => {
+  js\website-studio.js:594:    const lead = savedLeads.find((item) => String(item.leadId || item.id || "") === select.value);
+  js\website-studio.js:595:    if (lead) applySelectedLead(lead);
+  js\website-studio.js:596:    else applySelectedLead(null);
+  js\website-studio.js:597:  });
+  js\website-studio.js:598:}
+  js\website-studio.js:599:
+  js\website-studio.js:600:// ---------- your websites list ----------
+  js\website-studio.js:601:async function loadHistory() {
+
+
+
+=== pollinations buildWebsite ===
+
+api\services\pollinationsService.js:455:  async buildWebsite(lead = {}, options = {}) {
+
+
+

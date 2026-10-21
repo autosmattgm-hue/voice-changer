@@ -1,0 +1,147 @@
+﻿=== leads.js saved-lead id ===
+
+  js\leads.js:624:  const mailto = mailtoLinkFromLead(lead, emailMessage);
+> js\leads.js:625:  const id = escapeHtml(localLeadId(lead));
+  js\leads.js:626:  return `
+  js\leads.js:641:  const website = safeExternalUrl(lead.websiteUrl).replace(/^https?:\/\/(www\.)?/i, "").replace(/\/$/, "");
+> js\leads.js:642:  return [name, phone || website || address].filter(Boolean).join("|") || localLeadId(lead);
+  js\leads.js:643:}
+  js\leads.js:658:// and lead picker can reference it (format: ML-XXXXXX, no look-alike chars).
+> js\leads.js:659:function makeLeadId() {
+  js\leads.js:660:  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  js\leads.js:670:
+> js\leads.js:671:function backfillLocalLeadIds() {
+  js\leads.js:672:  try {
+  js\leads.js:675:    for (const lead of leads) {
+> js\leads.js:676:      if (lead && !lead.leadId) {
+> js\leads.js:677:        lead.leadId = makeLeadId();
+  js\leads.js:678:        changed = true;
+  js\leads.js:684:
+> js\leads.js:685:function localLeadId(lead = {}) {
+  js\leads.js:686:  return String(lead.id || `${lead.name || "lead"}-${lead.address || ""}-${lead.googleMapsLink || ""}`)
+  js\leads.js:717:  const copy = JSON.parse(JSON.stringify(lead || {}));
+> js\leads.js:718:  const id = localLeadId(copy);
+  js\leads.js:719:  delete copy.raw;
+  js\leads.js:727:    id,
+> js\leads.js:728:    leadId: copy.leadId || makeLeadId(),
+  js\leads.js:729:    localSavedAt: new Date().toISOString()
+  js\leads.js:732:
+> js\leads.js:733:function saveLeadsToLocalStorage(leads = []) {
+  js\leads.js:734:  const existing = readLocalSavedLeads();
+> js\leads.js:735:  const byId = new Map(existing.map((lead) => [localLeadId(lead), lead]));
+  js\leads.js:736:  for (const lead of leads) {
+  js\leads.js:748:function deleteLocalSavedLead(id) {
+> js\leads.js:749:  const remaining = readLocalSavedLeads().filter((lead) => localLeadId(lead) !== id);
+  js\leads.js:750:  return writeLocalSavedLeads(remaining);
+  js\leads.js:754:  const requested = String(id || "");
+> js\leads.js:755:  const requestedNormalized = localLeadId({ id: requested });
+  js\leads.js:756:  return readLocalSavedLeads().find((lead) => (
+  js\leads.js:757:    String(lead.id || "") === requested ||
+> js\leads.js:758:    localLeadId(lead) === requested ||
+> js\leads.js:759:    localLeadId(lead) === requestedNormalized
+  js\leads.js:760:  )) || null;
+  js\leads.js:766:  const updated = leads.map((lead) => {
+> js\leads.js:767:    const isMatch = localLeadId(lead) === targetId || String(lead.id || "") === targetId;
+  js\leads.js:768:    return isMatch
+  js\leads.js:807:function renderLocalLeadTools(lead = {}) {
+> js\leads.js:808:  const id = escapeHtml(localLeadId(lead));
+  js\leads.js:809:  const selectedStage = lead.localStage || lead.stage || "New";
+  js\leads.js:955:      title: `${lead.name || "Saved lead"} Growth Opportunity Report`,
+> js\leads.js:956:      reportUrl: `/client-report.html?id=${encodeURIComponent(localLeadId(lead))}`,
+  js\leads.js:957:      recommendedOffer: proposal.title,
+  js\leads.js:1248:  if (!dossier.proposal && !dossier.roi && !dossier.salesAgent) return "";
+> js\leads.js:1249:  const leadId = report?.lead?.id || "";
+> js\leads.js:1250:  const clientReportUrl = leadId ? `/client-report.html?id=${encodeURIComponent(leadId)}` : "";
+  js\leads.js:1251:  return `
+  js\leads.js:1561:        <span class="tag success">Local saved</span>
+> js\leads.js:1562:        <span class="tag tag-lead-id" title="Lead ID — used by AI tools and Website Studio">ID ${escapeHtml(lead.leadId || localLeadId(lead))}</span>
+  js\leads.js:1563:        <span class="tag">${escapeHtml(lead.localStage || lead.stage || "New")}</span>
+  js\leads.js:1576:      <div class="lead-actions">
+> js\leads.js:1577:        <a class="btn btn-secondary" href="/lead-details.html?id=${encodeURIComponent(localLeadId(lead))}">View</a>
+  js\leads.js:1578:        <label class="select-check" title="Tick to reveal the AI website builder for this lead">
+> js\leads.js:1579:          <input type="checkbox" data-ai-website-toggle="${escapeHtml(localLeadId(lead))}">
+  js\leads.js:1580:          <span>Use AI to create website</span>
+  js\leads.js:1581:        </label>
+> js\leads.js:1582:        <button class="btn btn-primary" type="button" hidden data-create-website="${escapeHtml(localLeadId(lead))}" data-lead-name="${escapeHtml(lead.name || "Business")}">Create Website</button>
+  js\leads.js:1583:        ${renderWhatsappButton(lead, "btn btn-secondary")}
+  js\leads.js:1585:        ${mapsUrl ? `<a class="btn btn-ghost" href="${mapsUrl}" target="_blank" rel="noreferrer">Maps</a>` : ""}
+> js\leads.js:1586:        <button class="btn btn-ghost" type="button" data-delete-local-lead="${escapeHtml(localLeadId(lead))}">Delete</button>
+  js\leads.js:1587:      </div>
+
+
+
+=== leadService save ===
+
+> api\services\leadService.js:308:  ID: "62",
+  api\services\leadService.js:309:  SN: "221",
+  api\services\leadService.js:310:  GM: "220",
+> api\services\leadService.js:1157:  async save(leadId, user, fallbackLead = null) {
+  api\services\leadService.js:1158:    let existing = null;
+> api\services\leadService.js:1159:    try { existing = await this.getById(leadId); } catch { existing = null; }
+  api\services\leadService.js:1160:    // Search-result leads live in a short-lived cache, not Firestore — if the
+  api\services\leadService.js:1161:    // cache missed, persist the client-sent copy instead of 404ing the save.
+> api\services\leadService.js:1166:      ownerId: user?.uid,
+  api\services\leadService.js:1167:      stage: lead.stage || "New",
+  api\services\leadService.js:1168:      savedAt: new Date().toISOString()
+
+
+
+=== admin nav ===
+
+  components\layout.js:64:export const navItems = navGroups.flatMap((group) => group.items);
+  components\layout.js:65:
+> components\layout.js:66:function isAdminAccount(user) {
+> components\layout.js:67:  return String(user?.role || "").toLowerCase() === "admin";
+  components\layout.js:68:}
+  components\layout.js:69:
+> components\layout.js:70:function adminLinkMarkup() {
+  components\layout.js:71:  const active = document.body.dataset.page || "";
+  components\layout.js:72:  return `
+  components\layout.js:73:    <div class="nav-group">
+> components\layout.js:74:      <p class="nav-group__label">Admin</p>
+> components\layout.js:75:      <a href="/admin.html" class="${active === "admin" ? "active" : ""}">
+  components\layout.js:76:        <span aria-hidden="true">M</span>
+> components\layout.js:77:        <span>Admin</span>
+  components\layout.js:78:      </a>
+  components\layout.js:79:    </div>
+  components\layout.js:81:}
+  components\layout.js:82:
+> components\layout.js:83:// The Admin entry exists only while the signed-in account is an admin —
+  components\layout.js:84:// normal users never see it, and it disappears the moment role changes.
+> components\layout.js:85:function syncAdminNavItem(user) {
+  components\layout.js:86:  const nav = document.querySelector("#sidebar nav");
+  components\layout.js:87:  if (!nav) return;
+> components\layout.js:88:  const existing = nav.querySelector('a[href="/admin.html"]');
+> components\layout.js:89:  if (isAdminAccount(user)) {
+> components\layout.js:90:    if (!existing) nav.insertAdjacentHTML("beforeend", adminLinkMarkup());
+  components\layout.js:91:  } else if (existing) {
+  components\layout.js:92:    existing.remove();
+  components\layout.js:202:  `;
+  components\layout.js:203:
+> components\layout.js:204:  // Admin nav is role-gated: rendered immediately when the cached account is
+> components\layout.js:205:  // an admin, otherwise injected later once /api/auth/me confirms the role.
+  components\layout.js:206:  let cachedUser = null;
+  components\layout.js:207:  try { cachedUser = JSON.parse(localStorage.getItem("mat_user") || "null"); } catch {}
+> components\layout.js:208:  if (isAdminAccount(cachedUser)) {
+> components\layout.js:209:    sidebar.querySelector("nav")?.insertAdjacentHTML("beforeend", adminLinkMarkup());
+  components\layout.js:210:  }
+  components\layout.js:211:
+  components\layout.js:236:
+  components\layout.js:237:function sessionText(user) {
+> components\layout.js:238:  if (user?.role === "admin" || user?.entitlements?.unlimitedAccess) {
+> components\layout.js:239:    return "Admin Unlimited Access: every feature is unlocked with no billing required.";
+  components\layout.js:240:  }
+  components\layout.js:241:  if (user?.subscription === "trial" || user?.billingStatus === "trial" || user?.entitlements?.trial) {
+  components\layout.js:265:  if (!hasStoredSession()) {
+  components\layout.js:266:    target.textContent = "Login required to access the workspace.";
+> components\layout.js:267:    syncAdminNavItem(null);
+  components\layout.js:268:    syncProNavState(null);
+  components\layout.js:269:    return;
+  components\layout.js:275:    localStorage.setItem("mat_user", JSON.stringify(user));
+  components\layout.js:276:    target.textContent = sessionText(user);
+> components\layout.js:277:    syncAdminNavItem(user);
+  components\layout.js:278:    syncProNavState(user);
+  components\layout.js:279:  } catch {
+
+
+

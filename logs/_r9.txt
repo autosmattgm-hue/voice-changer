@@ -1,0 +1,80 @@
+﻿=== follow in studio ===
+
+=== admin.html guard ===
+import { apiFetch, byId, formatCurrency, requireAuth } from "./api.js";
+
+function statusPill(enabled) {
+  return '<span class="status-pill ' + (enabled ? "success" : "danger") + '">' + (enabled ? "Connected" : "Required") + "</span>";
+}
+
+function renderAdmin(data) {
+  const metrics = byId("adminMetrics");
+  const logs = byId("auditLogs");
+  if (metrics) {
+    metrics.innerHTML = [
+      '<article class="metric"><span>Users</span><strong>' + data.users + '</strong></article>',
+      '<article class="metric"><span>MRR</span><strong>' + formatCurrency(data.mrr) + '</strong></article>',
+      '<article class="metric"><span>API Calls</span><strong>' + data.apiCalls + '</strong></article>',
+      '<article class="metric"><span>Errors</span><strong>' + data.errors + '</strong></article>',
+      '<article class="metric"><span>Admin Access</span><strong>' + (data.access?.unlimitedAccess ? "Unlimited" : "Limited") + '</strong></article>',
+      '<article class="metric"><span>Lead Limit</span><strong>' + (data.access?.monthlyLeadLimit === null ? "Unlimited" : data.access?.monthlyLeadLimit || "Plan") + '</strong></article>'
+    ].join("");
+  }
+  if (logs) {
+    logs.innerHTML = data.auditLogs.map(function(log) {
+      return '<tr><td>' + log.time + '</td><td>' + log.actor + '</td><td>' + log.action + '</td><td>' + log.ip + '</td></tr>';
+    }).join("");
+  }
+}
+
+async function initIntegrationStatus() {
+  const target = byId("integrationStatus");
+  const missing = byId("missingConfig");
+  if (!target) return;
+
+  try {
+    const health = await apiFetch("/api/health");
+    const integrations = health.integrations || {};
+    target.innerHTML = [
+      '<div class="audit-item"><span>Google Places API</span>' + statusPill(integrations.googlePlaces) + '</div>',
+      '<div class="audit-item"><span>OpenStreetMap Overpass</span>' + statusPill(integrations.openStreetMap) + '</div>',
+      '<div class="audit-item"><span>Firebase Firestore</span>' + statusPill(integrations.firebase) + '</div>',
+      '<div class="audit-item"><span>NVIDIA API</span>' + statusPill(integrations.nvidia) + '</div>',
+      '<div class="audit-item"><span>Stripe Billing</span>' + statusPill(integrations.stripe) + '</div>',
+
+=== billing confirm ===
+
+> api\services\billingService.js:205:  async confirmPaypalPayment(payload, user) {
+  api\services\billingService.js:206:    const plan = getPlan(payload.plan);
+  api\services\billingService.js:207:    if (!plan) throw new AppError("Unknown plan.", 422, "UNKNOWN_PLAN");
+  api\services\billingService.js:208:    if (isAdminUser(user)) {
+  api\services\billingService.js:209:      return {
+  api\services\billingService.js:210:        configured: true,
+  api\services\billingService.js:211:        included: true,
+  api\services\billingService.js:212:        provider: "paypal",
+  api\services\billingService.js:213:        plan: "enterprise",
+  api\services\billingService.js:214:        message: "Admin unlimited access is active. Billing is not required."
+  api\services\billingService.js:215:      };
+  api\services\billingService.js:216:    }
+  api\services\billingService.js:217:
+  api\services\billingService.js:218:    const session = await this.checkoutSessions.findById(payload.sessionId);
+  api\services\billingService.js:219:    if (!session || session.provider !== "paypal" || session.plan !== payload.plan || session.userId !== user?.uid) {
+  api\services\billingService.js:220:      throw new AppError("Payment session could not be verified. Please start checkout again.", 409, "PAYMENT_SESSION_MISMATCH");
+  api\services\billingService.js:221:    }
+  api\services\billingService.js:222:
+  api\services\billingService.js:223:    const createdAt = Date.parse(session.createdAt || "");
+  api\services\billingService.js:224:    if (!Number.isFinite(createdAt) || createdAt + CHECKOUT_SESSION_TTL_MS < Date.now()) {
+  api\services\billingService.js:225:      await this.checkoutSessions.update(session.id, { status: "expired" });
+  api\services\billingService.js:226:      throw new AppError("Payment session expired. Please start checkout again.", 409, "PAYMENT_SESSION_EXPIRED");
+  api\services\billingService.js:227:    }
+  api\services\billingService.js:228:
+  api\services\billingService.js:229:    const activatedAt = new Date().toISOString();
+  api\services\billingService.js:230:    await this.checkoutSessions.update(session.id, {
+  api\services\billingService.js:231:      status: "confirmed",
+  api\services\billingService.js:232:      returnedAt: activatedAt,
+  api\services\billingService.js:233:      paypalToken: payload.paypalToken || "",
+  api\services\billingService.js:234:      payerId: payload.payerId || "",
+  api\services\billingService.js:235:      transactionId: payload.transactionId || ""
+
+
+

@@ -1,0 +1,69 @@
+﻿=== nativeApp ai routes ===
+
+api\nativeApp.js:345:        website: [env.nvidia.websiteModel, ...(env.nvidia.websiteFallbacks || []), "z-ai/glm-5.3-flash", "z-ai/glm-5.3"].filter(Boolean),
+api\nativeApp.js:346:        tycoon: [env.nvidia.tycoonModel, "z-ai/glm-5.3-flash", "z-ai/glm-5.3"].filter(Boolean)
+
+
+
+=== route table head ===
+        steps.ownerCheck = authService.isOwnerLogin(email, String(body?.password || ""));
+      } catch (error) {
+        steps.ownerCheck = `THREW: ${error.message}`;
+      }
+      try {
+        const found = await authService.users.list({
+          where: [{ field: "email", op: "==", value: email || "__none__" }],
+          limit: 1
+        });
+        steps.storeList = `ok, found=${found.length}`;
+      } catch (error) {
+        steps.storeList = `THREW: ${error.message}`;
+      }
+      try {
+        const { signAccessToken: sign } = await import("./middleware/auth.js");
+        sign({ uid: "diag", email: email || "diag@test.local", role: "user" });
+        steps.jwtSign = "ok";
+      } catch (error) {
+        steps.jwtSign = `THREW: ${error.message}`;
+      }
+      steps.firebaseClient = Boolean(authService.users.client());
+      steps.firebaseWebApiKeySet = Boolean(env.firebase?.webApiKey);
+      return steps;
+    }
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/register$/,
+    keys: [],
+    handler: async ({ req, body }) => {
+      const parsed = validate(authSchemas.register, body);
+      await checkSignupAbuse(req, parsed);
+      return authService.register(parsed);
+    },
+    status: 201
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/login$/,
+    keys: [],
+    handler: async ({ body }) => authService.login(validate(authSchemas.login, body))
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/verify-email$/,
+    keys: [],
+    handler: async ({ body }) => authService.verifyEmail(validate(authSchemas.verifyEmail, body).token)
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/resend-verification$/,
+    keys: [],
+    handler: async ({ body }) => authService.resendVerification(validate(authSchemas.resendVerification, body).email)
+  },
+  {
+    method: "POST",
+    regex: /^\/api\/auth\/firebase$/,
+    keys: [],
+    handler: async ({ req, body }) => {
+      const { idToken, name, password } = validate(authSchemas.firebaseSession, body);
+

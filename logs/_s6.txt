@@ -1,0 +1,80 @@
+   1 | import fs from "node:fs/promises";
+   2 | import path from "node:path";
+   3 | import { fileURLToPath } from "node:url";
+   4 | import { env } from "./config/env.js";
+   5 | import { isFirebaseConfigured } from "./config/firebase.js";
+   6 | import { AdminService } from "./services/adminService.js";
+   7 | import { AuthService } from "./services/authService.js";
+   8 | import { BillingService } from "./services/billingService.js";
+   9 | import { CrmService } from "./services/crmService.js";
+  10 | import { DashboardService } from "./services/dashboardService.js";
+  11 | import { LeadService } from "./services/leadService.js";
+  12 | import { NvidiaService } from "./services/nvidiaService.js";
+  13 | import { WebsiteService } from "./services/websiteService.js";
+  14 | import { EarnService } from "./services/earnService.js";
+  15 | import { GigService } from "./services/gigService.js";
+  16 | import { isAdminUser } from "./utils/entitlements.js";
+  17 | import { AppError } from "./utils/errors.js";
+  18 | import { aiSchemas, authSchemas, billingSchema, crmSchemas, earnSchemas, gigSchemas, leadSearchSchema, paypalConfirmationSchema, profileSchema, settingsSchema } from "./utils/schemas.js";
+  19 | import { verifyAccessToken } from "./middleware/auth.js";
+  20 | 
+  21 | const __filename = fileURLToPath(import.meta.url);
+  22 | const __dirname = path.dirname(__filename);
+  23 | const projectRoot = path.resolve(__dirname, "..");
+  24 | 
+  25 | const authService = new AuthService();
+  26 | const leadService = new LeadService();
+  27 | const crmService = new CrmService();
+  28 | const dashboardService = new DashboardService();
+  29 | const billingService = new BillingService();
+  30 | const adminService = new AdminService();
+  31 | const nvidiaService = new NvidiaService();
+  32 | const websiteService = new WebsiteService();
+  33 | const earnService = new EarnService();
+  34 | const gigService = new GigService(earnService);
+  35 | 
+  36 | function canUseProAi(user = {}) {
+  37 |   if (isAdminUser(user)) return true;
+  38 |   if (user?.entitlements?.unlimitedAccess) return true;
+  39 |   if (Array.isArray(user?.permissions) && (user.permissions.includes("unlimited") || user.permissions.includes("business_tycoon") || user.permissions.includes("website_builder"))) return true;
+  40 |   const sub = String(user?.subscription || user?.planName || user?.entitlements?.activePlan || "").toLowerCase();
+  41 |   if (["professional", "growth_plus", "growth plus", "growth-plus", "agency", "enterprise", "pro"].some((k) => sub.includes(k))) return true;
+  42 |   if (user?.entitlements?.activePlan && !["trial", "starter", ""].includes(String(user.entitlements.activePlan))) return true;
+  43 |   return false;
+  44 | }
+  45 | 
+  46 | function requireProAi(user) {
+  47 |   if (canUseProAi(user)) return;
+  48 |   const err = new Error("Business Tycoon AI + Website Studio need a Pro plan or higher. Upgrade on Pricing to unlock.");
+  49 |   err.status = 402;
+  50 |   err.code = "PRO_REQUIRED";
+  51 |   throw err;
+  52 | }
+  53 | 
+  54 | const mimeTypes = new Map([
+  55 |   [".html", "text/html; charset=utf-8"],
+  56 |   [".css", "text/css; charset=utf-8"],
+  57 |   [".js", "text/javascript; charset=utf-8"],
+  58 |   [".json", "application/json; charset=utf-8"],
+  59 |   [".svg", "image/svg+xml"],
+  60 |   [".png", "image/png"],
+  61 |   [".jpg", "image/jpeg"],
+  62 |   [".jpeg", "image/jpeg"],
+  63 |   [".webp", "image/webp"],
+  64 |   [".webmanifest", "application/manifest+json; charset=utf-8"],
+  65 |   [".txt", "text/plain; charset=utf-8"],
+  66 |   [".xml", "application/xml; charset=utf-8"]
+  67 | ]);
+  68 | 
+  69 | const rateBuckets = new Map();
+  70 | const signupBuckets = new Map();
+  71 | const SIGNUP_ABUSE_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+  72 | const SIGNUP_ABUSE_MAX = 5;
+  73 | 
+  74 | function signupFingerprint(req, body = {}) {
+  75 |   const ip = clientIp(req);
+  76 |   const ua = String(getHeader(req, "user-agent") || "").slice(0, 160);
+  77 |   const lang = String(getHeader(req, "accept-language") || "").slice(0, 80);
+  78 |   const email = String(body?.email || "").trim().toLowerCase();
+  79 |   const domain = email.includes("@") ? email.split("@")[1] : "";
+  80 |   return { ip, deviceKey: `${ua}::${lang}`, domain };

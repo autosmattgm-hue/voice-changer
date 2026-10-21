@@ -1,0 +1,10 @@
+﻿openai/gpt-5.4-nano => HTTP 200 in 5268ms
+openai/gpt-5.4 => HTTP 200 in 757ms
+openai/gpt-5-nano => HTTP 200 in 603ms
+openai/gpt-4o-mini => HTTP 200 in 540ms
+google/gemini-3-flash-preview => HTTP 200 in 777ms
+openai/gpt-oss-20b => HTTP 200 in 1098ms
+mistralai/mistral-small-3.2 => HTTP 200 in 753ms
+qwen/qwen3-coder-30b-a3b-instruct => HTTP 200 in 2080ms
+moonshotai/kimi-k2.6 => HTTP 200 in 546ms
+meta/llama-3.3-70b-instruct => HTTP 200 in 595ms

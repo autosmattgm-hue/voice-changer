@@ -1,0 +1,104 @@
+﻿=== ai website routes ===
+
+=== studio tail ===
+  if (String(user.role || "").toLowerCase() === "admin" || user.entitlements?.unlimitedAccess) {
+    pill.textContent = "Admin â€” all features";
+    return;
+  }
+  if (isProUser(user)) {
+    pill.textContent = `${user.planName || user.subscription || "Pro"} â€” Studio unlocked`;
+    return;
+  }
+  pill.textContent = "Pro required for Studio";
+}
+
+// ---------- initialization ----------
+async function initStudio() {
+  if (!requireAuth()) return;
+  paintPlanBadge();
+
+  bindComposer();
+  bindPreviewControls();
+  bindLeadPicker();
+  bindHistory();
+  loadLeadPicker();
+
+  byId("wsxNewChat")?.addEventListener("click", resetConversation);
+
+  // The Studio is a Pro feature â€” everyone else gets a clear upgrade path
+  // instead of a failed build.
+  const user = getCurrentUser();
+  const isAdmin = String(user?.role || "").toLowerCase() === "admin" || user?.entitlements?.unlimitedAccess;
+  if (!isAdmin && !isProUser(user)) {
+    stage = "locked";
+    typeAi("Website Studio is part of the Professional plan. Upgrade to unlock AI site generation, the visual builder and shareable client links.");
+    renderChips([
+      { label: "Upgrade to Pro", onPick: () => { window.location.href = "/pricing.html?upgrade=pro"; } },
+      { label: "See pricing", onPick: () => { window.location.href = "/pricing.html"; } }
+    ]);
+    setStatus("Upgrade to Professional to use the Studio.");
+    setStatusLine("Pro plan required");
+    return;
+  }
+
+  // Deep link from the Leads page: ?leadId=â€¦&business=â€¦
+  const params = new URLSearchParams(window.location.search);
+  const leadId = params.get("leadId") || "";
+  const business = params.get("business") || "";
+  const siteId = params.get("id") || "";
+
+  // Always show the owned-sites list, whatever the entry point.
+  loadHistory();
+
+  if (siteId) {
+    const loaded = await loadFromQuery();
+    if (loaded) return;
+  }
+
+  if (leadId) {
+    let lead = savedLeads.find((item) => String(item.leadId || item.id || "") === String(leadId));
+    if (!lead) {
+      try {
+        const result = await apiFetch(`/api/leads/${encodeURIComponent(leadId)}/report`);
+        lead = result.lead;
+      } catch {}
+    }
+    if (lead) {
+      applySelectedLead(lead);
+      const select = byId("wsxLeadSelect");
+      if (select && ![...select.options].some((o) => o.value === String(lead.leadId || lead.id || ""))) {
+        select.insertAdjacentHTML("afterbegin", `<option value="${esc(lead.leadId || lead.id || "")}">${esc(lead.leadId || "â€”")} â€” ${esc(lead.name)}</option>`);
+      }
+      if (select) select.value = String(lead.leadId || lead.id || "");
+    } else if (business) {
+      typedBusiness = business;
+    }
+  } else if (business) {
+    typedBusiness = business;
+  }
+
+  askPageCount();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initStudio);
+} else {
+  initStudio();
+}
+
+
+
+
+=== tools css ===
+
+css\style.css:787:.tools-layout {
+css\style.css:794:.tools-panel {
+css\style.css:799:.tools-panel--workspace {
+css\style.css:804:.tool-search {
+css\style.css:814:.tool-grid {
+css\style.css:1480:  .tools-layout {
+css\style.css:1484:  .tools-panel--workspace {
+css\style.css:1551:  .tool-grid {
+
+
+

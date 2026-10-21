@@ -1,0 +1,91 @@
+ 210 |     for (const attempt of queue) {
+ 211 |       const controller = new AbortController();
+ 212 |       const timer = setTimeout(() => controller.abort(), Math.max(5000, Number(timeoutMs) || 60000));
+ 213 |       try {
+ 214 |         const body = {
+ 215 |           model: attempt,
+ 216 |           messages: cleanMessages,
+ 217 |           max_tokens: Math.min(Math.max(Number(maxTokens) || 2000, 100), 8192),
+ 218 |           temperature: Number(temperature ?? 0.5),
+ 219 |           top_p: Number(topP ?? 1),
+ 220 |           stream: false,
+ 221 |           ...safety,
+ 222 |         };
+ 223 |         const response = await fetchJson(this.baseUrl + POLLINATIONS.TEXT_CHAT, {
+ 224 |           method: "POST",
+ 225 |           signal: controller.signal,
+ 226 |           headers: this.authHeaders({ "Content-Type": "application/json", Accept: "application/json" }),
+ 227 |           body: JSON.stringify(body),
+ 228 |         });
+ 229 |         let content = null;
+ 230 |         if (response.output !== undefined) content = String(response.output || "");
+ 231 |         else if (response.output_text !== undefined) content = String(response.output_text || "");
+ 232 |         else if (response.choices && Array.isArray(response.choices)) {
+ 233 |           const c = response.choices[0] || {};
+ 234 |           if (c.message && c.message.content !== undefined) content = String(c.message.content ?? "");
+ 235 |           else if (c.text !== undefined) content = String(c.text ?? "");
+ 236 |           else if (typeof c.content === "string") content = c.content;
+ 237 |         } else if (response.content !== undefined) content = String(response.content || "");
+ 238 |         else if (response.text !== undefined) content = String(response.text || "");
+ 239 |         if (!content || !String(content).trim()) {
+ 240 |           throw new AppError("Pollinations AI returned an empty response.", 503, "POLLINATIONS_EMPTY");
+ 241 |         }
+ 242 |         // Pollinations returns HTTP 200 with a block notice embedded in the message
+ 243 |         // content when the model allow-list of the key does not include the requested model.
+ 244 |         if (/isn.t allowed to use|is not allowed to use|allow it for this key/i.test(String(content))) {
+ 245 |           const grantMatch = String(content).match(/https:\/\/enter\.pollinations\.ai\/grant\?[^\s)\]">]+/);
+ 246 |           deniedModels.push({ model: attempt, grant: grantMatch ? grantMatch[0] : "https://enter.pollinations.ai/keys" });
+ 247 |           lastError = new AppError("Pollinations key cannot use " + attempt + "; its model allow-list does not include it.", 503, "POLLINATIONS_MODEL_DENIED");
+ 248 |           continue;
+ 249 |         }
+ 250 |         return { configured: true, provider: PROVIDER, model: attempt, content, usage: response.usage || null, cached: false };
+ 251 |       } catch (error) {
+ 252 |         lastError = error;
+ 253 |         const msg = String(error?.message || "").toLowerCase();
+ 254 |         // Auth/quota/config mistakes should surface immediately, not burn retries.
+ 255 |         if (/unauthorized|forbidden|invalid api key|not_configured|402|quota|insufficient/i.test(msg)) break;
+ 256 |       } finally {
+ 257 |         clearTimeout(timer);
+ 258 |       }
+ 259 |     }
+ 260 |     if (deniedModels.length && deniedModels.length === queue.length) {
+ 261 |       throw new AppError("Pollinations key is not allowed to use any of: " + queue.join(", ") + " (its model allow-list covers none of them). Owner fix: open " + deniedModels[0].grant + " and allow the text category for this key - or set a full-access secret (sk_) key as POLLINATIONS_API_KEY. You can also pin one allowed model via POLLINATIONS_TEXT_MODEL / POLLINATIONS_WEBSITE_MODEL, then retry.", 503, "POLLINATIONS_MODEL_DENIED");
+ 262 |     }
+ 263 |     throw publicPollinationsError(lastError || new Error("Pollinations AI request failed."));
+ 264 |   }
+ 265 | 
+ 266 |   async image(payload = {}, options = {}) {
+ 267 |     const {
+ 268 |       prompt, model = POLLINATIONS.MODELS.IMAGE_DEFAULT, seed = null,
+ 269 |       width = null, height = null, nologo = true, safe = undefined, referrer = null,
+ 270 |     } = payload;
+ 271 |     const cleanPrompt = String(prompt || "").trim();
+ 272 |     if (!cleanPrompt) throw new AppError("Image prompt is required.", 400, "POLLINATIONS_INVALID_IMAGE");
+ 273 |     let url = this.baseUrl + POLLINATIONS.IMAGE + "/" + encodeURIComponent(cleanPrompt);
+ 274 |     const params = new URLSearchParams();
+ 275 |     params.set("model", String(model || POLLINATIONS.MODELS.IMAGE_DEFAULT));
+ 276 |     if (seed !== null && seed !== undefined && String(seed) !== "") params.set("seed", String(seed));
+ 277 |     if (width) params.set("width", String(width));
+ 278 |     if (height) params.set("height", String(height));
+ 279 |     if (nologo !== false) params.set("nologo", "true");
+ 280 |     if (safe !== undefined && safe !== null && safe !== false && safe !== 0 && safe !== "") {
+ 281 |       params.set("safe", Array.isArray(safe) ? safe.join(",") : String(safe));
+ 282 |     }
+ 283 |     if (referrer) params.set("referrer", String(referrer));
+ 284 |     if (env.pollinations.apiKey) params.set("key", env.pollinations.apiKey);
+ 285 |     url += "?" + params.toString();
+ 286 |     const response = await fetch(url, { headers: { ...this.authHeaders(), Accept: "image/*" }, signal: options.signal });
+ 287 |     if (!response.ok) throw publicPollinationsError(new Error("Image request failed: " + response.status));
+ 288 |     const arrayBuffer = await response.arrayBuffer();
+ 289 |     return { provider: PROVIDER, model: String(model), format: response.headers.get("content-type") || "image/jpeg", data: Buffer.from(arrayBuffer).toString("base64"), url };
+ 290 |   }
+ 291 | 
+ 292 |   async audio(payload = {}, options = {}) {
+ 293 |     // Pollinations simple TTS/music endpoint: GET /audio/{text}?model=&voice=
+ 294 |     const { text, model = null, voice = POLLINATIONS.MODELS.AUDIO_VOICE_DEFAULT } = payload;
+ 295 |     const cleanText = String(text || "").trim();
+ 296 |     if (!cleanText) throw new AppError("Audio text is required.", 400, "POLLINATIONS_INVALID_AUDIO");
+ 297 |     let url = this.baseUrl + POLLINATIONS.AUDIO + "/" + encodeURIComponent(cleanText);
+ 298 |     const params = new URLSearchParams();
+ 299 |     if (model) params.set("model", String(model));
+ 300 |     if (voice) params.set("voice", String(voice));

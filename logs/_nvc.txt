@@ -1,0 +1,51 @@
+=== api/nativeApp.js ===
+   12 | import { NvidiaService } from "./services/nvidiaService.js";
+   31 | const nvidiaService = new NvidiaService();
+  336 | nvidia: Boolean(env.nvidia.apiKey),
+  344 | chat: [env.nvidia.model, ...(env.nvidia.modelFallbacks || [])].filter(Boolean),
+  345 | website: [env.nvidia.websiteModel, ...(env.nvidia.websiteFallbacks || []), "z-ai/glm-5.3-flash", "z-ai/glm-5.3"].filter(Boolean),
+  346 | tycoon: [env.nvidia.tycoonModel, "z-ai/glm-5.3-flash", "z-ai/glm-5.3"].filter(Boolean)
+  349 | !env.nvidia.apiKey && "NVIDIA_API_KEY",
+  521 | const status = nvidiaService.status();
+  523 | ? "Add NVIDIA_API_KEY in .env or Vercel, then restart or redeploy."
+  525 | ? status.lastFailure?.message || "NVIDIA AI connection failed."
+  532 | chat: [env.nvidia.model, ...(env.nvidia.modelFallbacks || [])].filter(Boolean).slice(0, 3),
+  533 | website: [env.nvidia.websiteModel, ...(env.nvidia.websiteFallbacks || [])].filter(Boolean).slice(0, 3),
+  534 | tycoon: [env.nvidia.tycoonModel].filter(Boolean).slice(0, 3)
+  549 | const r = await nvidiaService.chat(prompt);
+  563 | return nvidiaService.chat(payload.prompt);
+  575 | return nvidiaService.analyzeLead(lead);
+  587 | return nvidiaService.writeOutreach(lead, payload.type);
+  599 | return nvidiaService.proposalPack(lead, payload.offerKey || "pro_site");
+  612 | return nvidiaService.tycoonChat(payload.prompt, { lead: lead || {}, user: user.email || "" });
+  917 | const showMessage = status < 500 || errorCode.endsWith("_NOT_CONFIGURED") || errorCode.startsWith("NVIDIA_") || errorCode === "AUTH_STORE_UNAVAILABLE"
+
+=== api/controllers/aiController.js ===
+    2 | import { NvidiaService } from "../services/nvidiaService.js";
+    6 | const nvidia = new NvidiaService();
+   11 | const result = await nvidia.analyzeLead(lead);
+   18 | const result = await nvidia.writeOutreach(lead, req.body.type);
+
+=== api/controllers/healthController.js ===
+    9 | nvidia: Boolean(env.nvidia.apiKey),
+   17 | if (!integrations.nvidia) missingRequiredForLiveOperation.push("NVIDIA API");
+
+=== api/services/leadService.js ===
+ 1185 | aiSummary: env.nvidia.apiKey
+ 1186 | ? "NVIDIA analysis is ready for this lead."
+ 1187 | : "Real NVIDIA analysis requires NVIDIA_API_KEY in .env."
+
+=== api/config/env.js ===
+   69 | nvidia: {
+   70 | apiKey: process.env.NVIDIA_API_KEY || "",
+   71 | baseUrl: process.env.NVIDIA_BASE_URL || "https://integrate.api.nvidia.com/v1",
+   75 | model: process.env.NVIDIA_MODEL || "openai/gpt-oss-20b",
+   76 | modelFallbacks: list(process.env.NVIDIA_MODEL_FALLBACKS, ["z-ai/glm-5.3-flash", "z-ai/glm-5.3"]),
+   77 | websiteModel: process.env.NVIDIA_WEBSITE_MODEL || "openai/gpt-oss-20b",
+   78 | websiteFallbacks: list(process.env.NVIDIA_WEBSITE_FALLBACKS, ["z-ai/glm-5.3-flash", "z-ai/glm-5.3"]),
+   79 | tycoonModel: process.env.NVIDIA_TYCOON_MODEL || "openai/gpt-oss-20b",
+   83 | timeoutMs: number(process.env.NVIDIA_TIMEOUT_MS, 30000),
+   84 | websiteTimeoutMs: number(process.env.NVIDIA_WEBSITE_TIMEOUT_MS, 50000),
+   85 | cacheTtlMs: number(process.env.NVIDIA_CACHE_TTL_MS, 600000),
+   86 | maxTokens: number(process.env.NVIDIA_MAX_TOKENS, 420)
+  135 | ["NVIDIA_API_KEY", env.nvidia.apiKey],
