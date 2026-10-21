@@ -1,0 +1,13 @@
+KEY len=19
+openai/gpt-5.4-nano                    HTTP 200 1712ms   content="OK"
+openai/gpt-5-nano                      HTTP 200 522ms    content="" RAW={"choices":[{"content_filter_results":{},"finish_reason":"length","index":0,"logprobs":null,"message":{"annotations":[],"content":"","refusal":null,"role":"assistant"}}],"created":1790091161,"id":"cha
+openai/gpt-oss-20b                     HTTP 200 521ms    content="" RAW={"id":"chatcmpl-a4c6bbbe6285f958","choices":[{"index":0,"message":{"role":"assistant","reasoning":"User says: \"Reply with exactly: OK\" So we should reply with just \"","tool_calls":[]},"finish_reaso
+google/gemini-3-flash-preview          HTTP 200 369ms    content="The API key used for this request isn't allowed to use googl"
+openai/gpt-4o-mini                     HTTP 200 1595ms   content="The API key used for this request isn't allowed to use opena"
+mistralai/mistral-small-3.2            HTTP 200 406ms    content="The API key used for this request isn't allowed to use mistr"
+meta/llama-3.3-70b-instruct            HTTP 200 468ms    content="The API key used for this request isn't allowed to use meta/"
+openai/gpt-5.4                         HTTP 200 377ms    content="The API key used for this request isn't allowed to use opena"
+qwen/qwen3-coder-30b-a3b-instruct      HTTP 200 356ms    content="The API key used for this request isn't allowed to use qwen/"
+openai/gpt-5.4-mini                    HTTP 200 318ms    content="The API key used for this request isn't allowed to use opena"
+openai/gpt-5.5                         HTTP 200 374ms    content="The API key used for this request isn't allowed to use opena"
+moonshotai/kimi-k2.6                   HTTP 200 298ms    content="The API key used for this request isn't allowed to use moons"

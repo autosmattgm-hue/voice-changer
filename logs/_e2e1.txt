@@ -1,0 +1,3 @@
+﻿LOGIN_OK uid=owner role=admin
+ENTITLEMENTS={"unlimitedAccess":true,"unlimitedLeads":true,"billingRequired":false,"allFeatures":true}
+SUBSCRIPTION=enterprise

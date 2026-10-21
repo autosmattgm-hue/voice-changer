@@ -1,0 +1,97 @@
+ 400 |           : error;
+ 401 |         clearTimeout(timeout);
+ 402 |         if (isRetryableNvidiaFailure(lastError)) {
+ 403 |           // A transient timeout cools the model briefly; a dead/retired ID gets
+ 404 |           // the full 5-minute ban so we don't lock out the only fast model.
+ 405 |           coolDownModel(model, lastError?.code === "NVIDIA_TIMEOUT" ? TRANSIENT_COOLDOWN_MS : MODEL_COOLDOWN_MS);
+ 406 |           // Timeouts are usually jitter on the fast primary (5-10s normally,
+ 407 |           // occasional 17s+ spikes). The slow fallbacks run ~44-100s live and can
+ 408 |           // never answer inside an interactive budget, so a timed-out first
+ 409 |           // attempt swaps the next slot to a retry of the SAME fast model — two
+ 410 |           // real chances instead of one real chance plus a doomed slow attempt.
+ 411 |           if (lastError?.code === "NVIDIA_TIMEOUT" && index === 0 && queue.length > 1 && queue[1] !== model) {
+ 412 |             queue[1] = model;
+ 413 |           }
+ 414 |           continue;
+ 415 |         }
+ 416 |         throw lastError;
+ 417 |       }
+ 418 |       clearTimeout(timeout);
+ 419 | 
+ 420 |       if (!response.ok) {
+ 421 |         const body = await response.text();
+ 422 |         let detail = body.slice(0, 500);
+ 423 |         try {
+ 424 |           const parsed = JSON.parse(body);
+ 425 |           detail = parsed.error?.message || parsed.detail || detail;
+ 426 |         } catch {
+ 427 |           // Keep the raw text detail when NVIDIA returns non-JSON errors.
+ 428 |         }
+ 429 |         lastError = new AppError(`NVIDIA API request failed on ${model}: ${detail}`, response.status, "NVIDIA_API_ERROR");
+ 430 |         // EOL / retired models: ban for 5 min and move on instantly — don't burn the timeout.
+ 431 |         if (isEndOfLifeError(lastError) || isRetiredModel(model)) {
+ 432 |           coolDownModel(model);
+ 433 |           continue;
+ 434 |         }
+ 435 |         if (isRetryableNvidiaFailure(lastError)) {
+ 436 |           // 429/5xx are transient — short cool so a rate-limit blip doesn't
+ 437 |           // sideline the fast primary for 5 minutes and starve later calls.
+ 438 |           coolDownModel(model, TRANSIENT_COOLDOWN_MS);
+ 439 |           continue;
+ 440 |         }
+ 441 |         throw lastError;
+ 442 |       }
+ 443 | 
+ 444 |       let payload = await response.json();
+ 445 |       let content = extractMessageContent(payload);
+ 446 |       // GLM reasoning models can burn max_tokens thinking before answering.
+ 447 |       if (isReasoningExhausted(payload) && Date.now() < deadlineAt - 2500) {
+ 448 |         const retryController = new AbortController();
+ 449 |         const retryTimeout = setTimeout(() => retryController.abort(), Math.min(14000, Math.max(3000, deadlineAt - Date.now() - 500)));
+ 450 |         try {
+ 451 |           const retryResponse = await fetch(invokeUrl, {
+ 452 |             method: "POST",
+ 453 |             signal: retryController.signal,
+ 454 |             headers: {
+ 455 |               "Content-Type": "application/json",
+ 456 |               "Accept": "application/json",
+ 457 |               "Authorization": `Bearer ${env.nvidia.apiKey}`
+ 458 |             },
+ 459 |             body: JSON.stringify({ ...requestPayload, top_p: modelTopP(model, topP), max_tokens: Math.min(Math.max(maxTokens * 2, 900), 2600) })
+ 460 |           });
+ 461 |           if (retryResponse.ok) {
+ 462 |             const retryPayload = await retryResponse.json();
+ 463 |             const retryContent = extractMessageContent(retryPayload);
+ 464 |             if (retryContent) { payload = retryPayload; content = retryContent; }
+ 465 |           }
+ 466 |         } catch {
+ 467 |           // Keep the original payload; empty content path handles the failure.
+ 468 |         } finally {
+ 469 |           clearTimeout(retryTimeout);
+ 470 |         }
+ 471 |       }
+ 472 |       // Some models return HTTP 200 with empty content (observed live on glm and
+ 473 |       // nemotron). Retry instead of handing the user a "No content" placeholder.
+ 474 |       if (!String(content || "").trim()) {
+ 475 |         lastError = new AppError(`NVIDIA model ${model} returned an empty response.`, 502, "NVIDIA_EMPTY");
+ 476 |         coolDownModel(model, TRANSIENT_COOLDOWN_MS);
+ 477 |         if (index === 0 && queue.length > 1 && queue[1] !== model) queue[1] = model;
+ 478 |         continue;
+ 479 |       }
+ 480 |       const result = {
+ 481 |         configured: true,
+ 482 |         provider: "nvidia",
+ 483 |         model,
+ 484 |         content: plainTextAiOutput(content) || "No content returned by NVIDIA model.",
+ 485 |         usage: payload.usage || null,
+ 486 |         cached: false
+ 487 |       };
+ 488 |       if (cacheKey) setCachedResult(cacheKey, result, cacheTtlMs);
+ 489 |       markProviderSuccess();
+ 490 |       return result;
+ 491 |     }
+ 492 | 
+ 493 |     throw lastError || new AppError("NVIDIA AI could not complete the request.", 503, "NVIDIA_UNAVAILABLE");
+ 494 |   }
+ 495 | 
+ 496 |   async completeSafe(messages, options = {}) {

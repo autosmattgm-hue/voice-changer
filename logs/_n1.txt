@@ -1,0 +1,52 @@
+ 289 | function markProviderSuccess() {
+ 290 |   const at = new Date().toISOString();
+ 291 |   providerState.lastCheckedAt = at;
+ 292 |   providerState.lastSuccessAt = at;
+ 293 |   providerState.lastFailure = null;
+ 294 | }
+ 295 | 
+ 296 | function markProviderFailure(error) {
+ 297 |   providerState.lastCheckedAt = new Date().toISOString();
+ 298 |   providerState.lastFailure = {
+ 299 |     code: error.code || "NVIDIA_UNAVAILABLE",
+ 300 |     message: error.message || "NVIDIA AI is unavailable."
+ 301 |   };
+ 302 | }
+ 303 | 
+ 304 | function coolDownModel(model, ms = MODEL_COOLDOWN_MS) {
+ 305 |   modelCooldowns.set(model, Date.now() + ms);
+ 306 | }
+ 307 | 
+ 308 | export class NvidiaService {
+ 309 |   configured() {
+ 310 |     return Boolean(env.nvidia.apiKey);
+ 311 |   }
+ 312 | 
+ 313 |   status() {
+ 314 |     return {
+ 315 |       configured: this.configured(),
+ 316 |       verification: providerState.lastSuccessAt ? "verified" : providerState.lastFailure ? "failed" : "unverified",
+ 317 |       lastCheckedAt: providerState.lastCheckedAt,
+ 318 |       lastSuccessAt: providerState.lastSuccessAt,
+ 319 |       lastFailure: providerState.lastFailure
+ 320 |     };
+ 321 |   }
+ 322 | 
+ 323 |   sanitizeMessages(messages = []) {
+ 324 |     // NVIDIA chat models accept text only. Drop image_url parts (your deepseek sample) so Tycoon/Studio never 400.
+ 325 |     return (Array.isArray(messages) ? messages : []).map((m) => {
+ 326 |       const role = m?.role || "user";
+ 327 |       const content = m?.content;
+ 328 |       if (typeof content === "string") return { role, content };
+ 329 |       if (Array.isArray(content)) {
+ 330 |         const text = content.filter((p) => p?.type === "text").map((p) => String(p?.text || "")).join("\n").trim();
+ 331 |         return { role, content: text || "(no text provided)" };
+ 332 |       }
+ 333 |       return { role, content: String(content ?? "") };
+ 334 |     }).filter((m) => String(m.content || "").trim().length);
+ 335 |   }
+ 336 | 
+ 337 |   async complete(messages, {
+ 338 |     temperature = 0.5,
+ 339 |     maxTokens = env.nvidia.maxTokens,
+ 340 |     topP = 1,

@@ -1,0 +1,78 @@
+ 323 |   sanitizeMessages(messages = []) {
+ 324 |     // NVIDIA chat models accept text only. Drop image_url parts (your deepseek sample) so Tycoon/Studio never 400.
+ 325 |     return (Array.isArray(messages) ? messages : []).map((m) => {
+ 326 |       const role = m?.role || "user";
+ 327 |       const content = m?.content;
+ 328 |       if (typeof content === "string") return { role, content };
+ 329 |       if (Array.isArray(content)) {
+ 330 |         const text = content.filter((p) => p?.type === "text").map((p) => String(p?.text || "")).join("\n").trim();
+ 331 |         return { role, content: text || "(no text provided)" };
+ 332 |       }
+ 333 |       return { role, content: String(content ?? "") };
+ 334 |     }).filter((m) => String(m.content || "").trim().length);
+ 335 |   }
+ 336 | 
+ 337 |   async complete(messages, {
+ 338 |     temperature = 0.5,
+ 339 |     maxTokens = env.nvidia.maxTokens,
+ 340 |     topP = 1,
+ 341 |     frequencyPenalty = 0,
+ 342 |     presencePenalty = 0,
+ 343 |     stream = false,
+ 344 |     timeoutMs = env.nvidia.timeoutMs,
+ 345 |     cacheTtlMs = env.nvidia.cacheTtlMs,
+ 346 |     preferredModels = null,
+ 347 |     maxAttempts = 2
+ 348 |   } = {}) {
+ 349 |     if (!this.configured()) {
+ 350 |       throw new AppError("Real NVIDIA AI requires NVIDIA_API_KEY in .env.", 503, "NVIDIA_NOT_CONFIGURED");
+ 351 |     }
+ 352 | 
+ 353 |     const invokeUrl = `${env.nvidia.baseUrl.replace(/\/$/, "")}/chat/completions`;
+ 354 |     const cleanMessages = this.sanitizeMessages(messages);
+ 355 |     const basePayload = {
+ 356 |       messages: withPlainTextInstruction(cleanMessages),
+ 357 |       max_tokens: Math.max(64, Math.min(Number(maxTokens) || env.nvidia.maxTokens, 4096)),
+ 358 |       temperature: Number(temperature ?? 0.5),
+ 359 |       top_p: topP,
+ 360 |       frequency_penalty: frequencyPenalty,
+ 361 |       presence_penalty: presencePenalty,
+ 362 |       stream
+ 363 |     };
+ 364 |     let lastError = null;
+ 365 | 
+ 366 |     const preferred = Array.isArray(preferredModels) ? preferredModels.filter((m) => m && !isRetiredModel(m)) : null;
+ 367 |     const queue = [...new Set([...(preferred && preferred.length ? preferred : []), ...modelsToTry()])]
+ 368 |       .filter((m) => !isRetiredModel(m))
+ 369 |       .slice(0, Math.max(1, Math.min(Number(maxAttempts) || 2, 2)));
+ 370 |     if (!queue.length) throw new AppError("No usable NVIDIA model is configured. Set NVIDIA_MODEL=z-ai/glm-5.3-flash and activate it at https://build.nvidia.com, then restart or redeploy.", 503, "NVIDIA_NO_LIVE_MODEL");
+ 371 |     const deadlineAt = Date.now() + requestBudget(timeoutMs, 32000);
+ 372 |     for (let index = 0; index < queue.length; index += 1) {
+ 373 |       const model = queue[index];
+ 374 |       // 17s per-attempt cap: gpt-oss-20b runs 9-11s on real business prompts, so
+ 375 |       // the old 12s cap cut it off mid-answer and forced a needless fallback.
+ 376 |       const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, queue.length - index, 17000);
+ 377 |       if (!attemptTimeoutMs) break;
+ 378 |       const requestPayload = { ...basePayload, ...modelRequestOptions(model), model, top_p: modelTopP(model, topP) };
+ 379 |       const cacheKey = !stream && cacheTtlMs > 0 ? cacheKeyFor(requestPayload) : "";
+ 380 |       const cached = cacheKey ? getCachedResult(cacheKey) : null;
+ 381 |       if (cached) return cached;
+ 382 | 
+ 383 |       const controller = new AbortController();
+ 384 |       const timeout = setTimeout(() => controller.abort(), attemptTimeoutMs);
+ 385 |       let response;
+ 386 |       try {
+ 387 |         response = await fetch(invokeUrl, {
+ 388 |           method: "POST",
+ 389 |           signal: controller.signal,
+ 390 |           headers: {
+ 391 |             "Content-Type": "application/json",
+ 392 |             "Accept": stream ? "text/event-stream" : "application/json",
+ 393 |             "Authorization": `Bearer ${env.nvidia.apiKey}`
+ 394 |           },
+ 395 |           body: JSON.stringify(requestPayload)
+ 396 |         });
+ 397 |       } catch (error) {
+ 398 |         lastError = error?.name === "AbortError"
+ 399 |           ? new AppError(`NVIDIA model ${model} took too long to reply.`, 504, "NVIDIA_TIMEOUT")
+ 400 |           : error;

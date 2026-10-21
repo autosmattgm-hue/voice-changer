@@ -1,0 +1,77 @@
+=== api/services/pollinationsService.js (528 lines) ===
+   83  fn:publicPollinationsError
+  107  fn:fetchJson
+  139  refreshConfig             ()
+  145  configured                ()
+  149  setKey                    (key)
+  154  authHeaders               (extra = {})
+  159  resolveTextModels         (requested, fallbackPool)
+  166  send                      (domain, payload = {}, options = {})
+  188  text                      (messages, options = {})
+  266  image                     (payload = {}, options = {})
+  292  audio                     (payload = {}, options = {})
+  309  transcribeAudio           (payload = {}, options = {})
+  335  speak                     (payload = {}, options = {})
+  351  video                     (payload = {}, options = {})
+  370  _3d                       (payload = {}, options = {})
+  387  embeddings                (payload = {}, options = {})
+  408  listModels                (params = {}, options = {})
+  417  pickDesignSystem          (style, palette)
+  430  fallbackPageFragment      (spec, lead, hero, gallery, isHome, archId)
+  444  assembleMultiPage         (pages, business, accent, archId)
+  455  buildWebsite              (lead = {}, options = {})
+  516  refineWebsite             (currentHtml, instruction, meta = {})
+
+=== api/services/nvidiaService.js (784 lines) ===
+   62  fn:isRetiredModel
+   74  fn:isEndOfLifeError
+   79  fn:plainTextAiOutput
+   98  fn:withPlainTextInstruction
+  108  fn:compactObject
+  117  fn:truncateText
+  122  fn:missingAuditChecks
+  129  fn:compactLeadForAi
+  153  fn:stableJson
+  161  fn:cacheKeyFor
+  165  fn:getCachedResult
+  178  fn:setCachedResult
+  190  fn:modelsToTry
+  199  fn:modelRequestOptions
+  216  fn:modelTopP
+  221  fn:extractMessageContent
+  226  fn:isReasoningExhausted
+  232  fn:requestBudget
+  237  fn:nextAttemptTimeout
+  244  fn:isRetryableNvidiaFailure
+  250  fn:friendlyAiError
+  261  fn:publicNvidiaError
+  289  fn:markProviderSuccess
+  296  fn:markProviderFailure
+  304  fn:coolDownModel
+  309  configured                ()
+  313  status                    ()
+  323  sanitizeMessages          (messages = [])
+  496  completeSafe              (messages, options = {})
+  506  completeWithModel         (messages, options = {})
+  510  chat                      (prompt)
+  529  analyzeLead               (lead)
+  544  writeOutreach             (lead, type)
+  568  proposalPack              (lead, offerKey = "pro_site")
+  577  tycoonChat                (prompt, context = {})
+  596  completeRaw               (messages, { temperature = 0.5, topP = 1, maxTokens = 2200, timeoutMs = 0 } = {})
+  675  cleanHtml                 (raw)
+  684  cleanFragment             (raw)
+  694  assembleMultiPage         (pages, business, accent)
+  701  fallbackPageFragment      (spec, lead, hero, gallery, isHome)
+  717  buildWebsite              (lead = {}, options = {})
+  771  refineWebsite             (currentHtml, instruction, meta = {})
+
+=== api/services/websiteService.js (170 lines) ===
+   12  fn:fallbackWebsiteHtml
+   33  websiteKey                (user, leadId)
+   36  build                     ({ lead, options = {}, user })
+  104  refine                    ({ id, instruction, user, provider })
+  122  getById                   (id)
+  128  listForUser               (user)
+  151  saveHtml                  (id, html, user)
+  162  getByToken                (token)

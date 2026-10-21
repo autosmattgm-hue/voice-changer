@@ -1,0 +1,105 @@
+ 496 |   async completeSafe(messages, options = {}) {
+ 497 |     try {
+ 498 |       return await this.complete(messages, options);
+ 499 |     } catch (error) {
+ 500 |       const publicError = publicNvidiaError(error);
+ 501 |       markProviderFailure(publicError);
+ 502 |       throw publicError;
+ 503 |     }
+ 504 |   }
+ 505 | 
+ 506 |   completeWithModel(messages, options = {}) {
+ 507 |     return this.complete(messages, options);
+ 508 |   }
+ 509 | 
+ 510 |   chat(prompt) {
+ 511 |     // Creator-identity questions are answered locally: guaranteed correct,
+ 512 |     // zero token cost, works even when the upstream key has no model access.
+ 513 |     if (isCreatorQuestion(prompt)) {
+ 514 |       const a = creatorAnswer();
+ 515 |       return Promise.resolve({ configured: true, provider: "brand-identity", model: "brand-identity", content: a.content, usage: null, cached: false, intent: a.intent });
+ 516 |     }
+ 517 |     return this.completeSafe([
+ 518 |       {
+ 519 |         role: "system",
+ 520 |         content: "You are MAT LEADS AI PRO X, a practical agency growth assistant. Give concise, useful, revenue-focused answers in plain text. " + identityLine()
+ 521 |       },
+ 522 |       {
+ 523 |         role: "user",
+ 524 |         content: truncateText(prompt, 3000)
+ 525 |       }
+ 526 |     ], { temperature: 0.4, maxTokens: env.nvidia.maxTokens }, "AI is temporarily unavailable. Please check NVIDIA_API_KEY and try again.");
+ 527 |   }
+ 528 | 
+ 529 |   analyzeLead(lead) {
+ 530 |     const leadContext = compactLeadForAi(lead);
+ 531 |     const fallback = `Opportunity: Website/SEO lead for ${lead?.name || "this business"}. Problems: Missing online presence data. Offer: Website audit + rebuild. First Outreach Angle: Free audit. Revenue Estimate: $799-$1499 setup.`;
+ 532 |     return this.completeSafe([
+ 533 |       {
+ 534 |         role: "system",
+ 535 |         content: "You are an expert agency growth strategist. Be factual, direct, and concise. Use plain text."
+ 536 |       },
+ 537 |       {
+ 538 |         role: "user",
+ 539 |         content: `Analyze this lead for website, SEO, AI automation, and marketing opportunity. Return these labels only: Opportunity, Problems, Offer, First Outreach Angle, Revenue Estimate. Keep under 160 words. Do not use # or * characters.\n\n${JSON.stringify(leadContext)}`
+ 540 |       }
+ 541 |     ], { temperature: 0.25, maxTokens: 320 }, fallback);
+ 542 |   }
+ 543 | 
+ 544 |   writeOutreach(lead, type) {
+ 545 |     const leadContext = compactLeadForAi(lead);
+ 546 |     const closers = {
+ 547 |       cold_email: "Cold email that books a call. Subject + 3 short paragraphs + paid-audit CTA.",
+ 548 |       follow_up: "Polite breakup follow-up with urgency + invoice CTA.",
+ 549 |       website_redesign: "Website redesign pitch with 3 flaws, outcome, price anchor $799-$1499.",
+ 550 |       seo: "Local SEO pitch with map-pack outcome + monthly retainer anchor.",
+ 551 |       marketing: "Marketing growth pitch with offer + guarantee + call CTA.",
+ 552 |       ai_automation: "AI chatbot/automation pitch with hours saved + setup + monthly.",
+ 553 |       business_audit: "Paid audit pitch: sell the $149 audit before the build."
+ 554 |     };
+ 555 |     const fallback = `Subject: Quick idea for ${lead?.name || "your business"}\n\nHi, I found your listing and can help with website, WhatsApp and bookings. Reply YES for a free audit.`;
+ 556 |     return this.completeSafe([
+ 557 |       {
+ 558 |         role: "system",
+ 559 |         content: "You write professional B2B outreach for web development, SEO, marketing, and AI automation agencies. Be specific, respectful, and concise. Use plain text. Always end with a clear money CTA."
+ 560 |       },
+ 561 |       {
+ 562 |         role: "user",
+ 563 |         content: `Write a ${closers[type] || type} for this business lead. Include a subject line, short email body, and one clear CTA. Keep under 150 words. Do not use # or * characters.\n\n${JSON.stringify(leadContext)}`
+ 564 |       }
+ 565 |     ], { temperature: 0.3, maxTokens: 300 }, fallback);
+ 566 |   }
+ 567 | 
+ 568 |   proposalPack(lead, offerKey = "pro_site") {
+ 569 |     const leadContext = compactLeadForAi(lead);
+ 570 |     const fallback = `Proposal for ${lead?.name || "your business"}: Website rebuild, WhatsApp + booking setup, $799-$1499, 7-14 days. Reply YES to approve.`;
+ 571 |     return this.completeSafe([
+ 572 |       { role: "system", content: "You are a proposal writer for agencies. Plain text only. Structure: Problem, Offer, Deliverables, Timeline, Price, Guarantee, Next step to pay." },
+ 573 |       { role: "user", content: `Write a client-ready proposal for offer ${offerKey} for this lead. Keep under 260 words. No markdown.\n\n${JSON.stringify(leadContext)}` }
+ 574 |     ], { temperature: 0.4, maxTokens: 500 }, fallback);
+ 575 |   }
+ 576 | 
+ 577 |   tycoonChat(prompt, context = {}) {
+ 578 |     const ctx = JSON.stringify(context).slice(0, 2000);
+ 579 |     const fallback = `What to say: Hi, I can rebuild your online presence with WhatsApp bookings. Price to quote: $799 setup + $99/mo care. Why it wins: direct bookings. Next move: send audit + pay link.`;
+ 580 |     if (isCreatorQuestion(prompt)) {
+ 581 |       const a = creatorAnswer();
+ 582 |       return Promise.resolve({ configured: true, provider: "brand-identity", model: "brand-identity", content: a.content, usage: null, cached: false, intent: a.intent });
+ 583 |     }
+ 584 |     return this.completeSafe([
+ 585 |       {
+ 586 |         role: "system",
+ 587 |         content: "You are BUSINESS AI TYCOON, a ruthless professional business tycoon mentor. You think like a billionaire closer: pricing psychology, negotiation, objection handling, WhatsApp scripts, follow-up cadence, upsells, retainers. Always give: 1) What to say (copy-paste script), 2) Price to quote, 3) Why it wins, 4) Next move. Keep it practical, confident, street-smart. Plain text only, no markdown symbols. " + identityLine()
+ 588 |       },
+ 589 |       {
+ 590 |         role: "user",
+ 591 |         content: `${String(prompt || "").slice(0, 1200)}\n\nLead context: ${ctx}`
+ 592 |       }
+ 593 |     ], { temperature: 0.5, topP: 1, maxTokens: 360, timeoutMs: env.nvidia.timeoutMs, cacheTtlMs: 600000, preferredModels: [env.nvidia.tycoonModel, "z-ai/glm-5.3-flash", "z-ai/glm-5.3"], maxAttempts: 2 });
+ 594 |   }
+ 595 | 
+ 596 |   async completeRaw(messages, { temperature = 0.5, topP = 1, maxTokens = 2200, timeoutMs = 0 } = {}) {
+ 597 |     if (!this.configured()) {
+ 598 |       throw new AppError("Real NVIDIA AI requires NVIDIA_API_KEY in .env.", 503, "NVIDIA_NOT_CONFIGURED");
+ 599 |     }
+ 600 |     const invokeUrl = `${env.nvidia.baseUrl.replace(/\/$/, "")}/chat/completions`;

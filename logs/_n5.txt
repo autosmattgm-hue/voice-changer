@@ -1,0 +1,171 @@
+ 160 | 
+ 161 | function cacheKeyFor(payload) {
+ 162 |   return crypto.createHash("sha256").update(stableJson(payload)).digest("hex");
+ 163 | }
+ 164 | 
+ 165 | function getCachedResult(cacheKey) {
+ 166 |   const cached = aiCache.get(cacheKey);
+ 167 |   if (!cached) return null;
+ 168 |   if (cached.expiresAt <= Date.now()) {
+ 169 |     aiCache.delete(cacheKey);
+ 170 |     return null;
+ 171 |   }
+ 172 |   return {
+ 173 |     ...cached.result,
+ 174 |     cached: true
+ 175 |   };
+ 176 | }
+ 177 | 
+ 178 | function setCachedResult(cacheKey, result, ttlMs) {
+ 179 |   if (!ttlMs || ttlMs <= 0) return;
+ 180 |   aiCache.set(cacheKey, {
+ 181 |     result,
+ 182 |     expiresAt: Date.now() + ttlMs
+ 183 |   });
+ 184 |   while (aiCache.size > MAX_CACHE_ENTRIES) {
+ 185 |     const oldestKey = aiCache.keys().next().value;
+ 186 |     aiCache.delete(oldestKey);
+ 187 |   }
+ 188 | }
+ 189 | 
+ 190 | function modelsToTry() {
+ 191 |   const now = Date.now();
+ 192 |   const configured = [env.nvidia.model, ...(env.nvidia.modelFallbacks || [])];
+ 193 |   const models = [...new Set([...configured, ...DEFAULT_MODELS].map((model) => String(model || "").trim()).filter(Boolean))]
+ 194 |     .filter((model) => !isRetiredModel(model))
+ 195 |     .filter((model) => (modelCooldowns.get(model) || 0) <= now);
+ 196 |   return models.slice(0, 2);
+ 197 | }
+ 198 | 
+ 199 | function modelRequestOptions(model) {
+ 200 |   // GLM 5.3 uses reasoning by default. These interactive business workflows
+ 201 |   // need a direct answer, so avoid spending the request budget on it.
+ 202 |   if (/^z-ai\/glm-5\.3/i.test(model)) {
+ 203 |     return {
+ 204 |       reasoning_effort: "low",
+ 205 |       chat_template_kwargs: { clear_thinking: true }
+ 206 |     };
+ 207 |   }
+ 208 |   // gpt-oss is a reasoning model; keep thinking minimal so it answers fast.
+ 209 |   if (/gpt-oss/i.test(model)) {
+ 210 |     return { reasoning_effort: "low" };
+ 211 |   }
+ 212 |   return {};
+ 213 | }
+ 214 | 
+ 215 | // Kimi K3 pins top_p to 0.95 and rejects any override — respect that.
+ 216 | function modelTopP(model, requested) {
+ 217 |   if (/kimi-k3/i.test(model)) return 0.95;
+ 218 |   return Number(requested ?? 1);
+ 219 | }
+ 220 | 
+ 221 | function extractMessageContent(payload) {
+ 222 |   const choice = payload?.choices?.[0] || {};
+ 223 |   return choice.message?.content || choice.delta?.content || "";
+ 224 | }
+ 225 | 
+ 226 | function isReasoningExhausted(payload) {
+ 227 |   const choice = payload?.choices?.[0] || {};
+ 228 |   const message = choice.message || {};
+ 229 |   return !extractMessageContent(payload) && (Boolean(message.reasoning_content) || choice.finish_reason === "length");
+ 230 | }
+ 231 | 
+ 232 | function requestBudget(timeoutMs, maxTotalMs) {
+ 233 |   const requested = Number(timeoutMs);
+ 234 |   return Math.max(5000, Math.min(Number.isFinite(requested) ? requested : maxTotalMs, maxTotalMs));
+ 235 | }
+ 236 | 
+ 237 | function nextAttemptTimeout(deadlineAt, attemptsRemaining, maxAttemptMs) {
+ 238 |   const remaining = deadlineAt - Date.now();
+ 239 |   if (remaining < 3000) return 0;
+ 240 |   const reservedForFallbacks = Math.max(0, attemptsRemaining - 1) * 3000;
+ 241 |   return Math.max(3000, Math.min(maxAttemptMs, remaining - reservedForFallbacks));
+ 242 | }
+ 243 | 
+ 244 | function isRetryableNvidiaFailure(error) {
+ 245 |   const status = Number(error?.status || 0);
+ 246 |   if (isEndOfLifeError(error)) return true;
+ 247 |   return error?.code === "NVIDIA_TIMEOUT" || error?.name === "TypeError" || status === 400 || status === 404 || status === 408 || status === 409 || status === 429 || status >= 500;
+ 248 | }
+ 249 | 
+ 250 | function friendlyAiError(error, fallback = "AI is temporarily unavailable. Please try again in a moment.") {
+ 251 |   const raw = String(error?.message || "");
+ 252 |   if (/NVIDIA_API_KEY|NVIDIA_NOT_CONFIGURED/i.test(raw)) return "AI key missing. Add NVIDIA_API_KEY in Vercel env vars, then redeploy.";
+ 253 |   if (isEndOfLifeError(error)) return "That model retired — switched to a live model. Please try again.";
+ 254 |   if (/timed out|NVIDIA_TIMEOUT|504/i.test(raw)) return "AI took too long — I retried a faster model. Please send again.";
+ 255 |   if (/402|PRO_REQUIRED/i.test(raw)) return raw;
+ 256 |   if (/401|INVALID_TOKEN|Login required/i.test(raw)) return "Please log in again, then retry.";
+ 257 |   if (error?.status && Number(error.status) >= 500) return `${fallback} (${raw.slice(0, 160)})`;
+ 258 |   return raw || fallback;
+ 259 | }
+ 260 | 
+ 261 | function publicNvidiaError(error) {
+ 262 |   const raw = String(error?.message || "");
+ 263 |   const status = Number(error?.status || 0);
+ 264 |   if (error?.code === "NVIDIA_NOT_CONFIGURED") return error;
+ 265 |   if (status === 401) {
+ 266 |     return new AppError("NVIDIA rejected the API key (401). Open https://build.nvidia.com, sign in, click 'Get API Key', replace NVIDIA_API_KEY in .env/Vercel, then redeploy.", 503, "NVIDIA_AUTH_FAILED");
+ 267 |   }
+ 268 |   if (status === 403 || /authorization failed/i.test(raw)) {
+ 269 |     return new AppError("Your NVIDIA key is valid but not activated for this model (403). Fix: while signed in at https://build.nvidia.com, open the model page (e.g. https://build.nvidia.com/z-ai/glm-5.3-flash), click 'Get API Key' / activate it, then replace NVIDIA_API_KEY in .env and Vercel and redeploy.", 503, "NVIDIA_MODEL_NOT_ACTIVE");
+ 270 |   }
+ 271 |   if (status === 410 || /end of life/i.test(raw)) {
+ 272 |     return new AppError("This NVIDIA model retired (410). The app auto-rotates to a live model — retry now; if it repeats, activate z-ai/glm-5.3-flash at https://build.nvidia.com and update NVIDIA_API_KEY.", 503, "NVIDIA_MODEL_EOL");
+ 273 |   }
+ 274 |   if (status === 402 || /payment required|insufficient.*credit|billing/i.test(raw)) {
+ 275 |     return new AppError("NVIDIA AI has no available inference credit or model access. Check the NVIDIA account, then try again.", 503, "NVIDIA_CREDIT_REQUIRED");
+ 276 |   }
+ 277 |   if (isEndOfLifeError(error) || status === 404) {
+ 278 |     return new AppError("No configured NVIDIA model is available. Set NVIDIA_MODEL=z-ai/glm-5.3-flash, activate it at https://build.nvidia.com, then restart or redeploy.", 503, "NVIDIA_MODEL_UNAVAILABLE");
+ 279 |   }
+ 280 |   if (error?.code === "NVIDIA_TIMEOUT" || status === 408 || status === 504) {
+ 281 |     return new AppError("NVIDIA AI timed out. Please try again in a moment.", 503, "NVIDIA_TIMEOUT");
+ 282 |   }
+ 283 |   if (status === 400 || status === 422) {
+ 284 |     return new AppError("NVIDIA AI rejected this request. Check the configured model IDs and try again.", 503, "NVIDIA_REQUEST_REJECTED");
+ 285 |   }
+ 286 |   return new AppError("NVIDIA AI is temporarily unavailable. Please try again in a moment.", 503, "NVIDIA_UNAVAILABLE");
+ 287 | }
+ 288 | 
+ 289 | function markProviderSuccess() {
+ 290 |   const at = new Date().toISOString();
+ 291 |   providerState.lastCheckedAt = at;
+ 292 |   providerState.lastSuccessAt = at;
+ 293 |   providerState.lastFailure = null;
+ 294 | }
+ 295 | 
+ 296 | function markProviderFailure(error) {
+ 297 |   providerState.lastCheckedAt = new Date().toISOString();
+ 298 |   providerState.lastFailure = {
+ 299 |     code: error.code || "NVIDIA_UNAVAILABLE",
+ 300 |     message: error.message || "NVIDIA AI is unavailable."
+ 301 |   };
+ 302 | }
+ 303 | 
+ 304 | function coolDownModel(model, ms = MODEL_COOLDOWN_MS) {
+ 305 |   modelCooldowns.set(model, Date.now() + ms);
+ 306 | }
+ 307 | 
+ 308 | export class NvidiaService {
+ 309 |   configured() {
+ 310 |     return Boolean(env.nvidia.apiKey);
+ 311 |   }
+ 312 | 
+ 313 |   status() {
+ 314 |     return {
+ 315 |       configured: this.configured(),
+ 316 |       verification: providerState.lastSuccessAt ? "verified" : providerState.lastFailure ? "failed" : "unverified",
+ 317 |       lastCheckedAt: providerState.lastCheckedAt,
+ 318 |       lastSuccessAt: providerState.lastSuccessAt,
+ 319 |       lastFailure: providerState.lastFailure
+ 320 |     };
+ 321 |   }
+ 322 | 
+ 323 |   sanitizeMessages(messages = []) {
+ 324 |     // NVIDIA chat models accept text only. Drop image_url parts (your deepseek sample) so Tycoon/Studio never 400.
+ 325 |     return (Array.isArray(messages) ? messages : []).map((m) => {
+ 326 |       const role = m?.role || "user";
+ 327 |       const content = m?.content;
+ 328 |       if (typeof content === "string") return { role, content };
+ 329 |       if (Array.isArray(content)) {
+ 330 |         const text = content.filter((p) => p?.type === "text").map((p) => String(p?.text || "")).join("\n").trim();

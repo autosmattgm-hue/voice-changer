@@ -1,0 +1,40 @@
+﻿331: }
+332: 
+333: .preview-lead span {
+334:   color: var(--muted);
+335:   font-size: 0.85rem;
+336: }
+337: 
+338: .score-pill,
+339: .status-pill,
+340: .tag,
+341: .plan-pill {
+342:   display: inline-flex;
+343:   align-items: center;
+344:   justify-content: center;
+345:   min-height: 28px;
+346:   padding: 4px 9px;
+347:   border: 1px solid var(--border);
+348:   border-radius: 999px;
+349:   background: var(--surface);
+350:   color: var(--muted);
+351:   font-size: 0.78rem;
+352:   font-weight: 750;
+353:   white-space: nowrap;
+354: }
+355: 
+356: .score-pill.high,
+357: .status-pill.success,
+358: .tag.success {
+359:   border-color: rgba(19, 115, 51, 0.22);
+360:   background: rgba(19, 115, 51, 0.08);
+361:   color: var(--accent-2);
+362: }
+363: 
+364: .score-pill.hot,
+365: .status-pill.warning,
+366: .tag.warning {
+367:   border-color: rgba(176, 96, 0, 0.24);
+368:   background: rgba(176, 96, 0, 0.09);
+369:   color: var(--warning);
+370: }

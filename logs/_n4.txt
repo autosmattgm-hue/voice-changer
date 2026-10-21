@@ -1,0 +1,178 @@
+ 323 |   sanitizeMessages(messages = []) {
+ 324 |     // NVIDIA chat models accept text only. Drop image_url parts (your deepseek sample) so Tycoon/Studio never 400.
+ 325 |     return (Array.isArray(messages) ? messages : []).map((m) => {
+ 326 |       const role = m?.role || "user";
+ 327 |       const content = m?.content;
+ 328 |       if (typeof content === "string") return { role, content };
+ 329 |       if (Array.isArray(content)) {
+ 330 |         const text = content.filter((p) => p?.type === "text").map((p) => String(p?.text || "")).join("\n").trim();
+ 331 |         return { role, content: text || "(no text provided)" };
+ 332 |       }
+ 333 |       return { role, content: String(content ?? "") };
+ 334 |     }).filter((m) => String(m.content || "").trim().length);
+ 335 |   }
+ 336 | 
+ 337 |   async complete(messages, {
+ 338 |     temperature = 0.5,
+ 339 |     maxTokens = env.nvidia.maxTokens,
+ 340 |     topP = 1,
+ 341 |     frequencyPenalty = 0,
+ 342 |     presencePenalty = 0,
+ 343 |     stream = false,
+ 344 |     timeoutMs = env.nvidia.timeoutMs,
+ 345 |     cacheTtlMs = env.nvidia.cacheTtlMs,
+ 346 |     preferredModels = null,
+ 347 |     maxAttempts = 2
+ 348 |   } = {}) {
+ 349 |     if (!this.configured()) {
+ 350 |       throw new AppError("Real NVIDIA AI requires NVIDIA_API_KEY in .env.", 503, "NVIDIA_NOT_CONFIGURED");
+ 351 |     }
+ 352 | 
+ 353 |     const invokeUrl = `${env.nvidia.baseUrl.replace(/\/$/, "")}/chat/completions`;
+ 354 |     const cleanMessages = this.sanitizeMessages(messages);
+ 355 |     const basePayload = {
+ 356 |       messages: withPlainTextInstruction(cleanMessages),
+ 357 |       max_tokens: Math.max(64, Math.min(Number(maxTokens) || env.nvidia.maxTokens, 4096)),
+ 358 |       temperature: Number(temperature ?? 0.5),
+ 359 |       top_p: topP,
+ 360 |       frequency_penalty: frequencyPenalty,
+ 361 |       presence_penalty: presencePenalty,
+ 362 |       stream
+ 363 |     };
+ 364 |     let lastError = null;
+ 365 | 
+ 366 |     const preferred = Array.isArray(preferredModels) ? preferredModels.filter((m) => m && !isRetiredModel(m)) : null;
+ 367 |     const queue = [...new Set([...(preferred && preferred.length ? preferred : []), ...modelsToTry()])]
+ 368 |       .filter((m) => !isRetiredModel(m))
+ 369 |       .slice(0, Math.max(1, Math.min(Number(maxAttempts) || 2, 2)));
+ 370 |     if (!queue.length) throw new AppError("No usable NVIDIA model is configured. Set NVIDIA_MODEL=z-ai/glm-5.3-flash and activate it at https://build.nvidia.com, then restart or redeploy.", 503, "NVIDIA_NO_LIVE_MODEL");
+ 371 |     const deadlineAt = Date.now() + requestBudget(timeoutMs, 32000);
+ 372 |     for (let index = 0; index < queue.length; index += 1) {
+ 373 |       const model = queue[index];
+ 374 |       // 17s per-attempt cap: gpt-oss-20b runs 9-11s on real business prompts, so
+ 375 |       // the old 12s cap cut it off mid-answer and forced a needless fallback.
+ 376 |       const attemptTimeoutMs = nextAttemptTimeout(deadlineAt, queue.length - index, 17000);
+ 377 |       if (!attemptTimeoutMs) break;
+ 378 |       const requestPayload = { ...basePayload, ...modelRequestOptions(model), model, top_p: modelTopP(model, topP) };
+ 379 |       const cacheKey = !stream && cacheTtlMs > 0 ? cacheKeyFor(requestPayload) : "";
+ 380 |       const cached = cacheKey ? getCachedResult(cacheKey) : null;
+ 381 |       if (cached) return cached;
+ 382 | 
+ 383 |       const controller = new AbortController();
+ 384 |       const timeout = setTimeout(() => controller.abort(), attemptTimeoutMs);
+ 385 |       let response;
+ 386 |       try {
+ 387 |         response = await fetch(invokeUrl, {
+ 388 |           method: "POST",
+ 389 |           signal: controller.signal,
+ 390 |           headers: {
+ 391 |             "Content-Type": "application/json",
+ 392 |             "Accept": stream ? "text/event-stream" : "application/json",
+ 393 |             "Authorization": `Bearer ${env.nvidia.apiKey}`
+ 394 |           },
+ 395 |           body: JSON.stringify(requestPayload)
+ 396 |         });
+ 397 |       } catch (error) {
+ 398 |         lastError = error?.name === "AbortError"
+ 399 |           ? new AppError(`NVIDIA model ${model} took too long to reply.`, 504, "NVIDIA_TIMEOUT")
+ 400 |           : error;
+ 401 |         clearTimeout(timeout);
+ 402 |         if (isRetryableNvidiaFailure(lastError)) {
+ 403 |           // A transient timeout cools the model briefly; a dead/retired ID gets
+ 404 |           // the full 5-minute ban so we don't lock out the only fast model.
+ 405 |           coolDownModel(model, lastError?.code === "NVIDIA_TIMEOUT" ? TRANSIENT_COOLDOWN_MS : MODEL_COOLDOWN_MS);
+ 406 |           // Timeouts are usually jitter on the fast primary (5-10s normally,
+ 407 |           // occasional 17s+ spikes). The slow fallbacks run ~44-100s live and can
+ 408 |           // never answer inside an interactive budget, so a timed-out first
+ 409 |           // attempt swaps the next slot to a retry of the SAME fast model — two
+ 410 |           // real chances instead of one real chance plus a doomed slow attempt.
+ 411 |           if (lastError?.code === "NVIDIA_TIMEOUT" && index === 0 && queue.length > 1 && queue[1] !== model) {
+ 412 |             queue[1] = model;
+ 413 |           }
+ 414 |           continue;
+ 415 |         }
+ 416 |         throw lastError;
+ 417 |       }
+ 418 |       clearTimeout(timeout);
+ 419 | 
+ 420 |       if (!response.ok) {
+ 421 |         const body = await response.text();
+ 422 |         let detail = body.slice(0, 500);
+ 423 |         try {
+ 424 |           const parsed = JSON.parse(body);
+ 425 |           detail = parsed.error?.message || parsed.detail || detail;
+ 426 |         } catch {
+ 427 |           // Keep the raw text detail when NVIDIA returns non-JSON errors.
+ 428 |         }
+ 429 |         lastError = new AppError(`NVIDIA API request failed on ${model}: ${detail}`, response.status, "NVIDIA_API_ERROR");
+ 430 |         // EOL / retired models: ban for 5 min and move on instantly — don't burn the timeout.
+ 431 |         if (isEndOfLifeError(lastError) || isRetiredModel(model)) {
+ 432 |           coolDownModel(model);
+ 433 |           continue;
+ 434 |         }
+ 435 |         if (isRetryableNvidiaFailure(lastError)) {
+ 436 |           // 429/5xx are transient — short cool so a rate-limit blip doesn't
+ 437 |           // sideline the fast primary for 5 minutes and starve later calls.
+ 438 |           coolDownModel(model, TRANSIENT_COOLDOWN_MS);
+ 439 |           continue;
+ 440 |         }
+ 441 |         throw lastError;
+ 442 |       }
+ 443 | 
+ 444 |       let payload = await response.json();
+ 445 |       let content = extractMessageContent(payload);
+ 446 |       // GLM reasoning models can burn max_tokens thinking before answering.
+ 447 |       if (isReasoningExhausted(payload) && Date.now() < deadlineAt - 2500) {
+ 448 |         const retryController = new AbortController();
+ 449 |         const retryTimeout = setTimeout(() => retryController.abort(), Math.min(14000, Math.max(3000, deadlineAt - Date.now() - 500)));
+ 450 |         try {
+ 451 |           const retryResponse = await fetch(invokeUrl, {
+ 452 |             method: "POST",
+ 453 |             signal: retryController.signal,
+ 454 |             headers: {
+ 455 |               "Content-Type": "application/json",
+ 456 |               "Accept": "application/json",
+ 457 |               "Authorization": `Bearer ${env.nvidia.apiKey}`
+ 458 |             },
+ 459 |             body: JSON.stringify({ ...requestPayload, top_p: modelTopP(model, topP), max_tokens: Math.min(Math.max(maxTokens * 2, 900), 2600) })
+ 460 |           });
+ 461 |           if (retryResponse.ok) {
+ 462 |             const retryPayload = await retryResponse.json();
+ 463 |             const retryContent = extractMessageContent(retryPayload);
+ 464 |             if (retryContent) { payload = retryPayload; content = retryContent; }
+ 465 |           }
+ 466 |         } catch {
+ 467 |           // Keep the original payload; empty content path handles the failure.
+ 468 |         } finally {
+ 469 |           clearTimeout(retryTimeout);
+ 470 |         }
+ 471 |       }
+ 472 |       // Some models return HTTP 200 with empty content (observed live on glm and
+ 473 |       // nemotron). Retry instead of handing the user a "No content" placeholder.
+ 474 |       if (!String(content || "").trim()) {
+ 475 |         lastError = new AppError(`NVIDIA model ${model} returned an empty response.`, 502, "NVIDIA_EMPTY");
+ 476 |         coolDownModel(model, TRANSIENT_COOLDOWN_MS);
+ 477 |         if (index === 0 && queue.length > 1 && queue[1] !== model) queue[1] = model;
+ 478 |         continue;
+ 479 |       }
+ 480 |       const result = {
+ 481 |         configured: true,
+ 482 |         provider: "nvidia",
+ 483 |         model,
+ 484 |         content: plainTextAiOutput(content) || "No content returned by NVIDIA model.",
+ 485 |         usage: payload.usage || null,
+ 486 |         cached: false
+ 487 |       };
+ 488 |       if (cacheKey) setCachedResult(cacheKey, result, cacheTtlMs);
+ 489 |       markProviderSuccess();
+ 490 |       return result;
+ 491 |     }
+ 492 | 
+ 493 |     throw lastError || new AppError("NVIDIA AI could not complete the request.", 503, "NVIDIA_UNAVAILABLE");
+ 494 |   }
+ 495 | 
+ 496 |   async completeSafe(messages, options = {}) {
+ 497 |     try {
+ 498 |       return await this.complete(messages, options);
+ 499 |     } catch (error) {
+ 500 |       const publicError = publicNvidiaError(error);

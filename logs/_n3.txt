@@ -1,0 +1,160 @@
+   1 | import crypto from "node:crypto";
+   2 | import { env } from "../config/env.js";
+   3 | import { AppError } from "../utils/errors.js";
+   4 | import { isCreatorQuestion, creatorAnswer, identityLine } from "../utils/brand.js";
+   5 | import { hasRealContent, visibleWordCount } from "../utils/siteContent.js";
+   6 | 
+   7 | const aiCache = new Map();
+   8 | const modelCooldowns = new Map();
+   9 | const MAX_CACHE_ENTRIES = 200;
+  10 | const MODEL_COOLDOWN_MS = 5 * 60 * 1000;
+  11 | // A timeout is usually transient load, not a dead model. Cooling the only fast
+  12 | // model for 5 minutes after one slow response cascades into every later call
+  13 | // (they get pushed onto the ~44s fallbacks and time out too), so transient
+  14 | // failures get a short cooldown instead.
+  15 | const TRANSIENT_COOLDOWN_MS = 30 * 1000;
+  16 | 
+  17 | // Live-per-probe (Oct 2026): these exist; your key returns 403 until activated on
+  18 | // https://build.nvidia.com/<model> ("Get API Key"). Dead IDs never get called.
+  19 | const DEFAULT_MODELS = [
+  20 |   "openai/gpt-oss-20b",
+  21 |   "z-ai/glm-5.3-flash",
+  22 |   "z-ai/glm-5.3",
+  23 |   "nvidia/nemotron-3.5-lightning-30b-a3b"
+  24 | ];
+  25 | const DEAD_MODELS = new Set([
+  26 |   // 410 Gone — reached end of life 2026-10-15; confirmed via live probe.
+  27 |   "moonshotai/kimi-k3",
+  28 |   "deepseek-ai/deepseek-v4-flash",
+  29 |   "deepseek-ai/deepseek-v4-flash-0731",
+  30 |   "deepseek-ai/deepseek-v4-pro",
+  31 |   "deepseek-ai/deepseek-v4.1-flash",
+  32 |   "meta/llama-3.1-8b-instruct",
+  33 |   "meta/llama-3.1-8b",
+  34 |   "meta/llama-3.1-70b-instruct",
+  35 |   "meta/llama-3.2-1b-instruct",
+  36 |   "meta/llama-3.2-3b-instruct",
+  37 |   "meta/llama-3.3-70b-instruct",
+  38 |   "meta/llama-4-maverick-17b-128e-instruct",
+  39 |   "moonshotai/kimi-k2-instruct",
+  40 |   "moonshotai/kimi-k2-thinking",
+  41 |   "qwen/qwen3-next-80b-a3b-instruct",
+  42 |   "qwen/qwen3-next-80b-a3b-thinking",
+  43 |   "qwen/qwen2.5-coder-32b-instruct",
+  44 |   "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+  45 |   "nvidia/nemotron-3-nano-30b-a3b",
+  46 |   "nvidia/nemotron-nano-9b-v2",
+  47 |   "openai/gpt-oss-120b",
+  48 |   "stepfun-ai/step-3.5-flash",
+  49 |   "microsoft/phi-4-mini-instruct",
+  50 |   "minimaxai/minimax-m2.5",
+  51 |   "minimaxai/minimax-m2.7",
+  52 |   "upstage/solar-10.7b-instruct",
+  53 |   "sarvamai/sarvam-m",
+  54 |   "stockmark/stockmark-2-100b-instruct",
+  55 |   "z-ai/glm-5.2",
+  56 |   "z-ai/glm4.7",
+  57 |   "llama-3.1-8b",
+  58 |   "llama-4-maverick",
+  59 |   "google/gemma-4-31b-it"
+  60 | ]);
+  61 | 
+  62 | function isRetiredModel(id = "") {
+  63 |   const v = String(id || "").trim();
+  64 |   if (!v) return true;
+  65 |   return DEAD_MODELS.has(v);
+  66 | }
+  67 | 
+  68 | const providerState = {
+  69 |   lastCheckedAt: null,
+  70 |   lastSuccessAt: null,
+  71 |   lastFailure: null
+  72 | };
+  73 | 
+  74 | function isEndOfLifeError(error) {
+  75 |   const msg = String(error?.message || "").toLowerCase();
+  76 |   return msg.includes("end of life") || msg.includes("end-of-life") || msg.includes("decommissioned") || msg.includes("retired") || msg.includes("no longer supported");
+  77 | }
+  78 | 
+  79 | function plainTextAiOutput(content) {
+  80 |   return String(content || "")
+  81 |     .replace(/\r\n/g, "\n")
+  82 |     .split("\n")
+  83 |     .map((line) => line
+  84 |       .replace(/^\s{0,3}#{1,6}\s*/g, "")
+  85 |       .replace(/^\s*[*]+\s+/g, "")
+  86 |       .replace(/^\s*[-]\s+/g, "")
+  87 |       .replace(/\*\*(.*?)\*\*/g, "$1")
+  88 |       .replace(/\*(.*?)\*/g, "$1")
+  89 |       .replace(/__([^_]+)__/g, "$1")
+  90 |       .replace(/`([^`]+)`/g, "$1")
+  91 |       .replace(/[#$*]/g, "")
+  92 |       .trimEnd())
+  93 |     .join("\n")
+  94 |     .replace(/\n{3,}/g, "\n\n")
+  95 |     .trim();
+  96 | }
+  97 | 
+  98 | function withPlainTextInstruction(messages) {
+  99 |   const instruction = "Formatting rule: reply in plain text only. Do not use Markdown. Do not use # headings. Do not use * bullets or bold markers. Keep answers concise.";
+ 100 |   const normalized = Array.isArray(messages) ? [...messages] : [];
+ 101 |   if (normalized[0]?.role === "system") {
+ 102 |     normalized[0] = { ...normalized[0], content: `${instruction}\n\n${normalized[0].content}` };
+ 103 |     return normalized;
+ 104 |   }
+ 105 |   return [{ role: "system", content: instruction }, ...normalized];
+ 106 | }
+ 107 | 
+ 108 | function compactObject(value) {
+ 109 |   return Object.fromEntries(Object.entries(value || {}).filter(([, item]) => {
+ 110 |     if (item === undefined || item === null || item === "") return false;
+ 111 |     if (Array.isArray(item) && item.length === 0) return false;
+ 112 |     if (typeof item === "object" && !Array.isArray(item) && Object.keys(item).length === 0) return false;
+ 113 |     return true;
+ 114 |   }));
+ 115 | }
+ 116 | 
+ 117 | function truncateText(value, max = 220) {
+ 118 |   const text = String(value || "").replace(/\s+/g, " ").trim();
+ 119 |   return text.length > max ? `${text.slice(0, max - 3)}...` : text;
+ 120 | }
+ 121 | 
+ 122 | function missingAuditChecks(checks = {}) {
+ 123 |   return Object.entries(checks)
+ 124 |     .filter(([, passed]) => passed === false)
+ 125 |     .map(([key]) => key)
+ 126 |     .slice(0, 8);
+ 127 | }
+ 128 | 
+ 129 | function compactLeadForAi(lead = {}) {
+ 130 |   const details = lead.details || {};
+ 131 |   const audit = lead.audit || {};
+ 132 |   return compactObject({
+ 133 |     name: lead.name,
+ 134 |     category: lead.businessType || lead.category,
+ 135 |     address: truncateText(lead.address, 180),
+ 136 |     country: lead.country,
+ 137 |     market: lead.marketName || lead.market,
+ 138 |     phone: lead.phone,
+ 139 |     email: lead.email,
+ 140 |     website: lead.websiteUrl,
+ 141 |     maps: lead.googleMapsLink,
+ 142 |     rating: lead.rating,
+ 143 |     reviews: lead.reviewsCount,
+ 144 |     score: lead.opportunityScore || audit.score,
+ 145 |     missing: missingAuditChecks(audit.checks),
+ 146 |     owner: details.ownerContact?.ownerName || details.ownerContact?.operator || details.ownerContact?.contactPerson,
+ 147 |     openingHours: truncateText(lead.openingHours || details.operations?.openingHours, 180),
+ 148 |     social: Object.keys(details.social || {}).slice(0, 5),
+ 149 |     source: lead.source
+ 150 |   });
+ 151 | }
+ 152 | 
+ 153 | function stableJson(value) {
+ 154 |   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+ 155 |   if (value && typeof value === "object") {
+ 156 |     return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+ 157 |   }
+ 158 |   return JSON.stringify(value);
+ 159 | }
+ 160 | 

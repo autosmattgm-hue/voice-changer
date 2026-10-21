@@ -1,0 +1,51 @@
+  90 |     up.className = "tycoon-upgrade";
+  91 |     up.href = "/pricing.html?upgrade=pro";
+  92 |     up.textContent = "Upgrade to Pro";
+  93 |     bar.appendChild(up);
+  94 |   }
+  95 |   thread().appendChild(el);
+  96 |   scrollThread();
+  97 | }
+  98 | 
+  99 | async function ask(prompt) {
+ 100 |   if (busy || !prompt) return;
+ 101 |   busy = true;
+ 102 |   byId("tycoonSend").disabled = true;
+ 103 |   const emptyState = byId("tycoonEmpty");
+ 104 |   if (emptyState) emptyState.remove();
+ 105 |   addUserMsg(prompt);
+ 106 |   const shell = addAiShell();
+ 107 |   const bubble = shell.querySelector(".tycoon-bubble");
+ 108 |   try {
+ 109 |     const status = await apiFetch("/api/ai/status").catch(() => null);
+ 110 |     if (status && (!status.configured || status.verification === "failed")) {
+ 111 |       throw new Error(status.hint || "NVIDIA AI is unavailable. Please try again in a moment.");
+ 112 |     }
+ 113 |     const leadId = byId("tycoonLead").value.trim();
+ 114 |     let lead = null;
+ 115 |     if (leadId) {
+ 116 |       try {
+ 117 |         const r = await apiFetch(`/api/leads/${encodeURIComponent(leadId)}/report`);
+ 118 |         lead = r.lead;
+ 119 |       } catch {}
+ 120 |     }
+ 121 |     const r = await apiFetch("/api/ai/tycoon", {
+ 122 |       method: "POST",
+ 123 |       body: JSON.stringify({ prompt, leadId, lead: lead || {} })
+ 124 |     });
+ 125 |     lastAnswer = r.content || "";
+ 126 |     const col = shell.querySelector(".tycoon-col");
+ 127 |     typeOut(bubble, lastAnswer, () => addActions(col, lastAnswer));
+ 128 |   } catch (err) {
+ 129 |     const msg = String(err?.message || "Request failed.");
+ 130 |     shell.remove();
+ 131 |     addErrorBubble(msg);
+ 132 |   } finally {
+ 133 |     busy = false;
+ 134 |     byId("tycoonSend").disabled = false;
+ 135 |   }
+ 136 | }
+ 137 | 
+ 138 | document.addEventListener("DOMContentLoaded", async () => {
+ 139 |   if (!requireAuth()) return;
+ 140 | 

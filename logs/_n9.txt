@@ -1,0 +1,41 @@
+ 160 | 
+ 161 | function cacheKeyFor(payload) {
+ 162 |   return crypto.createHash("sha256").update(stableJson(payload)).digest("hex");
+ 163 | }
+ 164 | 
+ 165 | function getCachedResult(cacheKey) {
+ 166 |   const cached = aiCache.get(cacheKey);
+ 167 |   if (!cached) return null;
+ 168 |   if (cached.expiresAt <= Date.now()) {
+ 169 |     aiCache.delete(cacheKey);
+ 170 |     return null;
+ 171 |   }
+ 172 |   return {
+ 173 |     ...cached.result,
+ 174 |     cached: true
+ 175 |   };
+ 176 | }
+ 177 | 
+ 178 | function setCachedResult(cacheKey, result, ttlMs) {
+ 179 |   if (!ttlMs || ttlMs <= 0) return;
+ 180 |   aiCache.set(cacheKey, {
+ 181 |     result,
+ 182 |     expiresAt: Date.now() + ttlMs
+ 183 |   });
+ 184 |   while (aiCache.size > MAX_CACHE_ENTRIES) {
+ 185 |     const oldestKey = aiCache.keys().next().value;
+ 186 |     aiCache.delete(oldestKey);
+ 187 |   }
+ 188 | }
+ 189 | 
+ 190 | function modelsToTry() {
+ 191 |   const now = Date.now();
+ 192 |   const configured = [env.nvidia.model, ...(env.nvidia.modelFallbacks || [])];
+ 193 |   const models = [...new Set([...configured, ...DEFAULT_MODELS].map((model) => String(model || "").trim()).filter(Boolean))]
+ 194 |     .filter((model) => !isRetiredModel(model))
+ 195 |     .filter((model) => (modelCooldowns.get(model) || 0) <= now);
+ 196 |   return models.slice(0, 2);
+ 197 | }
+ 198 | 
+ 199 | function modelRequestOptions(model) {
+ 200 |   // GLM 5.3 uses reasoning by default. These interactive business workflows
