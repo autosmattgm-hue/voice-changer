@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:Fraunces,Georgia,serif;color:#fafaf9;background:#0c0a09;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#0c0a09;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#e7e5e4;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#d4a437;color:#0c0a09}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#0c0a09;color:#a8a29e;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a></nav><section class="pg" id="pg-0"><style>
+.acme-roofing-body{margin:0;font-family:Inter,sans-serif;background:#e6ffed;color:#0f5132;}
+.acme-roofing-hero{position:relative;overflow:hidden;background:#e6ffed;}
+.acme-roofing-hero img{width:100%;height:100vh;object-fit:cover;filter:blur(2px);}
+.acme-roofing-hero .content{position:absolute;top:50%;left:5%;transform:translateY(-50%);max-width:45%;color:#0f5132;}
+.acme-roofing-hero h1{font-family:Fraunces,serif;font-size:3rem;margin:0 0 .5rem;}
+.acme-roofing-hero h1 .underline{color:#39b54a;border-bottom:4px solid #39b54a;display:inline-block;}
+.acme-roofing-hero p{margin:.5rem 0 1rem;font-size:1.125rem;}
+.acme-roofing-hero .btn{background:#39b54a;color:white;padding:.75rem 1.5rem;border:none;border-radius:9999px;cursor:pointer;margin-right:.5rem;}
+.acme-roofing-stats{display:flex;justify-content:space-around;padding:2rem 0;background:#d9f4e2;}
+.acme-roofing-stats div{font-size:2rem;text-align:center;}
+.acme-roofing-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;padding:2rem 0;}
+.acme-roofing-card{background:white;padding:1.5rem;border-radius:.5rem;box-shadow:0 4px 6px rgba(0,0,0,.1);}
+.acme-roofing-card h3{font-family:Fraunces,serif;margin:0 0 .5rem;}
+.acme-roofing-card p{margin:0 0 .75rem;}
+.acme-roofing-card a{color:#39b54a;text-decoration:none;font-size:.875rem;}
+.acme-roofing-split{display:flex;align-items:center;padding:2rem 0;background:#e6ffed;}
+.acme-roofing-split img{max-width:45%;border-radius:.5rem;margin-right:2rem;}
+.acme-roofing-split .text{max-width:55%;}
+.acme-roofing-faq{padding:2rem 0;background:#d9f4e2;}
+.acme-roofing-faq details{margin-bottom:1rem;}
+.acme-roofing-faq summary{font-family:Fraunces,serif;font-weight:600;cursor:pointer;}
+.acme-roofing-form{padding:2rem 0;background:white;max-width:600px;margin:auto;}
+.acme-roofing-form input,.acme-roofing-form textarea{width:100%;padding:.75rem;margin-bottom:1rem;border:1px solid #cbd5e0;border-radius:.5rem;}
+.acme-roofing-form button{background:#39b54a;color:white;padding:.75rem 1.5rem;border:none;border-radius:.5rem;cursor:pointer;}
+</style>
+
+<div class="acme-roofing-body">
+
+<div class="acme-roofing-hero">
+  <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Roofing contractor" loading="lazy">
+  <div class="content">
+    <h1>Secure Your <span class="underline">Future</span> with ACME Roofing</h1>
+    <p>Your trusted partner for premium roof solutions in Ikeja, Lagos.</p>
+    <button class="btn">Get a Quote</button>
+    <button class="btn">View Portfolio</button>
+  </div>
+</div>
+
+<div class="acme-roofing-stats">
+  <div>5k+</div>
+  <div>10y</div>
+  <div>98%</div>
+  <div>3600+</div>
+</div>
+
+<div class="acme-roofing-cards">
+  <div class="acme-roofing-card">
+    <h3>Expert Installations</h3>
+    <p>We install a variety of roofing systems with precision.</p>
+    <a href="#">Read More</a>
+  </div>
+  <div class="acme-roofing-card">
+    <h3>Durable Materials</h3>
+    <p>Only the best to protect your home for decades.</p>
+    <a href="#">Learn More</a>
+  </div>
+  <div class="acme-roofing-card">
+    <h3>Warranty & Support</h3>
+    <p>Peace of mind with comprehensive coverage.</p>
+    <a href="#">View Plans</a>
+  </div>
+</div>
+
+<div class="acme-roofing-split">
+  <img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Our team in action" loading="lazy">
+  <div class="text">
+    <h2>Quality You Can Rely On</h2>
+    <p>ACME Roofing has served the Lagos community for over a decade, delivering reliable and elegant roof solutions tailored to each client's needs.</p>
+  </div>
+</div>
+
+<div class="acme-roofing-faq">
+  <details>
+    <summary>What types of roofs do you install?</summary>
+    <p>We specialize in metal, asphalt shingles, flat roofs, and custom architectural designs.</p>
+  </details>
+  <details>
+    <summary>How long does installation take?</summary>
+    <p>Typical installations range from 2-5 days depending on project scope.</p>
+  </details>
+  <details>
+    <summary>Do you offer warranties?</summary>
+    <p>Yes, we provide up to 10-year warranties on all materials and workmanship.</p>
+  </details>
+</div>
+
+<div class="acme-roofing-form">
+  <form>
+    <input type="text" placeholder="Name" required>
+    <input type="email" placeholder="Email" required>
+    <input type="tel" placeholder="Phone" required>
+    <textarea rows="4" placeholder="Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
+
+</div></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

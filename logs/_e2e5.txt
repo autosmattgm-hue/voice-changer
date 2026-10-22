@@ -1,0 +1,2 @@
+[1p modern] OK 85916ms  model=openai-fast           len=5985   pages=1 w=161   style=2 img=2   det=3   form=1   picsum=3 fence=0 doctype=true emptyImg=false usage={"prompt_tokens":608,"completion_tokens":1252,"total_tokens":1860} fr=stop
+wrote logs/_e2e5.txt.html (5985 chars)

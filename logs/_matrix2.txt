@@ -1,0 +1,20 @@
+max_tokens=20    short prompt                 HTTP 200 1506ms    fr=stop     len=321   DENIED
+max_tokens=64    short prompt                 HTTP 200 346ms     fr=stop     len=2     OK | OK
+max_tokens=128   short prompt                 HTTP 200 1382ms    fr=stop     len=321   DENIED
+max_tokens=256   short prompt                 HTTP 200 409ms     fr=stop     len=2     OK | OK
+max_tokens=512   short prompt                 HTTP 200 483ms     fr=stop     len=321   DENIED
+max_tokens=1024  short prompt                 HTTP 200 1337ms    fr=stop     len=321   DENIED
+max_tokens=2048  short prompt                 HTTP 200 1598ms    fr=stop     len=321   DENIED
+max_tokens=4000  short prompt                 HTTP 200 1220ms    fr=stop     len=321   DENIED
+max_tokens=8000  short prompt                 HTTP 200 2018ms    fr=stop     len=321   DENIED
+
+promptChars=50     max_tokens=64              HTTP 200 2238ms    fr=stop     len=321   DENIED
+promptChars=250    max_tokens=64              HTTP 200 798ms     fr=stop     len=321   DENIED
+promptChars=500    max_tokens=64              HTTP 200 842ms     fr=stop     len=321   DENIED
+promptChars=1000   max_tokens=64              HTTP 200 1432ms    fr=stop     len=321   DENIED
+promptChars=2000   max_tokens=64              HTTP 200 990ms     fr=stop     len=321   DENIED
+
+sys+user max_tokens=2000                      HTTP 200 1726ms    fr=stop     len=321   DENIED
+user-only max_tokens=2000                     HTTP 200 2265ms    fr=stop     len=321   DENIED
+user-only max_tokens=2000 noTemp              HTTP 200 1197ms    fr=stop     len=321   DENIED
+short prompt again                            HTTP 200 2812ms    fr=stop     len=2     OK | OK

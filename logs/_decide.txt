@@ -1,0 +1,23 @@
+=== A. same LONG prompt x6, 4s apart ===
+A#0                               id=resp_8ad5eee9-57  3644ms   DENIED   len=321    reason=0      fr=stop
+A#1                               id=resp_b85792d8-54  1626ms   DENIED   len=321    reason=0      fr=stop
+A#2                               id=resp_d7757c82-63  743ms    DENIED   len=321    reason=0      fr=stop
+A#3                               id=resp_b67ba4d5-30  721ms    DENIED   len=321    reason=0      fr=stop
+A#4                               id=resp_acf335c1-76  740ms    DENIED   len=321    reason=0      fr=stop
+A#5                               id=resp_c2dfb39c-a9  808ms    DENIED   len=321    reason=0      fr=stop
+
+=== B. LONG prompt variants ===
+B1 long no-system                 id=resp_e464208c-cc  703ms    DENIED   len=321    reason=0      fr=stop
+B2 long mt=8192                   id=resp_2672a1a1-95  643ms    DENIED   len=321    reason=0      fr=stop
+B3 long +clear_thinking           id=resp_2d4dc4c8-d9  713ms    DENIED   len=321    reason=0      fr=stop
+B4 long simple-sys                id=resp_6ea501aa-e0  786ms    DENIED   len=321    reason=0      fr=stop
+B5 short q about website          id=resp_275fa243-8c  697ms    DENIED   len=321    reason=0      fr=stop
+
+=== C. prompt-length sweep (benign filler, mt=64) ===
+C filler x0   (24ch)              id=chatcmpl-1d27dcb  747ms    OK       len=0      reason=278    fr=length
+C filler x30  (714ch)             id=resp_0536d465-68  881ms    DENIED   len=321    reason=0      fr=stop
+C filler x60  (1404ch)            id=resp_df5702f2-76  734ms    DENIED   len=321    reason=0      fr=stop
+C filler x120 (2784ch)            id=resp_3031e08e-97  731ms    DENIED   len=321    reason=0      fr=stop
+C filler x240 (5544ch)            id=resp_8a18faf7-c4  1356ms   DENIED   len=321    reason=0      fr=stop
+C filler x480 (11064ch)           id=resp_d2d48638-a0  1096ms   DENIED   len=321    reason=0      fr=stop
+C filler x960 (22104ch)           id=resp_d5c7ae60-38  974ms    DENIED   len=321    reason=0      fr=stop

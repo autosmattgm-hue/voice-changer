@@ -1,0 +1,29 @@
+=== GEN: identical tiny prompt x6, WITH key ===
+#0 200msHTTP200 1794ms   id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+#1 200msHTTP200 902ms    id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+#2 200msHTTP200 417ms    id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+#3 200msHTTP200 399ms    id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+#4 200msHTTP200 1103ms   id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+#5 200msHTTP200 326ms    id=chatcmpl-8f337  len=2    fr=stop    OK      usage={"prompt_tokens":17,"total_tokens":66,"completion_tokens":49,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":46},"output_tokens_details":{"reasoning_tokens":46}}
+
+=== GEN: identical tiny prompt x3, NO key ===
+#0 200msHTTP200 193ms    id=chatcmpl-8f337  len=2    fr=stop    OK       | OK
+#1 200msHTTP200 211ms    id=chatcmpl-8f337  len=2    fr=stop    OK       | OK
+#2 200msHTTP200 182ms    id=chatcmpl-8f337  len=2    fr=stop    OK       | OK
+
+=== CLASSIC: tiny prompt WITH key ===
+200msHTTP200 500ms    id=pllns_6fe0aba2  len=2    fr=stop    usage={"prompt_tokens":313,"completion_tokens":24,"total_tokens":337}
+RAW: {"id":"pllns_6fe0aba2a38b8a253ba420fefdda6b68","choices":[{"index":0,"message":{"role":"assistant","content":"OK","reasoning":"User wants to reply with exactly \"OK\". Just output OK.","tool_calls":[]},"finish_reason":"stop"}],"created":1784451971,"model":"gpt-oss-20b","object":"chat.completion","usage":{"prompt_tokens":313,"completion_tokens":24,"total_tokens":337},"user_tier":"anonymous"}
+
+=== CLASSIC: tiny prompt NO key ===
+200msHTTP200 194ms    id=pllns_6fe0aba2  len=2    fr=stop    usage={"prompt_tokens":313,"completion_tokens":24,"total_tokens":337}
+RAW: {"id":"pllns_6fe0aba2a38b8a253ba420fefdda6b68","choices":[{"index":0,"message":{"role":"assistant","content":"OK","reasoning":"User wants to reply with exactly \"OK\". Just output OK.","tool_calls":[]},"finish_reason":"stop"}],"created":1784451971,"model":"gpt-oss-20b","object":"chat.completion","usage":{"prompt_tokens":313,"completion_tokens":24,"total_tokens":337},"user_tier":"anonymous"}
+=== CLASSIC: big website prompt NO key, mt=4000 ===
+200msHTTP200 266ms    id=pllns_049588e4  len=0    fr=length  words=0 style=0 img=0 det=0 picsum=0 usage={"prompt_tokens":266,"completion_tokens":1500,"total_tokens":1766}
+----BEGIN----
+
+----END----
+
+=== IMAGE: image.pollinations.ai anonymous ===
+https://image.pollinations.ai/prompt/blue%20bird?width=512&h  HTTP 200 bytes=29933 ct=image/jpeg 533ms
+https://image.pollinations.ai/prompt/green%20tree?width=512&  HTTP 200 bytes=67817 ct=image/jpeg 2868ms

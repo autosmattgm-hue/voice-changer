@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1e1b4b;background:#ffffff;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#eef2ff;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#4338ca;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#6366f1;color:#ffffff}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#1e1b4b;color:#c7d2fe;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a><a href="#" class="nav-a" onclick="return showPage(1)">About</a></nav><section class="pg" id="pg-0"><style>
+.acme-roofing-hero{background:url(https://picsum.photos/seed/roofing-contractor/1600/900);background-size:cover;color:white;padding:4rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+.acme-roofing-h1{font-size:4rem;margin:0;font-weight:bold;}
+.acme-roofing-btn{background:#008000;color:white;padding:1rem 2rem;border:none;border-radius:999px;margin-right:1rem;text-decoration:none;}
+.acme-roofing-stats{display:flex;justify-content:space-around;padding:2rem 0;font-size:2rem;}
+.acme-roofing-card{border:1px solid #eee;border-radius:1rem;padding:1.5rem;box-shadow:0 4px 6px rgba(0,0,0,.1);margin:1rem 0;}
+.acme-roofing-gallery{display:flex;justify-content:space-between;margin:2rem 0;}
+.acme-roofing-faq{margin:2rem 0;}
+.acme-roofing-form{display:flex;flex-direction:column;gap:1rem;}
+</style>
+<div class="acme-roofing-hero">
+  <h1 class="acme-roofing-h1">Premium Roof Solutions <span style="border-bottom:4px solid #008000;">for Your Home</span></h1>
+  <div>
+    <a href="#services" class="acme-roofing-btn">Our Services</a>
+    <a href="#contact" class="acme-roofing-btn" style="background:#006400;">Get Quote</a>
+  </div>
+</div>
+<div class="acme-roofing-stats">
+  <div>10k+ Projects</div>
+  <div>4.8★ Rating</div>
+  <div>3 Years Warranty</div>
+  <div>24/7 Support</div>
+</div>
+<div class="acme-roofing-card">
+  <h3 class="acme-roofing-h1" style="font-size:1.5rem;">Residential Roofing</h3>
+  <p>Expert solutions for homes.</p>
+  <a href="#residential">Learn More</a>
+</div>
+<div class="acme-roofing-card">
+  <h3 class="acme-roofing-h1" style="font-size:1.5rem;">Commercial Roofing</h3>
+  <p>Durable and cost‑effective.</p>
+  <a href="#commercial">Learn More</a>
+</div>
+<div class="acme-roofing-card">
+  <h3 class="acme-roofing-h1" style="font-size:1.5rem;">Roof Repair</h3>
+  <p>Fast and reliable service.</p>
+  <a href="#repair">Learn More</a>
+</div>
+<img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Roofing work" style="width:100%;max-width:800px;margin:2rem auto;display:block;border-radius:1rem;">
+<p style="text-align:center;font-size:1.2rem;margin-bottom:2rem;">Our team delivers quality and precision in every project.</p>
+<div class="acme-roofing-faq">
+  <details>
+    <summary>What materials do you use?</summary>
+    <p>We use premium shingles, metal roofs, and eco-friendly options tailored to your needs.</p>
+  </details>
+  <details>
+    <summary>How long does a roof installation take?</summary>
+    <p>Typically 5-7 days depending on size and complexity.</p>
+  </details>
+  <details>
+    <summary>Do you offer warranties?</summary>
+    <p>Yes, all our roofs come with a 3‑year workmanship warranty.</p>
+  </details>
+</div>
+<form class="acme-roofing-form" id="contact">
+  <label>Name:<input type="text" name="name" required></label>
+  <label>Email:<input type="email" name="email" required></label>
+  <label>Phone:<input type="tel" name="phone" required></label>
+  <label>Message:<textarea name="message" rows="4" required></textarea></label>
+  <button type="submit" class="acme-roofing-btn">Send Inquiry</button>
+</form></section><section class="pg" id="pg-1" style="display:none"><style>
+.acme-roofing-hero{display:flex;align-items:center;justify-content:space-between;padding:4rem 2rem;background:#fff;}
+.acme-roofing-hero h1{font-size:3rem;max-width:50%;color:#004d40;}
+.acme-roofing-cta{display:inline-flex;gap:1rem;margin-top:1rem;}
+.acme-roofing-cta a{background:#004d40;color:#fff;border-radius:999px;padding:0.75rem 1.5rem;text-decoration:none;}
+.acme-roofing-stats{display:flex;justify-content:space-around;padding:3rem 2rem;background:#f5f5f5;}
+.acme-roofing-stat{font-size:2rem;color:#004d40;}
+.acme-roofing-card{background:#fff;border-radius:0.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:2rem;margin:1rem 0;}
+.acme-roofing-card h3{margin-bottom:0.5rem;}
+.acme-roofing-card a{color:#004d40;text-decoration:none;}
+.acme-roofing-gallery{display:flex;gap:1rem;margin:2rem 0;}
+.acme-roofing-gallery img{width:100%;border-radius:0.5rem;}
+.acme-roofing-details{margin:2rem 0;}
+.acme-roofing-form{display:flex;flex-direction:column;gap:1rem;padding:2rem;background:#f5f5f5;border-radius:0.5rem;}
+.acme-roofing-form input, .acme-roofing-form textarea{padding:0.75rem;border:1px solid #ccc;border-radius:0.25rem;}
+.acme-roofing-form button{background:#004d40;color:#fff;border:none;border-radius:0.25rem;padding:0.75rem;}
+</style>
+<div class="acme-roofing-hero">
+  <h1>Elevate Your Home with <span style="text-decoration:underline;">Expert</span> Roofing Solutions</h1>
+  <div class="acme-roofing-cta">
+    <a href="#contact">Get a Quote</a>
+    <a href="#gallery">View Gallery</a>
+  </div>
+</div>
+<div class="acme-roofing-stats">
+  <div class="acme-roofing-stat">250+</div>
+  <div class="acme-roofing-stat">4.9⭐</div>
+  <div class="acme-roofing-stat">12K</div>
+  <div class="acme-roofing-stat">500+</div>
+</div>
+<div class="acme-roofing-card"><h3>Premium Materials</h3><p>We use only the finest roofing materials.</p><a href="#">Learn More</a></div>
+<div class="acme-roofing-card"><h3>Skilled Team</h3><p>Certified professionals on every job.</p><a href="#">Meet the Team</a></div>
+<div class="acme-roofing-card"><h3>Transparent Pricing</h3><p>No hidden fees, clear estimates.</p><a href="#">See Pricing</a></div>
+<div class="acme-roofing-gallery">
+  <img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Roofing Project 1">
+  <img src="https://picsum.photos/seed/roofing-contractor-2/800/600" alt="Roofing Project 2">
+  <img src="https://picsum.photos/seed/roofing-contractor-3/800/600" alt="Roofing Project 3">
+</div>
+<div class="acme-roofing-details">
+  <details><summary>What services do you offer?</summary>We provide roof installation, repair, and maintenance across Lagos.</details>
+  <details><summary>How long does a typical project take?</summary>Most installations complete within 5-7 business days.</details>
+  <details><summary>Do you offer warranties?</summary>Yes, all work is guaranteed for 10 years.</details>
+</div>
+<form class="acme-roofing-form" id="contact">
+  <input type="text" placeholder="Name" required>
+  <input type="email" placeholder="Email" required>
+  <input type="tel" placeholder="Phone" required>
+  <textarea rows="4" placeholder="Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

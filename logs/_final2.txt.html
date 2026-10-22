@@ -1,0 +1,138 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:Anton,Impact,sans-serif;color:#fff7ed;background:#1c0a00;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#1c0a00;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#fdba74;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#f97316;color:#1c0a00}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#1c0a00;color:#fdba74;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a><a href="#" class="nav-a" onclick="return showPage(1)">About</a></nav><section class="pg" id="pg-0"><style>
+.acme-roofing-home-hero{display:flex;align-items:center;gap:2rem;margin:4rem 0;}
+.acme-roofing-home-hero h1{font-size:3rem;flex:1;}
+.acme-roofing-home-hero a{background:emerald;color:#fff;padding:.75rem 1.5rem;border-radius:9999px;text-decoration:none;margin-top:1rem;display:inline-block;}
+.acme-roofing-home-stats{display:flex;justify-content:space-around;margin:2rem 0;}
+.acme-roofing-home-card{box-shadow:0 4px 8px rgba(0,0,0,.1);padding:2rem;border-radius:1rem;background:#fff;margin:1rem;width:30%;}
+.acme-roofing-home-card a{color:emerald;text-decoration:none;}
+.acme-roofing-home-form{margin-top:2rem;padding:2rem;background:#fff;border-radius:1rem;}
+</style>
+<div class="acme-roofing-home-hero">
+  <div>
+    <h1>ACME Roofing – <span style="border-bottom:4px solid emerald;">Reliable Roof Solutions</span></h1>
+    <p>Your trusted roofing partner in Ikeja.</p>
+    <a href="#contact">Get a Quote</a>
+    <a href="#services">Our Services</a>
+  </div>
+  <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Roofing crew" style="border-radius:1rem;max-width:50%;">
+</div>
+<div class="acme-roofing-home-stats">
+  <div><strong>10k+</strong> Projects</div>
+  <div><strong>20+</strong> Years</div>
+  <div><strong>5</strong> Awards</div>
+  <div><strong>1k</strong> Happy Clients</div>
+</div>
+<div style="display:flex;justify-content:space-between;">
+  <div class="acme-roofing-home-card">
+    <h3>Residential Roofing</h3>
+    <p>Custom designs for homes.</p>
+    <a href="#residential">Learn More</a>
+  </div>
+  <div class="acme-roofing-home-card">
+    <h3>Commercial Services</h3>
+    <p>Durable solutions for businesses.</p>
+    <a href="#commercial">Learn More</a>
+  </div>
+  <div class="acme-roofing-home-card">
+    <h3>Emergency Repair</h3>
+    <p>24/7 rapid response.</p>
+    <a href="#emergency">Learn More</a>
+  </div>
+</div>
+<img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Roof repair" style="display:block;margin:2rem auto;width:80%;border-radius:1rem;">
+<p style="text-align:center;">Expert craftsmanship ensuring lasting protection.</p>
+<details><summary>What roofing materials do you use?</summary>We offer shingles, metal, tile, and flat roof systems tailored to your needs.</details>
+<details><summary>Do you provide warranties?</summary>All installations come with a 10-year workmanship warranty.</details>
+<details><summary>How quickly can you respond?</summary>We typically respond within 24 hours for new inquiries.</details>
+<form class="acme-roofing-home-form" action="#" method="post">
+  <label>Name: <input type="text" name="name" required></label><br><br>
+  <label>Email: <input type="email" name="email" required></label><br><br>
+  <label>Phone: <input type="tel" name="phone" required></label><br><br>
+  <label>Message:<br><textarea name="message" rows="4" required></textarea></label><br><br>
+  <button type="submit" style="background:emerald;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:9999px;">Send Message</button>
+</form></section><section class="pg" id="pg-1" style="display:none"><style>
+.acme-roofing-about-hero{display:flex;align-items:center;justify-content:space-between;padding:4rem 2rem;background:#fff;}
+.acme-roofing-about-hero h1{font-size:3rem;margin:0 0 1rem 0;font-weight:700;color:#004d40;}
+.acme-roofing-about-hero h1 .accent{color:inherit;text-decoration:underline;}
+.acme-roofing-about-hero .buttons{display:flex;gap:1rem;}
+.acme-roofing-about-hero .buttons a{background:#004d40;color:#fff;padding:.75rem 1.5rem;border-radius:9999px;text-decoration:none;}
+.acme-roofing-about-stats{display:flex;justify-content:space-around;padding:3rem 0;background:#e0f2f1;}
+.acme-roofing-about-stats .stat{font-size:2rem;font-weight:600;color:#004d40;}
+.acme-roofing-about-cards{display:flex;gap:2rem;padding:3rem 2rem;}
+.acme-roofing-about-card{flex:1;padding:2rem;border-radius:1rem;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,.05);}
+.acme-roofing-about-card h3{margin-top:0;color:#004d40;}
+.acme-roofing-about-card a{color:#004d40;text-decoration:underline;}
+.acme-roofing-about-image{text-align:center;padding:3rem 2rem;}
+.acme-roofing-about-image img{max-width:100%;border-radius:1rem;}
+.acme-roofing-about-faq details{margin:1rem 0;}
+.acme-roofing-about-form{padding:3rem 2rem;background:#e0f2f1;}
+.acme-roofing-about-form input,.acme-roofing-about-form textarea{display:block;width:100%;margin-bottom:1rem;padding:.75rem;border:1px solid #ccc;border-radius:.5rem;}
+.acme-roofing-about-form button{background:#004d40;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:.5rem;}
+</style>
+
+<section class="acme-roofing-about-hero">
+  <div>
+    <h1>Our <span class="accent">Story</span></h1>
+    <p>From humble beginnings to modern excellence, ACME Roofing has built roofs that stand the test of time.</p>
+    <div class="buttons">
+      <a href="#">Contact Us</a>
+      <a href="#">Learn More</a>
+    </div>
+  </div>
+  <div><img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Roofing"></div>
+</section>
+
+<section class="acme-roofing-about-stats">
+  <div class="stat">5k+</div>
+  <div class="stat">12 Years</div>
+  <div class="stat">1,200+</div>
+  <div class="stat">100%</div>
+</section>
+
+<section class="acme-roofing-about-cards">
+  <article class="acme-roofing-about-card">
+    <h3>Quality Materials</h3>
+    <p>We source only the best.</p>
+    <a href="#">Read More</a>
+  </article>
+  <article class="acme-roofing-about-card">
+    <h3>Expert Team</h3>
+    <p>Skilled and certified.</p>
+    <a href="#">Read More</a>
+  </article>
+  <article class="acme-roofing-about-card">
+    <h3>Customer Focus</h3>
+    <p>Your satisfaction first.</p>
+    <a href="#">Read More</a>
+  </article>
+</section>
+
+<section class="acme-roofing-about-image">
+  <img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Our Work">
+  <p>Transforming homes with precision and care.</p>
+</section>
+
+<section class="acme-roofing-about-faq">
+  <details>
+    <summary>What services do you offer?</summary>
+    <p>Full roof installation, repair, and maintenance.</p>
+  </details>
+  <details>
+    <summary>Do you provide warranties?</summary>
+    <p>Yes, we offer a 10-year workmanship guarantee.</p>
+  </details>
+  <details>
+    <summary>How long does a project take?</summary>
+    <p>Typically 2-4 weeks depending on size.</p>
+  </details>
+</section>
+
+<section class="acme-roofing-about-form">
+  <form>
+    <input type="text" placeholder="Name" required>
+    <input type="email" placeholder="Email" required>
+    <input type="tel" placeholder="Phone" required>
+    <textarea placeholder="Message" rows="4" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

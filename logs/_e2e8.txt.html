@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:'DM Serif Display',Georgia,serif;color:#431407;background:#fffbeb;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#fffbeb;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#92400e;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#ea580c;color:#fffbeb}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#431407;color:#fed7aa;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a></nav><section class="pg" id="pg-0"><style>
+.acme-roofing-home-hero{font-family:DM Serif Display,serif;background:#fffbeb;color:#431407;padding:4rem 2rem;text-align:left;}
+.acme-roofing-home-hero h1{font-size:4rem;margin-bottom:1rem;border-bottom:4px solid #ea580c;display:inline-block;}
+.acme-roofing-home-hero a{display:inline-block;margin:1rem 0.5rem;padding:0.75rem 1.5rem;border-radius:9999px;color:#fff;background:#166534;text-decoration:none;}
+.acme-roofing-home-stats{display:flex;justify-content:space-around;padding:2rem 0;background:#fff;color:#431407;font-family:DM Serif Display,serif;}
+.acme-roofing-home-stats div{font-size:2rem;text-align:center;}
+.acme-roofing-home-card{background:#fff;color:#431407;border-radius:0.5rem;padding:1.5rem;margin:1rem 0;box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+.acme-roofing-home-card h3{margin-bottom:0.5rem;}
+.acme-roofing-home-card a{color:#166534;text-decoration:none;font-weight:700;}
+.acme-roofing-home-gallery{display:flex;justify-content:center;gap:1rem;padding:2rem 0;}
+.acme-roofing-home-gallery img{border-radius:0.5rem;max-width:100%;height:auto;}
+.acme-roofing-home-faq details{margin-bottom:1rem;background:#fff;padding:1rem;border-radius:0.5rem;}
+.acme-roofing-home-form{background:#fff;padding:2rem;border-radius:0.5rem;max-width:500px;margin:auto;}
+.acme-roofing-home-form input,.acme-roofing-home-form textarea{width:100%;padding:0.75rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:0.5rem;}
+.acme-roofing-home-form button{padding:0.75rem 1.5rem;background:#166534;color:#fff;border:none;border-radius:9999px;margin-top:1rem;}
+</style>
+
+<div class="acme-roofing-home-hero">
+  <h1>Premium Roof Solutions With Confidence</h1>
+  <a href="#contact">Get a Quote</a>
+  <a href="#services">Our Services</a>
+  <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Roofing" style="width:100%;margin-top:2rem;border-radius:1rem;">
+</div>
+
+<div class="acme-roofing-home-stats">
+  <div>500+ Projects</div>
+  <div>100% Satisfaction</div>
+  <div>10 Years Experience</div>
+  <div>24/7 Support</div>
+</div>
+
+<div class="acme-roofing-home-cards" style="display:flex;justify-content:center;gap:1rem;">
+  <div class="acme-roofing-home-card">
+    <h3>Residential Roofing</h3>
+    <p>Custom solutions for homes.</p>
+    <a href="#residential">Learn More</a>
+  </div>
+  <div class="acme-roofing-home-card">
+    <h3>Commercial Roofing</h3>
+    <p>Durable and reliable.</p>
+    <a href="#commercial">Learn More</a>
+  </div>
+  <div class="acme-roofing-home-card">
+    <h3>Emergency Repair</h3>
+    <p>Fast response teams.</p>
+    <a href="#repair">Learn More</a>
+  </div>
+</div>
+
+<div class="acme-roofing-home-gallery">
+  <img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Project 1">
+  <img src="https://picsum.photos/seed/roofing-contractor-2/800/600" alt="Project 2">
+  <img src="https://picsum.photos/seed/roofing-contractor-3/800/600" alt="Project 3">
+</div>
+
+<div class="acme-roofing-home-faq" style="padding:2rem 0;">
+  <details>
+    <summary>What is the average lifespan of a roof?</summary>
+    <p>Typically 15-25 years depending on materials and maintenance.</p>
+  </details>
+  <details>
+    <summary>Do you offer warranties?</summary>
+    <p>Yes, all our roofs come with a 10-year workmanship warranty.</p>
+  </details>
+  <details>
+    <summary>How quickly can you schedule a consultation?</summary>
+    <p>Within 48 hours after your initial inquiry.</p>
+  </details>
+</div>
+
+<form class="acme-roofing-home-form" action="#" method="post">
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="tel" name="phone" placeholder="Phone" required>
+  <textarea name="message" rows="4" placeholder="Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

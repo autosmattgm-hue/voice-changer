@@ -1,0 +1,89 @@
+=== COMPACT prompt x3 ===
+#0 23958ms  HTTP200 fr=stop     len=3429  w=125  style=1 img=1  det=3   form=1  sec=6   bal=0 fence=0 PAGE=0 usage={"prompt_tokens":381,"completion_tokens":1061,"total_tokens":1442}
+----SAMPLE----
+<style>
+.acme-bg{background:#f8f9fa;}
+.acme-primary{color:#0056b3;}
+.acme-btn{background:#0056b3;color:#fff;padding:.5rem 1rem;border:none;border-radius:.25rem;cursor:pointer;}
+.acme-btn:hover{background:#004094;}
+.acme-stat{font-size:2rem;font-weight:bold;}
+.acme-card{background:#fff;border-radius:.5rem;padding:1rem;margin:1rem;box-shadow:0 2px 5px rgba(0,0,0,.1);}
+.acme-card h3{margin-top:0;}
+.acme-link{color:#0056b3;text-decoration:none;}
+.acme-link:hover{text-decoration:underline;}
+.acme-grid{display:flex;flex-wrap:wrap;gap:1rem;}
+.acme-split{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;}
+.acme-form{display:flex;flex-direction:column;gap:.5rem;}
+</style>
+
+<section class="hero acme-bg" style="padding:2rem;text-align:center;">
+  <p class="eyebrow acme-primary">Trusted Roofing Solutions</p>
+  <h1 class="acme-primary">Protecting Lagos Homes Since 2005</h1>
+  <p>Premium quality roofing with unmatched durability.</p>
+  <a class="acme-btn" href="#services">Our Services</a>
+  <a class="acme-btn" href="#contact">Get a Quote</a>
+</section>
+
+<section id="stats" style="display:flex;justify-content:space-around;padding:2rem;">
+  <div><span class="acme-stat">15k+</span><br>Projects Completed</div>
+  <div><span class="acme-stat">12</span><br>Years Experience</div>
+  <div><span class="acme-stat">4.5</span><br>Avg Rating</div>
+  <div><span class="acme-stat">200+</span><br>Licensed Technicians</div>
+</section>
+
+<section id="services" class="acme-grid" style="padding:2rem;">
+  <div class="acme-card">
+    <h3>Residential Roofing</h3>
+    <p>Custom solutions for homes.</p>
+    <a class="acme-link" href="#">Learn More</a>
+  </div>
+  <div class="acme-card">
+    <h3>Commercial Roofing</h3>
+    <p>Durable roofs for businesses.</p>
+    <a class="acme-link" href="#">Learn More</a>
+  </div>
+  <div class="acme-card">
+    <h3>Roof Repairs</h3>
+    <p>Fast, reliable fixes.</p>
+    <a class="acme-link" href="#">Learn More</a>
+  </div>
+</section>
+
+<section class="acme-split" style="padding:2rem;">
+  <div style="flex:1;">
+    <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="ACME Roofing Services" loading="lazy" style="width:100%;border-radius:.5rem;">
+  </div>
+  <div style="flex:1;">
+    <h2>Why Choose Us?</h2>
+    <p>We offer high-quality materials, skilled labor, and a 10-year warranty on all installations.</p>
+  </div>
+</section>
+
+<section id="faq" style="padding:2rem;">
+  <details>
+    <summary>What is your warranty period?</summary>
+    <p>We provide a 10-year workmanship warranty on all roofing projects.</p>
+  </details>
+  <details>
+    <summary>Do you offer emergency repairs?</summary>
+    <p>Yes, we have a 24/7 emergency repair service across Lagos.</p>
+  </details>
+  <details>
+    <summary>How long does a typical roof installation take?</summary>
+    <p>Most residential roofs are completed within 5-7 days depending on size and complexity.</p>
+  </details>
+</section>
+
+<section id="contact" class="acme-bg" style="padding:2rem;">
+  <h2>Contact Us</h2>
+  <form class="acme-form" action="#" method="post">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="tel" name="phone" placeholder="Phone" required>
+    <textarea name="message" placeholder="Message" rows="4" required></textarea>
+    <button type="submit" class="acme-btn">Send Message</button>
+  </form>
+</section>
+----END----
+#1 27159ms  HTTP200 fr=stop     len=3470  w=140  style=1 img=1  det=3   form=0  sec=0   bal=0 fence=0 PAGE=0 usage={"prompt_tokens":382,"completion_tokens":1115,"total_tokens":1497}
+#2 20193ms  HTTP200 fr=stop     len=3964  w=164  style=1 img=1  det=3   form=1  sec=6   bal=0 fence=0 PAGE=0 usage={"prompt_tokens":381,"completion_tokens":1229,"total_tokens":1610}

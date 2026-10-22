@@ -1,0 +1,1 @@
+[ws 2p] OK 56546ms  provider=pollinationsmodel=openai-fast   len=8629   pages=2   w=225   style=3 img=4   det=6   form=2   doctype=true closed=true

@@ -1,0 +1,35 @@
+=== FULL denial body ===
+HTTP 200
+RAW: {"id":"resp_5a75fbcc-d36b-43b5-847f-08c7312f0fa9","object":"chat.completion","created":1792622380,"model":"z-ai/glm-5.3-flash","choices":[{"index":0,"message":{"role":"assistant","content":"The API key used for this request isn't allowed to use z-ai/glm-5.3-flash. Please [allow it for this key](https://enter.pollinations.ai/grant?id=eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU&category=text&ref=agent_grant), then try again.\n\nIf this isn’t your Pollinations account, contact whoever runs the app or service you’re using."},"finish_reason":"stop"}],"usage":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}}
+
+=== length sweep mt=64 ===
+len=22   OK      id=chatcmpl-1d27d  fr=length
+len=30   DENIED  id=resp_21667685-  fr=stop
+len=38   DENIED  id=resp_bc9aeaec-  fr=stop
+len=46   DENIED  id=resp_5db88ec0-  fr=stop
+len=54   DENIED  id=resp_960e7711-  fr=stop
+len=62   DENIED  id=resp_f553d44f-  fr=stop
+len=78   DENIED  id=resp_bac74b87-  fr=stop
+len=98   DENIED  id=resp_b7e5e323-  fr=stop
+len=128  DENIED  id=resp_0b994827-  fr=stop
+len=158  DENIED  id=resp_0d95e46d-  fr=stop
+len=198  DENIED  id=resp_6e691aa3-  fr=stop
+len=258  DENIED  id=resp_0b24915a-  fr=stop
+len=318  DENIED  id=resp_9449edde-  fr=stop
+len=398  DENIED  id=resp_253375f6-  fr=stop
+
+=== stability: 120-char prompt x6 ===
+#0 DENIED  id=resp_7516aef1-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+#1 DENIED  id=resp_7a619fd8-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+#2 DENIED  id=resp_3af65e33-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+#3 DENIED  id=resp_8500846f-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+#4 DENIED  id=resp_16415e8b-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+#5 DENIED  id=resp_cc984b01-  fr=stop    len=321  reason=0 usage={"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}
+
+=== no auth ===
+HTTP 401 :: {"success":false,"error":{"message":"A valid API key is required. Get one at https://enter.pollinations.ai/keys, or buy one with USDC (x402) at https://enter.pollinations.ai/api/x402/keys","code":"UNAUTHORIZED","timestamp":"2026-10-21T22:40:52.006Z"},"status":401}
+
+=== endpoint variants ===
+https://gen.pollinations.ai/v1/chat/completions HTTP 200 :: {"id":"resp_447be3e5-9fcf-4c22-ac1b-000b0b1a509b","object":"chat.completion","created":1792622456,"model":"z-ai/glm-5.3-flash","choices":[{"index":0,"message":{"role":"assistant","content":"The API ke
+https://text.pollinations.ai/openai             HTTP 404 :: {"status":404,"success":false,"error":{"code":"NOT_FOUND","message":"Model \"z-ai/glm-5.3-flash\" isn't on the Classic API. Free models: https://text.pollinations.ai/models. Every model we offer is on
+https://gen.pollinations.ai/v1/responses        HTTP 400 :: {"success":false,"error":{"message":"JSON body validation failed","code":"BAD_REQUEST","timestamp":"2026-10-21T22:41:08.868Z","details":{"name":"ValidationError","formErrors":["Unrecognized keys: \"me

@@ -1,0 +1,22 @@
+=== CLASSIC max_tokens sweep (tight prompt), generous timeout ===
+mt=4000  25407ms  HTTP200 fr=length   len=0     w=0    style=0(0ch) img=0  det=0  sec=0  h2=0  form=0 picsum=0 fence=0 usage={"prompt_tokens":266,"completion_tokens":1500,"total_tokens":1766}
+mt=12000 190ms    HTTP402 fr=         len=0     w=0    style=0(0ch) img=0  det=0  sec=0  h2=0  form=0 picsum=0 fence=0 usage={}
+----BEGIN 12000----
+
+----END 12000----
+
+=== CLASSIC extra param support ===
+reasoning_effort HTTP402 len=0 fr= |  | reason=
+max_completion_tokens HTTP200 len=2 fr=stop | OK
+
+=== CLASSIC stability: 3x same website prompt ===
+#0 220ms    HTTP402 fr=         len=0     w=0    img=0  det=0  form=0 picsum=0
+#1 203ms    HTTP402 fr=         len=0     w=0    img=0  det=0  form=0 picsum=0
+#2 200ms    HTTP402 fr=         len=0     w=0    img=0  det=0  form=0 picsum=0
+
+=== IMAGE hosts ===
+https://image.pollinations.ai/prompt/a%20red%20fox?width=512&height=512&nologo  HTTP 200 bytes=57996 ct=image/jpeg
+https://image.pollinations.ai/prompt/a%20red%20fox?width=512&height=512&nologo  HTTP 200 bytes=71258 ct=image/jpeg
+https://image.pollinations.ai/prompt/a%20red%20fox?width=512&height=512&nologo  HTTP 402 JSON {"status":402,"success":false,"error":{"code":"FREE_LIMIT","message":"Free limit reached: 1 image every 45 seconds per IP. Retry after 43s, or get unlimited images with a pollen key at https://enter.pollinations.ai/?ref=
+https://gen.pollinations.ai/image/a%20red%20fox?width=512&height=512&nologo=tr  HTTP 403 JSON {"success":false,"error":{"message":"Model 'flux' is not allowed for this API key, which allows no models. Allow it at https://enter.pollinations.ai/grant?id=eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU&category=image&ref=agent_gran
+https://gen.pollinations.ai/image/a%20red%20fox?width=512&height=512&nologo=tr  HTTP 403 JSON {"success":false,"error":{"message":"Model 'flux' is not allowed for this API key, which allows no models. Allow it at https://enter.pollinations.ai/grant?id=eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU&category=image&ref=agent_gran

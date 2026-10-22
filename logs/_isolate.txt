@@ -1,0 +1,30 @@
+=== isolate: what triggers the denial? (model z-ai/glm-5.3-flash) ===
+
+-- max_tokens sweep, TINY prompt --
+tiny mt=100                                       HTTP200 DENIED id=resp_57c76a91-e  len=321   ctok=0
+tiny mt=300                                       HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24
+tiny mt=1000                                      HTTP200 DENIED id=resp_686973e7-7  len=321   ctok=0
+tiny mt=2000                                      HTTP200 DENIED id=resp_97e0bffa-9  len=321   ctok=0
+tiny mt=4000                                      HTTP200 DENIED id=resp_aeb781fc-7  len=321   ctok=0
+tiny mt=8000                                      HTTP200 DENIED id=resp_95c0424b-9  len=321   ctok=0
+
+-- WEBSITE prompt, max_tokens sweep --
+web mt=100                                        HTTP200 DENIED id=resp_1f7408d5-a  len=321   ctok=0
+web mt=300                                        HTTP200 DENIED id=resp_d2275431-3  len=321   ctok=0
+web mt=1000                                       HTTP200 DENIED id=resp_336ebe0c-f  len=321   ctok=0
+web mt=4000                                       HTTP200 DENIED id=resp_e001ce40-2  len=321   ctok=0
+
+-- user prompt length sweep (system fixed) --
+userwords=1 promptchars=42                        HTTP200 DENIED id=resp_5a38cb49-0  len=321   ctok=0
+userwords=20 promptchars=80                       HTTP200 DENIED id=resp_7cae0726-7  len=321   ctok=0
+userwords=60 promptchars=160                      HTTP200 DENIED id=resp_d4c5a1a9-a  len=321   ctok=0
+userwords=120 promptchars=280                     HTTP200 DENIED id=resp_cbd5ebc5-9  len=321   ctok=0
+userwords=200 promptchars=440                     HTTP200 DENIED id=resp_731bdcb9-d  len=321   ctok=0
+userwords=400 promptchars=840                     HTTP200 DENIED id=resp_3841a21f-b  len=321   ctok=0
+
+-- full denial text (web prompt, mt=1000) --
+The API key used for this request isn't allowed to use z-ai/glm-5.3-flash. Please [allow it for this key](https://enter.pollinations.ai/grant?id=eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU&category=text&ref=agent_grant), then try again.
+
+If this isn’t your Pollinations account, contact whoever runs the app or service you’re using.
+--- RAW ---
+{"id":"resp_22729689-f3f7-4b05-9e78-0abfa463f65f","object":"chat.completion","created":1792629617,"model":"z-ai/glm-5.3-flash","choices":[{"index":0,"message":{"role":"assistant","content":"The API key used for this request isn't allowed to use z-ai/glm-5.3-flash. Please [allow it for this key](https://enter.pollinations.ai/grant?id=eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU&category=text&ref=agent_grant), then try again.\n\nIf this isn’t your Pollinations account, contact whoever runs the app or service you’re using."},"finish_reason":"stop"}],"usage":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}}

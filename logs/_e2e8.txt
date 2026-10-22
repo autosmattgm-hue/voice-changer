@@ -1,0 +1,3 @@
+[1p modern] OK 33640ms  model=openai-fast           len=5681   pages=1 w=113   style=2 img=4   det=3   form=1   picsum=4 fence=0 doctype=true emptyImg=false usage={"prompt_tokens":569,"completion_tokens":1373,"total_tokens":1942} fr=stop
+wrote logs/_e2e8.txt.html (5681 chars)
+[2p modern] OK 59116ms  model=openai-fast           len=8125   pages=2 w=236   style=3 img=3   det=6   form=2   picsum=3 fence=0 doctype=true emptyImg=false usage={"prompt_tokens":540,"completion_tokens":951,"total_tokens":1491} fr=stop

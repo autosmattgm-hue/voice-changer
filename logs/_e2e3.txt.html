@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:Fraunces,Georgia,serif;color:#fafaf9;background:#0c0a09;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#0c0a09;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#e7e5e4;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#d4a437;color:#0c0a09}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#0c0a09;color:#a8a29e;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a></nav><section class="pg" id="pg-0"><style>
+.acme-roofing-bg{background:#f1f5f9; color:#1e293b;}
+.acme-roofing-text{font-family:Inter,Arial,Helvetica,sans-serif;}
+.acme-roofing-head{font-family:Fraunces,serif; font-size:3rem; line-height:1.2;}
+.acme-roofing-underline{border-bottom:4px solid #00a86b;}
+.acme-roofing-btn{background:#00a86b; color:#fff; padding:0.75rem 1.5rem; border-radius:9999px; text-decoration:none; display:inline-block; margin-right:1rem;}
+.acme-roofing-btn-secondary{background:#e2e8f0; color:#1e293b;}
+.acme-roofing-card{background:#fff; border-radius:0.75rem; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:1.5rem; text-align:center;}
+.acme-roofing-card h3{margin-top:1rem; font-size:1.25rem;}
+.acme-roofing-gallery img{width:100%; height:auto; border-radius:0.5rem;}
+.acme-roofing-accordion details{margin-bottom:1rem;}
+.acme-roofing-accordion summary{font-weight:600; cursor:pointer;}
+.acme-roofing-form{display:grid; gap:1rem;}
+.acme-roofing-input{padding:0.75rem; border:1px solid #cbd5e1; border-radius:0.5rem;}
+.acme-roofing-submit{background:#00a86b; color:#fff; padding:0.75rem 1.5rem; border:none; border-radius:0.5rem; cursor:pointer;}
+</style>
+
+<div class="acme-roofing-bg acme-roofing-text">
+
+  <!-- Hero Section -->
+  <section style="display:flex; align-items:center; justify-content:space-between; padding:4rem 2rem;">
+    <div style="max-width:50%; padding-right:2rem;">
+      <div class="acme-roofing-head">Premium Roofing Solutions</div>
+      <div class="acme-roofing-underline" style="width:8rem; margin-top:0.5rem;"></div>
+      <p style="margin-top:1rem;">Expert craftsmanship for durable, beautiful roofs that last.</p>
+      <div style="margin-top:1.5rem;">
+        <a href="#contact" class="acme-roofing-btn">Get a Quote</a>
+        <a href="#services" class="acme-roofing-btn-secondary">Our Services</a>
+      </div>
+    </div>
+    <div style="max-width:45%;">
+      <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Roofing contractor at work" loading="lazy" style="border-radius:1rem;">
+    </div>
+  </section>
+
+  <!-- Stats Row -->
+  <section style="display:flex; justify-content:space-around; padding:3rem 2rem;">
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold;">10+</div>
+      <div>Years Experience</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold;">500+</div>
+      <div>Projects Completed</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold;">4.8</div>
+      <div>Star Rating</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem; font-weight:bold;">24/7</div>
+      <div>Support</div>
+    </div>
+  </section>
+
+  <!-- Card Grid -->
+  <section style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; padding:3rem 2rem;">
+    <div class="acme-roofing-card">
+      <h3>Residential Roofing</h3>
+      <p>Tailored solutions for homes of all sizes.</p>
+      <a href="#residential" class="acme-roofing-btn-secondary">Learn More</a>
+    </div>
+    <div class="acme-roofing-card">
+      <h3>Commercial Roofing</h3>
+      <p>Durable roofs for businesses and offices.</p>
+      <a href="#commercial" class="acme-roofing-btn-secondary">Learn More</a>
+    </div>
+    <div class="acme-roofing-card">
+      <h3>Repair & Maintenance</h3>
+      <p>Keep your roof in top condition.</p>
+      <a href="#repair" class="acme-roofing-btn-secondary">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Split Image + Text -->
+  <section style="display:flex; align-items:center; justify-content:space-between; padding:4rem 2rem;">
+    <div style="max-width:45%;">
+      <h2>Why Choose Us?</h2>
+      <p>Our team combines craftsmanship with green materials, ensuring eco‑friendly roofs that protect your home and the planet.</p>
+      <a href="#services" class="acme-roofing-btn">Explore Services</a>
+    </div>
+    <div style="max-width:45%;">
+      <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Eco-friendly roofing" loading="lazy" style="border-radius:1rem;">
+    </div>
+  </section>
+
+  <!-- Gallery Images -->
+  <section style="padding:3rem 2rem;">
+    <div class="acme-roofing-gallery" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem;">
+      <img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Project 1" loading="lazy">
+      <img src="https://picsum.photos/seed/roofing-contractor-2/800/600" alt="Project 2" loading="lazy">
+      <img src="https://picsum.photos/seed/</section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

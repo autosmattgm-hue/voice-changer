@@ -1,0 +1,5 @@
+=== CLASSIC openai-fast, UNIQUE prompts (cache-busting) ===
+#0 22178ms  HTTP200 fr=length  len=1482  w=47   style=1 img=0  det=0  form=0picsum=1fence=0  raw={"id":"pllns_663bbbc1080a9973d67acbec5131fa34","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n/* General Reset */\n*{box-sizi
+#1 26489ms  HTTP200 fr=length  len=0     w=0    style=0 img=0  det=0  form=0picsum=0fence=0  raw={"id":"pllns_9ec5b2f2cbe01bb910a7e441dfdc45fd","choices":[{"index":0,"message":{"role":"assistant","reasoning":"We need to output only the inner HTML 
+#2 18782ms  HTTP200 fr=length  len=2775  w=64   style=1 img=0  det=0  form=0picsum=1fence=0  raw={"id":"pllns_39926209eed88b1a6603058373e3b8c0","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n :root{--primary:#0066cc;--seco
+#3 29599ms  HTTP200 fr=length  len=1415  w=43   style=1 img=0  det=0  form=0picsum=1fence=0  raw={"id":"pllns_e7ecef8f03df88cb8fd2c62f008c4102","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n:root{--clr-primary:#3a7bd5;--c

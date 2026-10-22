@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACME Roofing</title><meta name="description" content="ACME Roofing — a professional website built to turn visitors into customers."><style>*{box-sizing:border-box}body{margin:0;font-family:Outfit,Inter,system-ui,sans-serif;color:#f8fafc;background:linear-gradient(160deg,#0f172a,#312e81);line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.85);display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#c7d2fe;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#22d3ee;color:#0f172a}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#0f172a;color:#a5b4fc;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class="nav"><span class="brand">ACME Roofing</span><a href="#" class="nav-a active" onclick="return showPage(0)">Home</a></nav><section class="pg" id="pg-0"><style>
+  .hue{background:linear-gradient(135deg,#004d40,#00695c);color:#f0f4c3;}
+  .hue .card{background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 4px 12px rgba(0,0,0,.1);padding:24px;transition:transform .3s;}
+  .hue .card:hover{transform:translateY(-6px);}
+  .hue .btn{display:inline-block;background:#00bfa5;color:#fff;border:none;border-radius:24px;padding:12px 24px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:background .3s;}
+  .hue .btn:hover{background:#009688;}
+  .hue .stat{border-right:1px solid #e0f2f1;padding-right:24px;margin-right:24px;}
+  .hue .stat:last-child{border:none;margin-right:0;}
+  .hue .stat-num{font-size:2.4rem;font-weight:700;}
+  .hue .stat-label{font-size:1rem;color:#004d40;}
+  .hue .faq details{margin-bottom:12px;}
+  .hue .faq summary{font-weight:600;color:#00695c;cursor:pointer;}
+  .hue .faq p{margin:8px 0 0 16px;}
+  .hue .cta{background:#004d40;color:#f0f4c3;padding:40px 20px;text-align:center;}
+  .hue .cta a{background:#00bfa5;padding:14px 28px;border-radius:30px;font-weight:600;color:#004d40;text-decoration:none;}
+  .hue .cta a:hover{background:#009688;}
+  .hue .gallery img{width:100%;height:auto;border-radius:16px;}
+  .hue .row{display:flex;gap:20px;flex-wrap:wrap;}
+  .hue .col{flex:1 1 45%;min-width:280px;}
+  .hue .hero{display:flex;align-items:center;gap:40px;padding:60px 20px;max-width:1200px;margin:auto;}
+  .hue .hero-text{flex:1;}
+  .hue .hero-img{flex:1 1 300px;}
+  .hue .hero-img img{border-radius:20px;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+  .hue .trust{background:#ffebee;padding:20px 0;text-align:center;color:#c62828;font-weight:600;}
+</style>
+
+<!--PAGE-->
+<div class="hue">
+  <section class="hero">
+    <div class="hero-text">
+      <p style="font-size:1rem;letter-spacing:.08em;">Reliable Roofing for All Seasons</p>
+      <h1 style="font-size:clamp(2.4rem,4vw,4rem);color:#f0f4c3;">Protect Your Home with <span style="color:#00bfa5;">ACME Roofing</span></h1>
+      <p style="font-size:1.25rem;color:#cfd8dc;margin-bottom:1.5rem;">Top‑quality materials, expert craftsmanship, and a guaranteed satisfaction promise.</p>
+      <a href="#contact" class="btn">Get a Free Quote</a>
+      <a href="#services" class="btn">View Our Services</a>
+    </div>
+    <div class="hero-img">
+      <img src="https://picsum.photos/seed/roofing-contractor/1600/900" alt="Professional roofing team inspecting a roof" loading="lazy">
+    </div>
+  </section>
+
+  <section class="trust">
+    Trusted by thousands of homeowners across Lagos – we bring the right roof to every house.
+  </section>
+
+  <section class="row" style="padding:40px 0;">
+    <div class="col card">
+      <h3 style="font-size:1.5rem;color:#004d40;">Residential Roofing</h3>
+      <p style="color:#004d40;">From leaks to remodels, we ensure your family stays safe.</p>
+      <a href="#residential" class="btn" style="margin-top:12px;">Learn More</a>
+    </div>
+    <div class="col card">
+      <h3 style="font-size:1.5rem;color:#004d40;">Commercial Roofing</h3>
+      <p style="color:#004d40;">Durable solutions that protect your business assets.</p>
+      <a href="#commercial" class="btn" style="margin-top:12px;">Learn More</a>
+    </div>
+    <div class="col card">
+      <h3 style="font-size:1.5rem;color:#004d40;">Maintenance & Repairs</h3>
+      <p style="color:#004d40;">Prevent costly damage with our quick-response service.</p>
+      <a href="#maintenance" class="btn" style="margin-top:12px;">Learn More</a>
+    </div>
+  </section>
+
+  <section style="padding:40px 0;">
+    <h2 style="font-size:2rem;color:#004d40;text-align:center;margin-bottom:24px;">Our Work Gallery</h2>
+    <div class="row">
+      <div class="col"><img src="https://picsum.photos/seed/roofing-contractor-1/800/600" alt="Completed roof project" loading="lazy"></div>
+      <div class="col"><img src="https://picsum.photos/seed/roofing-contractor-2/800/600" alt="Rooftop maintenance in progress" loading="lazy"></div>
+      <div class="col"><img src="https://picsum.photos/seed/roofing-contractor-3/800/600" alt="Exterior view of a newly installed roof" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section style="background:#f1f8e9;padding:60px 20px;">
+    <h2 style="font-size:2rem;color:#004d40;text-align:center;margin-bottom:24px;">What Our Clients Say</h2>
+    <div class="row" style="justify-content:center;">
+      <div class="col card" style="max-width:400px;">
+        <p style="color:#004d40;font-style:italic;">“ACME Roofing delivered on time, with a flawless finish. Highly recommend!”</</section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style="opacity:.75;font-size:.82rem">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>

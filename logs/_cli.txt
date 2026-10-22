@@ -1,0 +1,13 @@
+﻿js\admin.js 39 | '<div class="audit-item"><span>NVIDIA API</span>' + statusPill(integrations.nvidia) + '</div>',
+js\business-ai.js 111 | throw new Error(status.hint || "NVIDIA AI is unavailable. Please try again in a moment.");
+js\leads.js 2343 | <p>${result.aiSummary || "Ready for NVIDIA-powered analysis."}</p>
+js\settings.js 45 | setAiConnectionStatus(status.hint || "NVIDIA_API_KEY is missing.", "error");
+js\settings.js 53 | setAiConnectionStatus(status.hint || "NVIDIA AI connection failed.", "error");
+js\settings.js 56 | setAiConnectionStatus("NVIDIA AI is configured but has not been tested in this server session.");
+js\settings.js 72 | body: JSON.stringify({ prompt: "Reply with exactly: NVIDIA connection verified." })
+js\settings.js 74 | if (result.ok && result.provider === "nvidia") {
+js\settings.js 77 | setAiConnectionStatus(result.error || "NVIDIA AI test failed.", "error");
+components\layout.js 221 | <div class="notice" role="status" data-session-badge>NVIDIA-only AI pipeline connected through secure server endpoints.</div>
+index.html 7 | <meta name="description" content="Find businesses that need websites, SEO, AI automation, and digital marketing services using official Google APIs and NVIDIA-powered lead analysis.">
+settings.html 107 | <p id="aiConnectionStatus" class="notice" role="status">Checking NVIDIA AI configuration...</p>
+settings.html 109 | <button id="testAiConnection" class="btn btn-secondary" type="button">Test NVIDIA Connection</button>

@@ -1,0 +1,88 @@
+=== key state ===
+/account/key              HTTP200 :: {"id":"eIr3GxqdnMA4jd9rJEdxzcFVm6lyVVaU","valid":true,"type":"publishable","name":"mat leads","expiresAt":null,"expiresIn":null,"permissions":{"models":[],"account":null},"pollenBudget":0,"questPollenOnly":false,"rateLimitEnabled":true,"userId":"wGASSNk8O0Mtv8Lj79jrhA4oiVfQhJDK","byopApp":null}
+/account/key/usage        HTTP200 :: {"usage":[],"count":0}
+/v1/models?category=text  HTTP200 :: {"object":"list","data":[]}
+
+=== CLASSIC param support ===
+top_p        HTTP200 fr=stop len=3868 w=132  style=1 img=1  det=4   form=1  pic=2   fence=0PAGE=0  sec=6   {"id":"pllns_9e4e2c67a1f8f370ec95c35bb3867038","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n.acme-hero{background:url('http
+safe=no      HTTP200 fr=stop len=4198 w=150  style=1 img=1  det=4   form=1  pic=2   fence=0PAGE=0  sec=6   {"id":"pllns_4ad07c09a37e49e282be61bf43572043","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n .hero {background:url(https://
+
+=== CLASSIC 2 pages in one request ===
+2pages HTTP200 fr=length len=4844 rl=313 w=178  style=1 img=3  det=4   form=1  pic=3   fence=0PAGE=1  sec=8   usage={"prompt_tokens":280,"completion_tokens":1500,"total_tokens":1780}
+----SAMPLE----
+<style>
+.acme-hero{position:relative;background:#f8f9fa;color:#222;padding:6rem 2rem;text-align:center}
+.acme-hero img{display:block;width:100%;height:auto;object-fit:cover;position:absolute;top:0;left:0;z-index:-1;opacity:.5}
+.acme-hero .eyebrow{font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.1rem}
+.acme-hero h1{font-size:3rem;margin:1rem 0}
+.acme-hero p{font-size:1.25rem;margin-bottom:2rem}
+.acme-btn{display:inline-block;padding:.75rem 1.5rem;border-radius:.25rem;margin:.5rem}
+.acme-btn-primary{background:#007bff;color:#fff;border:none}
+.acme-btn-secondary{background:#6c757d;color:#fff;border:none}
+.acme-stats{display:flex;justify-content:space-around;background:#343a40;color:#fff;padding:2rem 0}
+.acme-stats div{flex:1;text-align:center}
+.acme-stats h3{font-size:2rem;margin:0}
+.acme-services{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;padding:2rem}
+.acme-card{background:#fff;border-radius:.5rem;padding:1.5rem;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+.acme-card h4{margin-top:0}
+.acme-split{display:flex;gap:2rem;padding:2rem}
+.acme-split img{flex:1;width:100%;height:auto;border-radius:.5rem}
+.acme-split .content{flex:1}
+.acme-accordion details{margin-bottom:1rem}
+.acme-accordion summary{font-weight:600;cursor:pointer}
+.acme-contact{padding:2rem;background:#f8f9fa}
+.acme-contact input, .acme-contact textarea{width:100%;padding:.75rem;margin-bottom:1rem;border:1px solid #ced4da;border-radius:.25rem}
+.acme-contact button{background:#28a745;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:.25rem}
+</style>
+<section class="acme-hero">
+    <img src="https://picsum.photos/seed/roofing/1600/900" alt="ACME Roofing Service">
+    <div class="eyebrow">Trusted by Lagos</div>
+    <h1>Premium Roofing Solutions</h1>
+    <p>Expert craftsmanship for residential and commercial roofs across Lagos.</p>
+    <a href="#services" class="acme-btn acme-btn-primary">Our Services</a>
+    <a href="#contact" class="acme-btn acme-btn-secondary">Get a Quote</a>
+</section>
+
+<section class="acme-stats">
+    <div><h3>500+</h3>Projects</div>
+    <div><h3>98%</h3>Customer Satisfaction</div>
+    <div><h3>10</h3>Years Experience</div>
+    <div><h3>24/7</h3>Support</div>
+</section>
+
+<section id="services" class="acme-services">
+    <div class="acme-card"><h4>Residential Roofing</h4><p>Top-tier materials and skilled installation.</p></div>
+    <div class="acme-card"><h4>Commercial Roofing</h4><p>Durable solutions for business properties.</p></div>
+    <div class="acme-card"><h4>Roof Repair</h4><p>Quick fixes for leaks and damage.</p></div>
+    <div class="acme-card"><h4>Maintenance Plans</h4><p>Regular inspections to extend roof life.</p></div>
+</section>
+
+<section class="acme-split">
+    <img src="https://picsum.photos/seed/roofing-1/800/600" alt="Roofing Work">
+    <div class="content">
+        <h2>Why Choose ACME?</h2>
+        <p>Our team combines local knowledge with international standards to deliver roofs that stand the test of time and weather.</p>
+        <ul>
+            <li>Certified installers</li>
+            <li>Guaranteed workmanship</li>
+            <li>Eco-friendly materials</li>
+        </ul>
+    </div>
+</section>
+
+<section class="acme-accordion">
+    <details><summary>What roofing materials do you use?</summary><p>We use premium metal, asphalt shingles, and composite panels tailored to your project.</p></details>
+    <details><summary>Do you offer warranties?</summary><p>All installations come with a 10-year workmanship warranty.</p></details>
+    <details><summary>How long does a roof install take?</summary><p>Typical projects finish in 3–4 weeks, depending on size.</p></details>
+    <details><summary>Can you handle emergency repairs?</summary><p>Yes, 24/7 emergency response for critical situations.</p></details>
+</section>
+
+<section id="contact" class="acme-contact">
+    <h2>Contact Us</h2>
+    <p>Phone: <a href="tel:+2348012345678">+2348012345678</a></p>
+    <form>
+        <input ty
+----END----
+
+=== CLASSIC max_tokens ceiling (effort=low) ===
+mt=16000 HTTP200 fr=stop len=4810 rl=173 w=170  style=1 img=1  det=4   form=1  pic=2   fence=0PAGE=0  sec=7   usage={"prompt_tokens":277,"completion_tokens":1457,"total_tokens":1734}

@@ -1,10 +1,2 @@
-﻿BUILD_OK in 44022ms
-id=f0d374db-aee1-4d20-aa36-a51d3008f63b
-provider=template model=builtin-template-v1 pages=2
-htmlLen=3221
-aiError=Pollinations key is blocked from the AI model (its model allow-list is empty). Owner fix: log in at enter.pollinations.ai and open https://enter.pollinations.ai/keys to allow the text category - or set a full-access secret (sk_) key as POLLINATIONS_API_KEY. Then click Generate again. Used premium template so you still have a working site.
-hasStyle=True
-hasImg=4
-hasFaq=False
-hasForm=True
-pageMarkers=0
+[1p modern] OK 33070ms  model=openai-fast           len=6482   pages=1 w=124   style=2 img=4   det=0   form=0   picsum=4 fence=0 doctype=true emptyImg=false
+wrote logs/_e2e2.txt.html (6482 chars)

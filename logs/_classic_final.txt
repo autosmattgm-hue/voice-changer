@@ -1,0 +1,95 @@
+=== CLASSIC openai-fast + reasoning_effort=low : 3 fresh runs ===
+#0 28054ms  HTTP200 fr=stop    len=3788  rl=193   w=159  style=1img=1  det=4  form=1  pic=2  fence=0sec=6  h2=7   usage={"prompt_tokens":277,"completion_tokens":1166,"total_tokens":1443} ra=null
+----SAMPLE----
+<style>
+  .hero{background:url('https://picsum.photos/seed/roofing/1600/900') center/cover no-repeat;padding:80px 20px;color:#fff;text-align:center;}
+  .hero h1{font-size:3rem;margin:0.5rem 0;}
+  .hero p{font-size:1.25rem;margin:1rem auto;max-width:600px;}
+  .hero .btn{background:#ff5e00;border:none;padding:0.75rem 1.5rem;margin:0.5rem;color:#fff;font-weight:bold;cursor:pointer;}
+  .stats{display:flex;justify-content:space-around;background:#f7f7f7;padding:40px 0;color:#333;text-align:center;}
+  .stats div{flex:1;}
+  .stats h2{font-size:2rem;margin:0;}
+  .services{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;background:#fff;padding:40px;}
+  .service-card{border:1px solid #e0e0e0;padding:20px;text-align:center;}
+  .service-card h3{margin:0.5rem 0;}
+  .split{display:flex;align-items:center;background:#fafafa;padding:40px;}
+  .split img{max-width:50%;margin-right:20px;}
+  .split-text{flex:1;}
+  .faq{padding:40px;background:#fff;}
+  .faq details{margin-bottom:1rem;border-bottom:1px solid #e0e0e0;padding-bottom:0.5rem;}
+  .contact{background:#f0f0f0;padding:40px;}
+  .contact form{max-width:600px;margin:auto;}
+  .contact input,.contact textarea{width:100%;padding:0.75rem;margin:0.5rem 0;border:1px solid #ccc;}
+  .contact button{background:#ff5e00;border:none;color:#fff;padding:0.75rem 1.5rem;font-weight:bold;cursor:pointer;}
+</style>
+
+<section class="hero">
+  <div class="eyebrow">Premium Roofing Solutions</div>
+  <h1>ACME Roofing – Your Roof, Our Expertise</h1>
+  <p>Providing top‑quality roofing services across Lagos with unmatched durability and style.</p>
+  <button class="btn">Get a Quote</button>
+  <button class="btn">View Gallery</button>
+</section>
+
+<section class="stats">
+  <div><h2>200+</h2>Projects Completed</div>
+  <div><h2>15</h2>Years in Business</div>
+  <div><h2>5</h2>Certified Inspectors</div>
+  <div><h2>98%</h2>Customer Satisfaction</div>
+</section>
+
+<section class="services">
+  <div class="service-card"><h3>Roof Installation</h3><p>Precision installation for new homes.</p></div>
+  <div class="service-card"><h3>Roof Repair</h3><p>Fast, reliable repairs for leaks.</p></div>
+  <div class="service-card"><h3>Facade Renovation</h3><p>Modern aesthetics for commercial buildings.</p></div>
+  <div class="service-card"><h3>Maintenance Packages</h3><p>Scheduled upkeep for longevity.</p></div>
+</section>
+
+<section class="split">
+  <img src="https://picsum.photos/seed/roofing-1/800/600" alt="Roofing work in progress">
+  <div class="split-text">
+    <h2>Why Choose ACME Roofing?</h2>
+    <p>We combine local expertise with international standards to deliver roofs that stand the test of time, weather, and style.</p>
+  </div>
+</section>
+
+<section class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <details>
+    <summary>What roofing materials do you use?</summary>
+    <p>We offer asphalt shingles, metal roofing, flat roof systems, and eco‑friendly options.</p>
+  </details>
+  <details>
+    <summary>Do you provide warranties?</summary>
+    <p>All installations come with a 5‑year workmanship warranty.</p>
+  </details>
+  <details>
+    <summary>Can you work on commercial sites?</summary>
+    <p>Yes, we handle projects from small offices to large warehouses.</p>
+  </details>
+  <details>
+    <summary>How long does a typical installation take?</summary>
+    <p>Depending on size, most projects complete within 3–5 days.</p>
+  </details>
+</section>
+
+<section class="contact">
+  <h2>Get in Touch</h2>
+  <form>
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Email Address" required>
+    <input type="tel" placeholder="Phone Number" required>
+    <textarea rows="4" placeholder="Message"></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+----END SAMPLE----
+#1 20488ms  HTTP200 fr=stop    len=4857  rl=164   w=178  style=1img=1  det=4  form=1  pic=2  fence=0sec=6  h2=3   usage={"prompt_tokens":274,"completion_tokens":1441,"total_tokens":1715} ra=null
+#2 21168ms  HTTP200 fr=stop    len=4166  rl=352   w=142  style=1img=1  det=4  form=1  pic=2  fence=0sec=1  h2=2   usage={"prompt_tokens":275,"completion_tokens":1319,"total_tokens":1594} ra=null
+
+=== RATE LIMIT probe: two back-to-back requests (no sleep) ===
+burst#0 21661ms  HTTP200 fr=stop    len=4428  w=151  style=1img=1  det=4  form=1  pic=2  fence=0sec=6  h2=2   ra=null | {"id":"pllns_6c3136fd35870729048245fd2f7bb5a9","choices":[{"index":0,"message":{"role":"assistant","content":"<style>\n.acmhero{background:url(\"https://picsum.photos/seed/roofing/1600/900\") center/c
+burst#1 205ms    HTTP402 fr=        len=0     w=0    style=0img=0  det=0  form=0  pic=0  fence=0sec=0  h2=0   ra=6 | {"status":402,"success":false,"error":{"code":"FREE_LIMIT","message":"Free limit reached: 1 reply every 30 seconds per IP. Retry after 6s, or get unlimited replies with a pollen key at https://enter.p
+
+=== AUTH check: no-auth on Classic ===
+no-auth HTTP402 422ms :: {"status":402,"success":false,"error":{"code":"FREE_LIMIT","message":"Free limit reached: 1 reply every 30 seconds per IP. Retry after 5s, or get unlimited replies with a pollen key at https://enter.pollinations.ai/?ref=

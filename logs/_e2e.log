@@ -1,0 +1,1 @@
+[1p modern] FAIL 5804ms   code=POLLINATIONS_MODEL_DENIED msg=Pollinations key is not allowed to use any of: openai/gpt-5.4, qwen/qwen3-coder-30b-a3b-instruct, openai/gpt-5.4-mini, openai/gpt-5.5, moonshotai/kimi-k2.6, openai/gpt-5-nano, google/gemini-3-flash-preview (its model allow-list covers none of them). Owner fix:

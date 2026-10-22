@@ -1,0 +1,5 @@
+short ping                    HTTP 200 2208ms    chars=0      fr=length  
+medium 500 tok                HTTP 200 356ms     chars=321    fr=stop    DENIED
+long 4000 no-reason           HTTP 200 452ms     chars=321    fr=stop    DENIED
+long 4000 clear_think         HTTP 200 1086ms    chars=321    fr=stop    DENIED
+long 4000 reason_low          HTTP 200 957ms     chars=321    fr=stop    DENIED

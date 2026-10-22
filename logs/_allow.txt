@@ -1,0 +1,18 @@
+z-ai/glm-5.3-flash              HTTP200 ALLOWED id=chatcmpl-c8f51  len=2    OK
+z-ai/glm-5.3                    HTTP200 ALLOWED id=chatcmpl-781fe  len=2    OK
+openai/gpt-oss-20b              HTTP200 ALLOWED id=chatcmpl-81f65  len=2    OK
+openai/gpt-oss-120b             HTTP400 BADID   id=-               len=0    {"success":false,"error":{"message":"Invalid model or alias: \"openai/
+openai/gpt-5.4-nano             HTTP200 ALLOWED id=chatcmpl-EYuTs  len=2    OK
+openai/gpt-5-nano               HTTP200 ALLOWED id=chatcmpl-EYuYa  len=2    OK
+openai/gpt-5.4                  HTTP200 ALLOWED id=chatcmpl-EYuYb  len=2    OK
+openai/gpt-5.4-mini             HTTP200 ALLOWED id=chatcmpl-EYuYd  len=2    OK
+openai/gpt-5.5                  HTTP200 DENIED  id=resp_ce97d2d4-  len=317  {"id":"resp_ce97d2d4-8ec5-4d03-bec4-0bbb628c4929","object":"chat.compl
+google/gemini-3-flash-preview   HTTP200 DENIED  id=resp_bea67d04-  len=332  {"id":"resp_bea67d04-ed2f-419f-87c0-c6e1e835ecc9","object":"chat.compl
+google/gemma-3-27b-it           HTTP400 BADID   id=-               len=0    {"success":false,"error":{"message":"Invalid model or alias: \"google/
+mistralai/mistral-small-3.2     HTTP200 DENIED  id=resp_621bc496-  len=330  {"id":"resp_621bc496-71a5-4338-bf80-8920ba8f70a5","object":"chat.compl
+meta/llama-3.3-70b-instruct     HTTP200 ALLOWED id=64a7ae7dbf984f  len=2    OK
+qwen/qwen3-coder-30b-a3b-instructHTTP200 DENIED  id=resp_4dafadf8-  len=336  {"id":"resp_4dafadf8-42b0-4968-8dba-a88fcb2e30a8","object":"chat.compl
+moonshotai/kimi-k2.6            HTTP200 ALLOWED id=c8854656f52b46  len=2    OK
+openai/gpt-4o-mini              HTTP200 DENIED  id=resp_dc51727d-  len=321  {"id":"resp_dc51727d-2b48-4441-8c1d-92900e3097a4","object":"chat.compl
+openai-fast                     HTTP200 ALLOWED id=chatcmpl-Eaum1  len=2    OK
+openai                          HTTP200 ALLOWED id=chatcmpl-EaL6g  len=2    OK

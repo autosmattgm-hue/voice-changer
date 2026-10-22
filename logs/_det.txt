@@ -1,0 +1,21 @@
+=== determinism: A/B/C repeated 4x, mt differs by 1 ===
+A mt=300 #0                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+B mt=301 #0                                   HTTP200 DENIED id=resp_810009c7-9  len=321   ctok=0 ptok=0
+C mt=302 #0                                   HTTP200 DENIED id=resp_c6cc76e3-6  len=321   ctok=0 ptok=0
+A mt=300 #1                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+B mt=301 #1                                   HTTP200 DENIED id=resp_0a20c266-f  len=321   ctok=0 ptok=0
+C mt=302 #1                                   HTTP200 DENIED id=resp_42d5d91d-3  len=321   ctok=0 ptok=0
+A mt=300 #2                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+B mt=301 #2                                   HTTP200 DENIED id=resp_2afd7162-0  len=321   ctok=0 ptok=0
+C mt=302 #2                                   HTTP200 DENIED id=resp_ce6f8254-b  len=321   ctok=0 ptok=0
+A mt=300 #3                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+B mt=301 #3                                   HTTP200 DENIED id=resp_1d79c5c4-f  len=321   ctok=0 ptok=0
+C mt=302 #3                                   HTTP200 DENIED id=resp_beba26be-2  len=321   ctok=0 ptok=0
+
+=== same body, 3x back to back (no sleep) ===
+A repeat #0                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+A repeat #1                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+A repeat #2                                   HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2     ctok=24 ptok=14
+
+=== no-auth header version of A ===
+no-auth mt=301 -> HTTP401 id=- len=0 denied=false

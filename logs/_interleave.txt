@@ -1,0 +1,19 @@
+round0 short mt=64   2164ms   OK       len=0      reason=278
+round0 med mt=300    417ms    DENIED   len=321    reason=0
+round0 long mt=4000  392ms    DENIED   len=321    reason=0
+
+round1 short mt=64   472ms    OK       len=0      reason=278
+round1 med mt=300    300ms    DENIED   len=321    reason=0
+round1 long mt=4000  314ms    DENIED   len=321    reason=0
+
+round2 short mt=64   422ms    OK       len=0      reason=278
+round2 med mt=300    344ms    DENIED   len=321    reason=0
+round2 long mt=4000  570ms    DENIED   len=321    reason=0
+
+round3 short mt=64   324ms    OK       len=0      reason=278
+round3 med mt=300    778ms    DENIED   len=321    reason=0
+round3 long mt=4000  480ms    DENIED   len=321    reason=0
+
+round4 short mt=64   366ms    OK       len=0      reason=278
+round4 med mt=300    667ms    DENIED   len=321    reason=0
+round4 long mt=4000  402ms    DENIED   len=321    reason=0
