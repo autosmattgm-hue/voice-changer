@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T06:41:15.794Z",
+  "updatedAt": "2026-10-23T21:44:28.175Z",
   "collections": {
     "aiWebsites": [
       {
@@ -1104,6 +1104,60 @@
         ],
         "createdAt": "2026-10-22T06:41:15.768Z",
         "updatedAt": "2026-10-22T06:41:15.768Z"
+      },
+      {
+        "id": "988de73b-6a5c-40a0-8ff6-4df1e080461c",
+        "shareToken": "00ec8ce84bf1444593de686d",
+        "ownerId": "anon",
+        "leadId": "",
+        "leadName": "ACME Roofing",
+        "businessType": "Roofing Contractor",
+        "address": "12 Allen Avenue, Ikeja, Lagos",
+        "phone": "+2348012345678",
+        "email": "hello@acmeroofing.ng",
+        "businessName": "ACME Roofing",
+        "style": "modern",
+        "html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>ACME Roofing</title><meta name=\"description\" content=\"ACME Roofing — a professional website built to turn visitors into customers.\"><style>*{box-sizing:border-box}body{margin:0;font-family:Anton,Impact,sans-serif;color:#fff7ed;background:#1c0a00;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#1c0a00;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#fdba74;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#f97316;color:#1c0a00}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#1c0a00;color:#fdba74;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class=\"nav\"><span class=\"brand\">ACME Roofing</span><a href=\"#\" class=\"nav-a active\" onclick=\"return showPage(0)\">Home</a><a href=\"#\" class=\"nav-a\" onclick=\"return showPage(1)\">About</a></nav><section class=\"pg\" id=\"pg-0\"><style>\n.acme-roofing-home-hero{display:flex;align-items:center;gap:2rem;margin:4rem 0;}\n.acme-roofing-home-hero h1{font-size:3rem;flex:1;}\n.acme-roofing-home-hero a{background:emerald;color:#fff;padding:.75rem 1.5rem;border-radius:9999px;text-decoration:none;margin-top:1rem;display:inline-block;}\n.acme-roofing-home-stats{display:flex;justify-content:space-around;margin:2rem 0;}\n.acme-roofing-home-card{box-shadow:0 4px 8px rgba(0,0,0,.1);padding:2rem;border-radius:1rem;background:#fff;margin:1rem;width:30%;}\n.acme-roofing-home-card a{color:emerald;text-decoration:none;}\n.acme-roofing-home-form{margin-top:2rem;padding:2rem;background:#fff;border-radius:1rem;}\n</style>\n<div class=\"acme-roofing-home-hero\">\n  <div>\n    <h1>ACME Roofing – <span style=\"border-bottom:4px solid emerald;\">Reliable Roof Solutions</span></h1>\n    <p>Your trusted roofing partner in Ikeja.</p>\n    <a href=\"#contact\">Get a Quote</a>\n    <a href=\"#services\">Our Services</a>\n  </div>\n  <img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Roofing crew\" style=\"border-radius:1rem;max-width:50%;\">\n</div>\n<div class=\"acme-roofing-home-stats\">\n  <div><strong>10k+</strong> Projects</div>\n  <div><strong>20+</strong> Years</div>\n  <div><strong>5</strong> Awards</div>\n  <div><strong>1k</strong> Happy Clients</div>\n</div>\n<div style=\"display:flex;justify-content:space-between;\">\n  <div class=\"acme-roofing-home-card\">\n    <h3>Residential Roofing</h3>\n    <p>Custom designs for homes.</p>\n    <a href=\"#residential\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-home-card\">\n    <h3>Commercial Services</h3>\n    <p>Durable solutions for businesses.</p>\n    <a href=\"#commercial\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-home-card\">\n    <h3>Emergency Repair</h3>\n    <p>24/7 rapid response.</p>\n    <a href=\"#emergency\">Learn More</a>\n  </div>\n</div>\n<img src=\"https://picsum.photos/seed/roofing-contractor-1/800/600\" alt=\"Roof repair\" style=\"display:block;margin:2rem auto;width:80%;border-radius:1rem;\">\n<p style=\"text-align:center;\">Expert craftsmanship ensuring lasting protection.</p>\n<details><summary>What roofing materials do you use?</summary>We offer shingles, metal, tile, and flat roof systems tailored to your needs.</details>\n<details><summary>Do you provide warranties?</summary>All installations come with a 10-year workmanship warranty.</details>\n<details><summary>How quickly can you respond?</summary>We typically respond within 24 hours for new inquiries.</details>\n<form class=\"acme-roofing-home-form\" action=\"#\" method=\"post\">\n  <label>Name: <input type=\"text\" name=\"name\" required></label><br><br>\n  <label>Email: <input type=\"email\" name=\"email\" required></label><br><br>\n  <label>Phone: <input type=\"tel\" name=\"phone\" required></label><br><br>\n  <label>Message:<br><textarea name=\"message\" rows=\"4\" required></textarea></label><br><br>\n  <button type=\"submit\" style=\"background:emerald;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:9999px;\">Send Message</button>\n</form></section><section class=\"pg\" id=\"pg-1\" style=\"display:none\"><style>\n.acme-roofing-about-hero{display:flex;align-items:center;justify-content:space-between;padding:4rem 2rem;background:#fff;}\n.acme-roofing-about-hero h1{font-size:3rem;margin:0 0 1rem 0;font-weight:700;color:#004d40;}\n.acme-roofing-about-hero h1 .accent{color:inherit;text-decoration:underline;}\n.acme-roofing-about-hero .buttons{display:flex;gap:1rem;}\n.acme-roofing-about-hero .buttons a{background:#004d40;color:#fff;padding:.75rem 1.5rem;border-radius:9999px;text-decoration:none;}\n.acme-roofing-about-stats{display:flex;justify-content:space-around;padding:3rem 0;background:#e0f2f1;}\n.acme-roofing-about-stats .stat{font-size:2rem;font-weight:600;color:#004d40;}\n.acme-roofing-about-cards{display:flex;gap:2rem;padding:3rem 2rem;}\n.acme-roofing-about-card{flex:1;padding:2rem;border-radius:1rem;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,.05);}\n.acme-roofing-about-card h3{margin-top:0;color:#004d40;}\n.acme-roofing-about-card a{color:#004d40;text-decoration:underline;}\n.acme-roofing-about-image{text-align:center;padding:3rem 2rem;}\n.acme-roofing-about-image img{max-width:100%;border-radius:1rem;}\n.acme-roofing-about-faq details{margin:1rem 0;}\n.acme-roofing-about-form{padding:3rem 2rem;background:#e0f2f1;}\n.acme-roofing-about-form input,.acme-roofing-about-form textarea{display:block;width:100%;margin-bottom:1rem;padding:.75rem;border:1px solid #ccc;border-radius:.5rem;}\n.acme-roofing-about-form button{background:#004d40;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:.5rem;}\n</style>\n\n<section class=\"acme-roofing-about-hero\">\n  <div>\n    <h1>Our <span class=\"accent\">Story</span></h1>\n    <p>From humble beginnings to modern excellence, ACME Roofing has built roofs that stand the test of time.</p>\n    <div class=\"buttons\">\n      <a href=\"#\">Contact Us</a>\n      <a href=\"#\">Learn More</a>\n    </div>\n  </div>\n  <div><img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Roofing\"></div>\n</section>\n\n<section class=\"acme-roofing-about-stats\">\n  <div class=\"stat\">5k+</div>\n  <div class=\"stat\">12 Years</div>\n  <div class=\"stat\">1,200+</div>\n  <div class=\"stat\">100%</div>\n</section>\n\n<section class=\"acme-roofing-about-cards\">\n  <article class=\"acme-roofing-about-card\">\n    <h3>Quality Materials</h3>\n    <p>We source only the best.</p>\n    <a href=\"#\">Read More</a>\n  </article>\n  <article class=\"acme-roofing-about-card\">\n    <h3>Expert Team</h3>\n    <p>Skilled and certified.</p>\n    <a href=\"#\">Read More</a>\n  </article>\n  <article class=\"acme-roofing-about-card\">\n    <h3>Customer Focus</h3>\n    <p>Your satisfaction first.</p>\n    <a href=\"#\">Read More</a>\n  </article>\n</section>\n\n<section class=\"acme-roofing-about-image\">\n  <img src=\"https://picsum.photos/seed/roofing-contractor-1/800/600\" alt=\"Our Work\">\n  <p>Transforming homes with precision and care.</p>\n</section>\n\n<section class=\"acme-roofing-about-faq\">\n  <details>\n    <summary>What services do you offer?</summary>\n    <p>Full roof installation, repair, and maintenance.</p>\n  </details>\n  <details>\n    <summary>Do you provide warranties?</summary>\n    <p>Yes, we offer a 10-year workmanship guarantee.</p>\n  </details>\n  <details>\n    <summary>How long does a project take?</summary>\n    <p>Typically 2-4 weeks depending on size.</p>\n  </details>\n</section>\n\n<section class=\"acme-roofing-about-form\">\n  <form>\n    <input type=\"text\" placeholder=\"Name\" required>\n    <input type=\"email\" placeholder=\"Email\" required>\n    <input type=\"tel\" placeholder=\"Phone\" required>\n    <textarea placeholder=\"Message\" rows=\"4\" required></textarea>\n    <button type=\"submit\">Send Message</button>\n  </form>\n</section></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style=\"opacity:.75;font-size:.82rem\">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>",
+        "provider": "pollinations",
+        "model": "openai-fast",
+        "pageCount": 2,
+        "aiError": "",
+        "revisions": 1,
+        "history": [
+          {
+            "at": "2026-10-22T06:47:11.528Z",
+            "instruction": "Initial AI website build"
+          }
+        ],
+        "createdAt": "2026-10-22T06:48:04.673Z",
+        "updatedAt": "2026-10-22T06:48:04.673Z"
+      },
+      {
+        "id": "426af6b8-c550-416f-b5e5-74021d4b567f",
+        "shareToken": "832352a0963d4f8182800762",
+        "ownerId": "anon",
+        "leadId": "",
+        "leadName": "ACME Roofing",
+        "businessType": "Roofing Contractor",
+        "address": "12 Allen Avenue, Ikeja, Lagos",
+        "phone": "+2348012345678",
+        "email": "hello@acmeroofing.ng",
+        "businessName": "ACME Roofing",
+        "style": "modern",
+        "html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>ACME Roofing</title><meta name=\"description\" content=\"ACME Roofing — a professional website built to turn visitors into customers.\"><style>*{box-sizing:border-box}body{margin:0;font-family:Fraunces,Georgia,serif;color:#fafaf9;background:#0c0a09;line-height:1.55}img{max-width:100%;height:auto}.nav{position:sticky;top:0;z-index:50;background:#0c0a09;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap;box-shadow:0 1px 8px rgba(15,23,42,.08);backdrop-filter:blur(8px)}.nav-a{color:#e7e5e4;text-decoration:none;font-weight:600;padding:8px 13px;border-radius:9px;font-size:.9rem}.nav-a.active,.nav-a:hover{background:#d4a437;color:#0c0a09}.nav .brand{font-weight:800;margin-right:auto;font-size:1.02rem}.pg{max-width:1120px;margin:0 auto;padding:26px 20px 40px}.site-foot{background:#0c0a09;color:#a8a29e;text-align:center;padding:24px;font-size:.88rem}form.site-form{display:grid;gap:10px;max-width:520px}input,textarea,select{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;width:100%}button{cursor:pointer}</style></head><body><nav class=\"nav\"><span class=\"brand\">ACME Roofing</span><a href=\"#\" class=\"nav-a active\" onclick=\"return showPage(0)\">Home</a><a href=\"#\" class=\"nav-a\" onclick=\"return showPage(1)\">About</a><a href=\"#\" class=\"nav-a\" onclick=\"return showPage(2)\">Services</a><a href=\"#\" class=\"nav-a\" onclick=\"return showPage(3)\">Contact</a></nav><section class=\"pg\" id=\"pg-0\"><style>\n.acme-roofing-home-h1{font-family:Fraunces,serif;font-size:4rem;color:#1c1917;}\n.acme-roofing-home-cta{background:#d4a437;color:#fafaf9;font-family:Inter,Helvetica,Arial;font-size:1rem;padding:0.75rem 1.5rem;border:none;border-radius:9999px;display:inline-block;margin-right:1rem;cursor:pointer;}\n.acme-roofing-home-underline{border-bottom:3px solid #d4a437;display:inline;}\n.acme-roofing-home-stats{font-family:Inter,Helvetica,Arial;font-size:2.5rem;color:#1c1917;margin:2rem 0;}\n.acme-roofing-home-card{background:#1c1917;color:#fafaf9;padding:1.5rem;border-radius:0.5rem;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);margin-bottom:1rem;}\n.acme-roofing-home-card-heading{font-family:Fraunces,serif;font-size:1.75rem;margin-bottom:0.5rem;}\n.acme-roofing-home-card-link{color:#d4a437;font-family:Inter,Helvetica,Arial;font-size:0.9rem;}\n.acme-roofing-home-img{width:100%;height:auto;border-radius:0.5rem;margin:2rem 0;}\n.acme-roofing-home-form{display:grid;gap:1rem;width:100%;max-width:500px;margin-top:2rem;}\n.acme-roofing-home-form input,.acme-roofing-home-form textarea{padding:0.75rem;border-radius:0.5rem;border:1px solid #d4a437;background:#fafaf9;color:#1c1917;font-family:Inter,Helvetica,Arial;}\n.acme-roofing-home-form button{background:#d4a437;color:#fafaf9;padding:0.75rem 1.5rem;border:none;border-radius:9999px;cursor:pointer;margin-top:0.5rem;}\n</style>\n<h1 class=\"acme-roofing-home-h1\">Premium Roof <span class=\"acme-roofing-home-underline\">Protection</span> for Your Home</h1>\n<p>Expert roofing solutions in Lagos with unmatched quality and service.</p>\n<a href=\"#contact\" class=\"acme-roofing-home-cta\">Get a Quote</a>\n<a href=\"#services\" class=\"acme-roofing-home-cta\">Learn More</a>\n<div class=\"acme-roofing-home-stats\">10+<br>500+<br>99%<br>100%</div>\n<div class=\"acme-roofing-home-card\">\n<h3 class=\"acme-roofing-home-card-heading\">Durable Materials</h3>\n<p>Top-tier roofing materials for lasting protection.</p>\n<a href=\"#\" class=\"acme-roofing-home-card-link\">Read More</a>\n</div>\n<div class=\"acme-roofing-home-card\">\n<h3 class=\"acme-roofing-home-card-heading\">Certified Experts</h3>\n<p>Licensed professionals with years of experience.</p>\n<a href=\"#\" class=\"acme-roofing-home-card-link\">Read More</a>\n</div>\n<div class=\"acme-roofing-home-card\">\n<h3 class=\"acme-roofing-home-card-heading\">Fast & Free Estimates</h3>\n<p>Get an instant quote with no commitment.</p>\n<a href=\"#\" class=\"acme-roofing-home-card-link\">Read More</a>\n</div>\n<img src=\"https://picsum.photos/seed/roofing-contractor-1/800/600\" alt=\"Roofing Project\" class=\"acme-roofing-home-img\">\n<p>We ensure every roof is built to withstand the elements and protect your home.</p>\n<details>\n<summary>What services do you offer?</summary>\n<p>We provide roof installation, repairs, maintenance, and inspections.</p>\n</details>\n<details>\n<summary>How long does a typical roof installation take?</summary>\n<p>Most installations take 2-4 weeks depending on size and complexity.</p>\n</details>\n<details>\n<summary>Do you offer warranties?</summary>\n<p>Yes, we provide a comprehensive 10-year workmanship warranty.</p>\n</details>\n<form class=\"acme-roofing-home-form\" id=\"contact\">\n<input type=\"text\" name=\"name\" placeholder=\"Name\" required>\n<input type=\"email\" name=\"email\" placeholder=\"Email\" required>\n<input type=\"tel\" name=\"phone\" placeholder=\"Phone\" required>\n<textarea name=\"message\" placeholder=\"Message\" rows=\"4\" required></textarea>\n<button type=\"submit\">Send Message</button>\n</form></section><section class=\"pg\" id=\"pg-1\" style=\"display:none\"><style>\n.acme-roofing-about-hero{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;color:#fafaf9;padding:4rem;}\n.acme-roofing-about-hero h1{font-family:'Fraunces',serif;font-size:3rem;max-width:50%;}\n.acme-roofing-about-hero img{border-radius:1rem;max-width:45%;height:auto;}\n.acme-roofing-about-stats{display:flex;justify-content:space-around;color:#fafaf9;font-family:'Inter',sans-serif;margin:2rem 0;}\n.acme-roofing-about-card{background:#1c1917;border-radius:.5rem;padding:1.5rem;margin:1rem;box-shadow:0 4px 10px rgba(0,0,0,.3);color:#fafaf9;font-family:'Inter',sans-serif;}\n.acme-roofing-about-card h3{margin-top:0;}\n.acme-roofing-about-cta{background:#d4a437;color:#0c0a09;padding:.75rem 1.5rem;border:none;border-radius:999px;font-family:'Inter',sans-serif;}\n.acme-roofing-about-form{display:flex;flex-direction:column;gap:1rem;background:#1c1917;padding:2rem;border-radius:.5rem;color:#fafaf9;font-family:'Inter',sans-serif;}\n</style>\n\n<div class=\"acme-roofing-about-hero\">\n  <h1>Crafting Roofs with <span style=\"text-decoration:underline;\">Perfection</span></h1>\n  <div>\n    <a href=\"/contact\" class=\"acme-roofing-about-cta\">Get a Quote</a>\n    <a href=\"/services\" class=\"acme-roofing-about-cta\">Our Services</a>\n  </div>\n  <img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Roofing\">\n</div>\n\n<div class=\"acme-roofing-about-stats\">\n  <div>500+ Projects</div>\n  <div>15 Years</div>\n  <div>4.8★ Avg. Rating</div>\n  <div>24/7 Support</div>\n</div>\n\n<div class=\"acme-roofing-about-card\">\n  <h3>Expert Craftsmanship</h3>\n  <p>Precision in every shingle.</p>\n  <a href=\"/expertise\">Learn More</a>\n</div>\n\n<div class=\"acme-roofing-about-card\">\n  <h3>Eco-Friendly Materials</h3>\n  <p>Green solutions for sustainable roofs.</p>\n  <a href=\"/materials\">Discover</a>\n</div>\n\n<div class=\"acme-roofing-about-card\">\n  <h3>Transparent Pricing</h3>\n  <p>No hidden costs.</p>\n  <a href=\"/pricing\">See Plans</a>\n</div>\n\n<img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Our Work\" style=\"width:100%;border-radius:.5rem;margin:2rem 0;\">\n<p style=\"text-align:center;color:#fafaf9;font-family:'Inter',sans-serif;\">Building roofs that stand the test of time.</p>\n\n<details>\n  <summary>What makes ACME Roofing unique?</summary>\n  <p>Our blend of seasoned expertise and innovative techniques ensures lasting protection.</p>\n</details>\n<details>\n  <summary>Do you offer warranties?</summary>\n  <p>Yes, all our roofs come with a 10-year structural warranty.</p>\n</details>\n<details>\n  <summary>Can I get a free estimate?</summary>\n  <p>Absolutely! Contact us for a complimentary assessment.</p>\n</details>\n\n<form class=\"acme-roofing-about-form\" action=\"/submit\" method=\"post\">\n  <label>Name: <input type=\"text\" name=\"name\" required></label>\n  <label>Email: <input type=\"email\" name=\"email\" required></label>\n  <label>Phone: <input type=\"tel\" name=\"phone\" required></label>\n  <label>Message: <textarea name=\"message\"></textarea></label>\n  <button type=\"submit\" class=\"acme-roofing-about-cta\">Send Message</button>\n</form></section><section class=\"pg\" id=\"pg-2\" style=\"display:none\"><style>\n.acme-roofing-services-hero{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;color:#fafaf9;padding:4rem 2rem;}\n.acme-roofing-services-hero h1{font-family:'Fraunces',serif;font-size:3rem;margin:0;}\n.acme-roofing-services-hero img{border-radius:1rem;max-width:45%;box-shadow:0 4px 12px rgba(0,0,0,.3);}\n.acme-roofing-services-hero a{background:#d4a437;color:#0c0a09;padding:.75rem 1.5rem;border-radius:9999px;text-decoration:none;margin-right:.5rem;}\n.acme-roofing-services-stats{display:flex;justify-content:space-around;text-align:center;background:#1c1917;color:#fafaf9;padding:2rem 0;}\n.acme-roofing-services-stats div{font-size:2rem;font-family:'Inter',sans-serif;}\n.acme-roofing-services-card{background:#1c1917;color:#fafaf9;border-radius:.75rem;padding:1.5rem;margin:1rem;box-shadow:0 2px 8px rgba(0,0,0,.2);flex:1;}\n.acme-roofing-services-card h3{font-family:'Fraunces',serif;font-size:1.5rem;margin-bottom:.5rem;}\n.acme-roofing-services-card a{display:inline-block;margin-top:.75rem;color:#d4a437;text-decoration:none;}\n.acme-roofing-services-faq details{border-bottom:1px solid #2a2524;padding:.75rem 0;}\n.acme-roofing-services-form{background:#1c1917;color:#fafaf9;padding:2rem;border-radius:.75rem;display:flex;flex-direction:column;max-width:500px;margin:auto;}\n.acme-roofing-services-form input, .acme-roofing-services-form textarea{margin:.5rem 0;padding:.75rem;border:none;border-radius:.5rem;background:#2a2524;color:#fafaf9;}\n.acme-roofing-services-form button{background:#d4a437;color:#0c0a09;padding:.75rem 1.5rem;border:none;border-radius:9999px;margin-top:.75rem;}\n</style>\n\n<section class=\"acme-roofing-services-hero\">\n  <div>\n    <h1>Premium Roofing Solutions for Your Home</h1>\n    <p>We guarantee lasting protection and flawless style for your roof.</p>\n    <a href=\"/contact\">Get a Quote</a>\n    <a href=\"/services\">Our Services</a>\n  </div>\n  <img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Roofing\">\n</section>\n\n<section class=\"acme-roofing-services-stats\">\n  <div>250+</div>\n  <div>5 Years</div>\n  <div>10k sqft</div>\n  <div>99%</div>\n</section>\n\n<section style=\"display:flex;flex-wrap:wrap;margin:2rem 0;\">\n  <div class=\"acme-roofing-services-card\">\n    <h3>Residential Roofing</h3>\n    <p>Custom solutions for homes of all sizes.</p>\n    <a href=\"/residential\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-services-card\">\n    <h3>Commercial Roofing</h3>\n    <p>Durable roofs for businesses.</p>\n    <a href=\"/commercial\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-services-card\">\n    <h3>Roof Replacement</h3>\n    <p>Seamless transitions to new roof systems.</p>\n    <a href=\"/replacement\">Learn More</a>\n  </div>\n</section>\n\n<section style=\"display:flex;align-items:center;margin:2rem 0;\">\n  <img src=\"https://picsum.photos/seed/roofing-contractor-1/800/600\" alt=\"Roofing Work\" style=\"border-radius:.75rem;max-width:60%;margin-right:2rem;box-shadow:0 4px 12px rgba(0,0,0,.3);\">\n  <p>ACME Roofing delivers high-quality craftsmanship with premium materials, ensuring your roof lasts for decades.</p>\n</section>\n\n<section style=\"margin:2rem 0;\">\n  <details>\n    <summary>What types of roofing materials do you use?</summary>\n    <p>We use asphalt shingles, metal, tile, and composite options tailored to your needs.</p>\n  </details>\n  <details>\n    <summary>Do you offer warranties?</summary>\n    <p>Yes, we provide a 10-year workmanship warranty and a 25-year product warranty.</p>\n  </details>\n  <details>\n    <summary>Can I get an estimate online?</summary>\n    <p>Sure! Click the “Get a Quote” button to start the process.</p>\n  </details>\n</section>\n\n<form class=\"acme-roofing-services-form\" action=\"/submit\" method=\"POST\">\n  <input type=\"text\" name=\"name\" placeholder=\"Name\" required>\n  <input type=\"email\" name=\"email\" placeholder=\"Email\" required>\n  <input type=\"tel\" name=\"phone\" placeholder=\"Phone\" required>\n  <textarea name=\"message\" rows=\"4\" placeholder=\"Message\" required></textarea>\n  <button type=\"submit\">Send Message</button>\n</form></section><section class=\"pg\" id=\"pg-3\" style=\"display:none\"><style>\n.acme-roofing-contact-hero{display:flex;align-items:center;gap:2rem;background:#1c1917;color:#fafaf9;padding:4rem 2rem;border-radius:1rem;}\n.acme-roofing-contact-headline{font-family:'Fraunces',serif;font-size:3rem;line-height:1.2;}\n.acme-roofing-contact-underline{border-bottom:4px solid #d4a437;display:inline-block;padding-bottom:.25rem;}\n.acme-roofing-contact-btn{background:#d4a437;color:#0c0a09;padding:.75rem 1.5rem;border-radius:999px;margin-right:.5rem;text-decoration:none;font-weight:600;}\n.acme-roofing-contact-stats{display:flex;justify-content:space-around;margin:2rem 0;}\n.acme-roofing-contact-stats div{font-size:2rem;text-align:center;}\n.acme-roofing-contact-card{background:#1c1917;color:#fafaf9;padding:1.5rem;border-radius:.75rem;box-shadow:0 4px 6px rgba(0,0,0,.3);margin:.75rem;}\n.acme-roofing-contact-details{margin-top:2rem;}\n.acme-roofing-contact-form{display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}\n.acme-roofing-contact-form input{padding:.75rem;border:none;border-radius:.5rem;}\n.acme-roofing-contact-submit{background:#d4a437;color:#0c0a09;padding:.75rem;border:none;border-radius:.5rem;font-weight:600;cursor:pointer;}\n</style>\n<div class=\"acme-roofing-contact-hero\">\n  <div>\n    <h1 class=\"acme-roofing-contact-headline\">Get in <span class=\"acme-roofing-contact-underline\">Touch</span> with ACME Roofing</h1>\n    <p>We’re ready to transform your roof.</p>\n    <a href=\"#contact\" class=\"acme-roofing-contact-btn\">Request Quote</a>\n    <a href=\"tel:+2348012345678\" class=\"acme-roofing-contact-btn\">Call Us</a>\n  </div>\n  <img src=\"https://picsum.photos/seed/roofing-contractor/1600/900\" alt=\"Roofing\" width=\"400\" style=\"border-radius:.75rem;\">\n</div>\n<div class=\"acme-roofing-contact-stats\">\n  <div>20+ Years</div>\n  <div>500+ Projects</div>\n  <div>100% Satisfaction</div>\n  <div>24/7 Support</div>\n</div>\n<div style=\"display:flex;justify-content:space-around;\">\n  <div class=\"acme-roofing-contact-card\">\n    <h3>Expert Installation</h3>\n    <p>Precision and care.</p>\n    <a href=\"#more\" class=\"acme-roofing-contact-btn\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-contact-card\">\n    <h3>Quality Materials</h3>\n    <p>Durability guaranteed.</p>\n    <a href=\"#more\" class=\"acme-roofing-contact-btn\">Learn More</a>\n  </div>\n  <div class=\"acme-roofing-contact-card\">\n    <h3>Eco Friendly</h3>\n    <p>Sustainable options.</p>\n    <a href=\"#more\" class=\"acme-roofing-contact-btn\">Learn More</a>\n  </div>\n</div>\n<img src=\"https://picsum.photos/seed/roofing-contractor-1/800/600\" alt=\"Roofing Gallery\" width=\"400\" style=\"border-radius:.75rem;margin-top:2rem;\">\n<p style=\"margin-top:.5rem;\">Check out our recent projects.</p>\n<div class=\"acme-roofing-contact-details\">\n  <details><summary>What services do you offer?</summary>We install, repair, and maintain residential and commercial roofs.</details>\n  <details><summary>Do you provide warranties?</summary>All work comes with a 10-year workmanship warranty.</details>\n  <details><summary>Where are you located?</summary>12 Allen Avenue, Ikeja, Lagos.</details>\n</div>\n<form class=\"acme-roofing-contact-form\" id=\"contact\">\n  <input type=\"text\" name=\"name\" placeholder=\"Your Name\" required>\n  <input type=\"email\" name=\"email\" placeholder=\"Email Address\" required>\n  <input type=\"tel\" name=\"phone\" placeholder=\"Phone Number\">\n  <textarea name=\"message\" placeholder=\"Your Message\" rows=\"4\"></textarea>\n  <button type=\"submit\" class=\"acme-roofing-contact-submit\">Send Message</button>\n</form></section><footer>© 2026 ACME Roofing. All rights reserved.<br><span style=\"opacity:.75;font-size:.82rem\">Website crafted with MAT LEADS AI Website Studio — created by Ebube John Okoye.</span></footer><script>function showPage(i){document.querySelectorAll('.pg').forEach(function(s,idx){s.style.display=idx===i?'block':'none'});document.querySelectorAll('.nav-a').forEach(function(a,idx){a.classList.toggle('active',idx===i)});window.scrollTo(0,0);return false;}</script></body></html>",
+        "provider": "pollinations",
+        "model": "openai-fast",
+        "pageCount": 4,
+        "aiError": "",
+        "revisions": 1,
+        "history": [
+          {
+            "at": "2026-10-22T06:48:48.250Z",
+            "instruction": "Initial AI website build"
+          }
+        ],
+        "createdAt": "2026-10-22T06:51:33.450Z",
+        "updatedAt": "2026-10-22T06:51:33.450Z"
       }
     ],
     "users": [
@@ -1562,6 +1616,69 @@
         "verificationTokenExpiresAt": 0,
         "verificationSentAt": "2026-10-20T06:42:34.861Z",
         "emailVerifiedAt": "2026-10-20T06:42:40.661Z"
+      },
+      {
+        "uid": "122cc12b-8576-408b-8da2-5bb38c5d77b7",
+        "id": "122cc12b-8576-408b-8da2-5bb38c5d77b7",
+        "name": "Test User",
+        "email": "test@example.com",
+        "passwordHash": "scrypt$c359edb6ad1efa63e653c24a4d37cc42$81c23a9a8ce7197a2924ce1c93b7f94cc62544e64438ffc046545dc80f37f0eb8b883f8a7b506e1cad621fe156743399f60ee5e060de5c3d9dd54e89ebc96be8",
+        "role": "user",
+        "tokenVersion": 1,
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 0,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 0,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": false,
+        "verificationRequired": true,
+        "createdAt": "2026-10-23T21:38:43.214Z",
+        "updatedAt": "2026-10-23T21:38:43.386Z",
+        "verificationToken": "eb88eb07502f5ed80a0f098087d7d9b05cd6c2b1f3be29dc",
+        "verificationTokenExpiresAt": 1792877923386,
+        "verificationSentAt": "2026-10-23T21:38:43.386Z"
+      },
+      {
+        "uid": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "id": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "name": "Smoke Tester",
+        "email": "smoke-1792791778810@example.com",
+        "passwordHash": "scrypt$ecc59cf5a7b884b36ebb9bae1695b8f9$0994ff3188882ea24d9357206070f2c615844e97ecbdb40ac40619a52029452f089c01e393c2589e37723774fc7c7fe7a4dfb309e17274ecc024eb2c7370581f",
+        "role": "user",
+        "tokenVersion": 1,
+        "subscription": "trial",
+        "planName": "Free Trial",
+        "monthlyLeadLimit": 5,
+        "trialSearchLimit": 2,
+        "trialLeadLimit": 5,
+        "billingStatus": "trial",
+        "trialSearchesUsed": 1,
+        "entitlements": {
+          "billingRequired": true,
+          "trial": true,
+          "trialSearchesUsed": 1,
+          "trialSearchLimit": 2,
+          "trialLeadLimit": 5,
+          "upgradeRequiredAfterTrial": true
+        },
+        "emailVerified": true,
+        "verificationRequired": true,
+        "createdAt": "2026-10-23T21:42:58.995Z",
+        "updatedAt": "2026-10-23T21:44:26.418Z",
+        "verificationToken": "",
+        "verificationTokenExpiresAt": 0,
+        "verificationSentAt": "2026-10-23T21:42:59.924Z",
+        "emailVerifiedAt": "2026-10-23T21:43:01.106Z"
       }
     ],
     "leads": [
@@ -13948,13 +14065,13 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
-        "discoveredAt": "2026-10-18T19:06:00.425Z",
-        "updatedAt": "2026-10-18T19:06:19.288Z",
+        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "discoveredAt": "2026-10-23T21:44:23.126Z",
+        "updatedAt": "2026-10-23T21:44:27.983Z",
         "createdAt": "2026-10-09T07:24:55.141Z",
-        "ownerId": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "ownerId": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
         "stage": "Contacted",
-        "savedAt": "2026-10-18T19:06:16.713Z"
+        "savedAt": "2026-10-23T21:44:27.786Z"
       },
       {
         "id": "photon-node-7320697313",
@@ -14083,9 +14200,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
-        "discoveredAt": "2026-10-18T19:06:00.425Z",
-        "updatedAt": "2026-10-18T19:06:00.425Z",
+        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "discoveredAt": "2026-10-23T21:44:23.126Z",
+        "updatedAt": "2026-10-23T21:44:23.126Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14215,9 +14332,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
-        "discoveredAt": "2026-10-18T19:06:00.425Z",
-        "updatedAt": "2026-10-18T19:06:00.425Z",
+        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "discoveredAt": "2026-10-23T21:44:23.126Z",
+        "updatedAt": "2026-10-23T21:44:23.126Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14347,9 +14464,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
-        "discoveredAt": "2026-10-18T19:06:00.425Z",
-        "updatedAt": "2026-10-18T19:06:00.425Z",
+        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "discoveredAt": "2026-10-23T21:44:23.126Z",
+        "updatedAt": "2026-10-23T21:44:23.126Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14481,9 +14598,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
-        "discoveredAt": "2026-10-18T19:06:00.425Z",
-        "updatedAt": "2026-10-18T19:06:00.425Z",
+        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "discoveredAt": "2026-10-23T21:44:23.126Z",
+        "updatedAt": "2026-10-23T21:44:23.126Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -17689,6 +17806,37 @@
         "id": "dcf23491-327c-4a0d-a062-53b904c1bc78",
         "createdAt": "2026-10-18T23:56:49.687Z",
         "updatedAt": "2026-10-18T23:56:49.687Z"
+      },
+      {
+        "actor": "smoke-1792791778810@example.com",
+        "action": "lead_search",
+        "query": {
+          "country": "",
+          "countries": [],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "businesses",
+          "businessTypes": [],
+          "mapLink": "https://www.google.com/maps/@13.4053888,-16.6887424,11z?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 10,
+          "searchDepth": "deep",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 5,
+        "id": "d3ef6deb-b4e7-4474-a35b-da05aed332a8",
+        "createdAt": "2026-10-23T21:44:26.785Z",
+        "updatedAt": "2026-10-23T21:44:26.785Z"
       }
     ],
     "activities": [
@@ -17745,6 +17893,15 @@
         "id": "0af89efd-e40d-46f2-939a-8b61dc723606",
         "createdAt": "2026-10-18T23:56:57.398Z",
         "updatedAt": "2026-10-18T23:56:57.398Z"
+      },
+      {
+        "leadId": "photon-node-8209452111",
+        "actor": "smoke-1792791778810@example.com",
+        "action": "stage_updated",
+        "stage": "Contacted",
+        "id": "8c98968c-9e11-4a79-ae30-552ff7df91bc",
+        "createdAt": "2026-10-23T21:44:28.175Z",
+        "updatedAt": "2026-10-23T21:44:28.175Z"
       }
     ],
     "checkoutSessions": [
