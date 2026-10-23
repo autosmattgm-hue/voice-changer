@@ -1,0 +1,12 @@
+KEY len=19
+openai/gpt-5.4-nano        #0 HTTP 200 2649ms  DENIED "{\"id\":\"resp_05992e11-678a-434f-ae57-4d0e6b9f9587\",\"object\":\"chat.completion\",\"created\":1792620014,\"model\":\"openai/gpt-5.4-nano\",\"choices\":[{\"index\":0,"
+openai/gpt-5.4-nano        #1 HTTP 200 377ms   DENIED "{\"id\":\"resp_9e8e74db-ca00-490a-9257-59383caad3ed\",\"object\":\"chat.completion\",\"created\":1792620017,\"model\":\"openai/gpt-5.4-nano\",\"choices\":[{\"index\":0,"
+openai/gpt-5.4-nano        #2 HTTP 200 508ms   DENIED "{\"id\":\"resp_1bdcd099-0061-41f8-8d3c-3f16628b7e0d\",\"object\":\"chat.completion\",\"created\":1792620020,\"model\":\"openai/gpt-5.4-nano\",\"choices\":[{\"index\":0,"
+openai/gpt-5.4-nano        #3 HTTP 200 1008ms  DENIED "{\"id\":\"resp_ab16c784-afad-4bcf-a814-8f31cfd229df\",\"object\":\"chat.completion\",\"created\":1792620023,\"model\":\"openai/gpt-5.4-nano\",\"choices\":[{\"index\":0,"
+openai/gpt-5.4-nano        #4 HTTP 200 749ms   DENIED "{\"id\":\"resp_4482b825-7aa9-4faa-85d8-5fc4e90f7ffc\",\"object\":\"chat.completion\",\"created\":1792620027,\"model\":\"openai/gpt-5.4-nano\",\"choices\":[{\"index\":0,"
+
+z-ai/glm-5.3-flash         #0 HTTP 200 478ms   OK     "{\"id\":\"chatcmpl-a4180f32\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"OK\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to reply with exac"
+z-ai/glm-5.3-flash         #1 HTTP 200 4586ms  OK     "{\"id\":\"chatcmpl-a4180f32\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"OK\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to reply with exac"
+z-ai/glm-5.3-flash         #2 HTTP 200 2341ms  OK     "{\"id\":\"chatcmpl-a4180f32\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"OK\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to reply with exac"
+z-ai/glm-5.3-flash         #3 HTTP 200 982ms   OK     "{\"id\":\"chatcmpl-a4180f32\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"OK\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to reply with exac"
+z-ai/glm-5.3-flash         #4 HTTP 200 414ms   OK     "{\"id\":\"chatcmpl-a4180f32\",\"choices\":[{\"index\":0,\"message\":{\"content\":\"OK\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to reply with exac"

@@ -1,0 +1,21 @@
+=== max_tokens fine sweep (tiny prompt, glm-5.3-flash) ===
+mt=64   HTTP200 ALLOW  id=chatcmpl-bb46d8  len=0    ctok=64
+mt=100  HTTP200 DENIED id=resp_e3c74392-2  len=321  ctok=0
+mt=150  HTTP200 DENIED id=resp_0db1fb0e-6  len=321  ctok=0
+mt=200  HTTP200 DENIED id=resp_560d849d-4  len=321  ctok=0
+mt=250  HTTP200 DENIED id=resp_e21664fe-5  len=321  ctok=0
+mt=280  HTTP200 DENIED id=resp_2673a3a0-3  len=321  ctok=0
+mt=290  HTTP200 DENIED id=resp_ef71b1dc-9  len=321  ctok=0
+mt=295  HTTP200 DENIED id=resp_a38de73b-f  len=321  ctok=0
+mt=299  HTTP200 DENIED id=resp_666628f8-3  len=321  ctok=0
+mt=300  HTTP200 ALLOW  id=chatcmpl-c8f51d  len=2    ctok=24
+mt=301  HTTP200 DENIED id=resp_7f1b2a13-4  len=321  ctok=0
+mt=310  HTTP200 DENIED id=resp_0bb48696-0  len=321  ctok=0
+mt=320  HTTP200 DENIED id=resp_392a73f7-7  len=321  ctok=0
+mt=350  HTTP200 DENIED id=resp_0277f49b-0  len=321  ctok=0
+mt=400  HTTP200 ALLOW  id=chatcmpl-b1c27d  len=2    ctok=108
+mt=450  HTTP200 DENIED id=resp_2593e2cc-d  len=321  ctok=0
+mt=500  HTTP200 DENIED id=resp_7639749f-1  len=321  ctok=0
+mt=600  HTTP200 DENIED id=resp_67385d9b-c  len=321  ctok=0
+mt=700  HTTP200 DENIED id=resp_8f10cb1b-8  len=321  ctok=0
+mt=800  HTTP200 DENIED id=resp_12670eda-b  len=321  ctok=0

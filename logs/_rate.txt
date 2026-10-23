@@ -1,0 +1,23 @@
+=== Gen allow-rate: 20 distinct website bodies, mt=3000, glm-5.3-flash ===
+#0  HTTP200 DENIED 1740ms  id=resp_806698b2-0  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#1  HTTP200 DENIED 433ms   id=resp_1c4a771d-2  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#2  HTTP200 DENIED 1005ms  id=resp_367bf3b7-b  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#3  HTTP200 DENIED 1251ms  id=resp_c96c8d5a-d  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#4  HTTP200 DENIED 413ms   id=resp_4705b203-b  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#5  HTTP200 DENIED 1184ms  id=resp_ddd9b4de-5  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#6  HTTP200 DENIED 413ms   id=resp_8d3c9c3b-1  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#7  HTTP200 DENIED 1281ms  id=resp_30aec511-5  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#8  HTTP200 DENIED 537ms   id=resp_81625c06-a  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#9  HTTP200 DENIED 1504ms  id=resp_b6e7cc00-7  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#10 HTTP200 DENIED 492ms   id=resp_f98d2745-e  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#11 HTTP200 DENIED 404ms   id=resp_354924e7-5  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#12 HTTP200 DENIED 414ms   id=resp_7d1235e7-d  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#13 HTTP200 DENIED 411ms   id=resp_13549889-8  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#14 HTTP200 DENIED 444ms   id=resp_e9f34ca8-f  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#15 HTTP200 DENIED 546ms   id=resp_e0a5a44e-3  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#16 HTTP200 DENIED 420ms   id=resp_0b741e73-2  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#17 HTTP200 DENIED 1605ms  id=resp_145fcf09-d  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#18 HTTP200 DENIED 1633ms  id=resp_3fe6306d-c  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+#19 HTTP200 DENIED 499ms   id=resp_972f48d8-c  len=321   fr=stop    w=36   style=0 img=0  det=0  form=0picsum=0fence=0
+
+ALLOWED 0/20

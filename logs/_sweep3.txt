@@ -1,0 +1,18 @@
+=== GEN endpoint, REAL website prompt mt=4000 ===
+z-ai/glm-5.3-flash            4961ms   HTTP200  DENIED  id=resp_7b7738c  len=321   w=36   reason=0    fr=stop    style=n img=0 det=0
+openai/gpt-oss-20b            1469ms   HTTP200  DENIED  id=resp_e1412dc  len=321   w=36   reason=0    fr=stop    style=n img=0 det=0
+openai/gpt-oss-120b           307ms    HTTP400  OK      id=-             len=0     w=0    reason=0    fr=        style=n img=0 det=0
+openai-fast                   972ms    HTTP200  DENIED  id=resp_aa14c42  len=314   w=36   reason=0    fr=stop    style=n img=0 det=0
+gpt-oss-20b                   411ms    HTTP200  DENIED  id=resp_7820cee  len=314   w=36   reason=0    fr=stop    style=n img=0 det=0
+
+=== CLASSIC endpoint, REAL website prompt mt=4000 ===
+openai-fast                   60605ms  HTTP200  OK      id=pllns_101700  len=3274  w=45   reason=0    fr=length  style=Y img=0 det=0
+gpt-oss-20b                   956ms    HTTP200  OK      id=pllns_2114e7  len=3274  w=45   reason=0    fr=length  style=Y img=0 det=0
+openai                        293ms    HTTP402  OK      id=-             len=0     w=0    reason=0    fr=        style=n img=0 det=0
+
+=== CLASSIC endpoint, SHORT prompt mt=300 (does it actually answer?) ===
+openai-fast                   336ms    HTTP200  OK      id=pllns_c781de  len=2     w=1    reason=0    fr=stop    style=n img=0 det=0 | OK
+gpt-oss-20b                   423ms    HTTP402  OK      id=-             len=0     w=0    reason=0    fr=        style=n img=0 det=0 | 
+
+=== CLASSIC no-auth (anonymous) ===
+HTTP 200 :: {"id":"pllns_c781deb197dbb6b41a0980ecab07e72f","choices":[{"index":0,"message":{"role":"assistant","content":"OK","reasoning":"User wants to reply with exactly \"OK\". Just output OK.","tool_calls":[]},"finish_reason":"stop"}],"created":1784451971,"model":"gpt-oss-20b","object":"chat.completion","us

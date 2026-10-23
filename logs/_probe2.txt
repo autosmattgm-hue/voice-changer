@@ -1,0 +1,14 @@
+=== NVIDIA probes ===
+openai/gpt-oss-20b      mt=4000  90027ms  HTTP0   fr=ERR:AbortErrorlen=0     rl=0     w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={}
+openai/gpt-oss-20b      mt=8000  90011ms  HTTP0   fr=ERR:AbortErrorlen=0     rl=0     w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={}
+z-ai/glm-5.3-flash      mt=4000  90006ms  HTTP0   fr=ERR:AbortErrorlen=0     rl=0     w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={}
+
+=== CLASSIC openai-fast param tuning ===
+mt=4000 plain           19109ms  HTTP200 fr=length  len=0     rl=5687  w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={"prompt_tokens":273,"completion_tokens":1500,"total_tokens":1773}
+   raw={"id":"pllns_532d30eb3630da6fc2080516c3f13966","choices":[{"index":0,"message":{"role":"assistant","reasoning":"We need to produce the inner HTML of a business website page. Must be one <style> block (max 25 short rules)
+mt=8000 plain           25617ms  HTTP200 fr=length  len=0     rl=5241  w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={"prompt_tokens":274,"completion_tokens":1500,"total_tokens":1774}
+   raw={"id":"pllns_0e07dcc033ffee6a49df804764ee9140","choices":[{"index":0,"message":{"role":"assistant","reasoning":"We need to produce inner HTML of a page. Provide one <style> block with <=25 short rules, prefixed class nam
+mt=8000 effort=low      19261ms  HTTP200 fr=stop    len=3673  rl=91    w=151  style=1img=1  det=4  form=1  picsum=2  fence=0sections=6  h2=3   usage={"prompt_tokens":274,"completion_tokens":1146,"total_tokens":1420}
+mt=8000 effort=none     2083ms   HTTP400 fr=        len=0     rl=0     w=0    style=0img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={}
+   raw={"success":false,"error":{"message":"400 Bad Request: feature 'reasoning_effort None for this model' is not currently supported","code":"BAD_REQUEST","timestamp":"2026-10-22T05:10:59.159Z","details":{"name":"UpstreamErro
+mt=8000 clear_thinking  21373ms  HTTP200 fr=length  len=206   rl=4773  w=4    style=1img=0  det=0  form=0  picsum=0  fence=0sections=0  h2=0   usage={"prompt_tokens":274,"completion_tokens":1500,"total_tokens":1774}

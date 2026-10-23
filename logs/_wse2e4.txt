@@ -1,0 +1,1 @@
+[ws 4p] OK 122896ms provider=pollinationsmodel=openai-fast   len=16062  pages=4   w=464   style=5 img=7   det=12  form=4   doctype=true closed=true

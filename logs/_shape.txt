@@ -1,0 +1,15 @@
+=== Does the WEBSITE_PROMPT shape change the verdict per model? (service sends max_tokens/top_p/temperature) ===
+full-shape mt=4000 openai/gpt-5.4                         HTTP200 1657ms  id=resp_b63df448-c  len=317   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         openai/gpt-5.4                               HTTP200 392ms   id=chatcmpl-EYuYbI  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=4 rtok=0
+full-shape mt=4000 openai/gpt-5.4-mini                    HTTP200 365ms   id=resp_2f380d49-e  len=322   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         openai/gpt-5.4-mini                          HTTP200 514ms   id=chatcmpl-EYuYdm  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=4 rtok=0
+full-shape mt=4000 openai/gpt-5-nano                      HTTP200 365ms   id=resp_5f5a2934-6  len=320   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         openai/gpt-5-nano                            HTTP200 296ms   id=chatcmpl-EYuYag  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=74 rtok=64
+full-shape mt=4000 moonshotai/kimi-k2.6                   HTTP200 591ms   id=resp_e438de2b-4  len=323   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         moonshotai/kimi-k2.6                         HTTP200 357ms   id=c8854656f52b468  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=47 rtok=-
+full-shape mt=4000 z-ai/glm-5.3-flash                     HTTP200 344ms   id=resp_98b493a0-0  len=321   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         z-ai/glm-5.3-flash                           HTTP200 318ms   id=chatcmpl-c8f51d  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=24 rtok=21
+full-shape mt=4000 openai/gpt-oss-20b                     HTTP200 313ms   id=resp_6077b9cd-0  len=321   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         openai/gpt-oss-20b                           HTTP200 1275ms  id=chatcmpl-81f65a  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=87 rtok=-
+full-shape mt=4000 meta/llama-3.3-70b-instruct            HTTP200 313ms   id=resp_50dff59c-9  len=330   fr=stop    DENIED w=36   style=0 img=0 det=0 fence=0 ctok=0 rtok=-
+tiny         meta/llama-3.3-70b-instruct                  HTTP200 342ms   id=64a7ae7dbf984fc  len=2     fr=stop    w=1    style=0 img=0 det=0 fence=0 ctok=2 rtok=-
