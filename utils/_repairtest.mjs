@@ -1,4 +1,19 @@
-import { repairTruncatedHtml, hasRichVisibleContent, visibleWordCount } from "../api/utils/siteContent.js";
+import { missingPageSections, repairTruncatedHtml, hasRichVisibleContent, visibleWordCount } from "../api/utils/siteContent.js";
+import { PollinationsService } from "../api/services/pollinationsService.js";
+
+const svc = new PollinationsService();
+const lead = { name: "ACME Roofing", businessType: "Roofing Contractor", address: "12 Allen Ave, Lagos", phone: "+2348012345678", email: "a@b.ng" };
+for (const [spec, isHome] of [[{ id: "home", title: "Home", focus: "headline" }, true], [{ id: "about", title: "About", focus: "story" }, false]]) {
+  const frag = svc.fallbackPageFragment(spec, lead, "https://picsum.photos/seed/x/1600/900", [], isHome, "modern");
+  const missing = missingPageSections(frag);
+  console.log((missing.length === 0 ? "PASS" : "FAIL") + "  fallback " + spec.id + "  missing=" + JSON.stringify(missing) + "  len=" + frag.length);
+}
+const doc = svc.assembleMultiPage(
+  [{ title: "Home", body: svc.fallbackPageFragment({ id: "home", title: "Home", focus: "x" }, lead, "h", [], true, "modern") }],
+  "ACME Roofing", "#22c55e", "modern");
+console.log((/<\/html>/i.test(doc) ? "PASS" : "FAIL") + "  fallback doc closed");
+console.log((/<form/i.test(doc) && /<details/i.test(doc) ? "PASS" : "FAIL") + "  fallback doc has form+faq");
+
 import { writeFileSync, readFileSync } from "node:fs";
 
 const cases = [
