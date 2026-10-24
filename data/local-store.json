@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T21:44:28.175Z",
+  "updatedAt": "2026-10-23T23:28:27.472Z",
   "collections": {
     "aiWebsites": [
       {
@@ -1647,38 +1647,6 @@
         "verificationToken": "eb88eb07502f5ed80a0f098087d7d9b05cd6c2b1f3be29dc",
         "verificationTokenExpiresAt": 1792877923386,
         "verificationSentAt": "2026-10-23T21:38:43.386Z"
-      },
-      {
-        "uid": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "id": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "name": "Smoke Tester",
-        "email": "smoke-1792791778810@example.com",
-        "passwordHash": "scrypt$ecc59cf5a7b884b36ebb9bae1695b8f9$0994ff3188882ea24d9357206070f2c615844e97ecbdb40ac40619a52029452f089c01e393c2589e37723774fc7c7fe7a4dfb309e17274ecc024eb2c7370581f",
-        "role": "user",
-        "tokenVersion": 1,
-        "subscription": "trial",
-        "planName": "Free Trial",
-        "monthlyLeadLimit": 5,
-        "trialSearchLimit": 2,
-        "trialLeadLimit": 5,
-        "billingStatus": "trial",
-        "trialSearchesUsed": 1,
-        "entitlements": {
-          "billingRequired": true,
-          "trial": true,
-          "trialSearchesUsed": 1,
-          "trialSearchLimit": 2,
-          "trialLeadLimit": 5,
-          "upgradeRequiredAfterTrial": true
-        },
-        "emailVerified": true,
-        "verificationRequired": true,
-        "createdAt": "2026-10-23T21:42:58.995Z",
-        "updatedAt": "2026-10-23T21:44:26.418Z",
-        "verificationToken": "",
-        "verificationTokenExpiresAt": 0,
-        "verificationSentAt": "2026-10-23T21:42:59.924Z",
-        "emailVerifiedAt": "2026-10-23T21:43:01.106Z"
       }
     ],
     "leads": [
@@ -1819,8 +1787,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-10-13T22:35:09.252Z",
-        "updatedAt": "2026-10-13T22:35:09.252Z",
+        "discoveredAt": "2026-10-23T23:12:30.100Z",
+        "updatedAt": "2026-10-23T23:12:30.100Z",
         "createdAt": "2026-07-05T20:50:35.805Z"
       },
       {
@@ -1955,8 +1923,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-10-09T21:46:56.495Z",
-        "updatedAt": "2026-10-09T21:46:56.495Z",
+        "discoveredAt": "2026-10-23T23:12:30.100Z",
+        "updatedAt": "2026-10-23T23:12:30.100Z",
         "createdAt": "2026-07-05T20:50:35.805Z"
       },
       {
@@ -2094,8 +2062,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-10-13T22:35:09.252Z",
-        "updatedAt": "2026-10-13T22:35:09.252Z",
+        "discoveredAt": "2026-10-23T23:12:30.100Z",
+        "updatedAt": "2026-10-23T23:12:30.100Z",
         "createdAt": "2026-07-05T20:50:35.805Z"
       },
       {
@@ -2938,8 +2906,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-07-05T22:05:52.296Z",
-        "updatedAt": "2026-07-05T22:05:52.296Z",
+        "discoveredAt": "2026-10-23T23:12:30.104Z",
+        "updatedAt": "2026-10-23T23:12:30.104Z",
         "createdAt": "2026-07-05T20:52:47.394Z"
       },
       {
@@ -3079,8 +3047,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-07-05T22:05:52.296Z",
-        "updatedAt": "2026-07-05T22:05:52.296Z",
+        "discoveredAt": "2026-10-23T23:12:30.104Z",
+        "updatedAt": "2026-10-23T23:12:30.104Z",
         "createdAt": "2026-07-05T20:52:47.394Z"
       },
       {
@@ -3920,8 +3888,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-07-05T22:05:52.296Z",
-        "updatedAt": "2026-07-05T22:05:52.296Z",
+        "discoveredAt": "2026-10-23T23:28:02.732Z",
+        "updatedAt": "2026-10-23T23:28:02.732Z",
         "createdAt": "2026-07-05T20:52:47.394Z"
       },
       {
@@ -14065,13 +14033,13 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "discoveredAt": "2026-10-23T21:44:23.126Z",
-        "updatedAt": "2026-10-23T21:44:27.983Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:19.288Z",
         "createdAt": "2026-10-09T07:24:55.141Z",
-        "ownerId": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
+        "ownerId": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
         "stage": "Contacted",
-        "savedAt": "2026-10-23T21:44:27.786Z"
+        "savedAt": "2026-10-18T19:06:16.713Z"
       },
       {
         "id": "photon-node-7320697313",
@@ -14200,9 +14168,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "discoveredAt": "2026-10-23T21:44:23.126Z",
-        "updatedAt": "2026-10-23T21:44:23.126Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14332,9 +14300,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "discoveredAt": "2026-10-23T21:44:23.126Z",
-        "updatedAt": "2026-10-23T21:44:23.126Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14464,9 +14432,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "discoveredAt": "2026-10-23T21:44:23.126Z",
-        "updatedAt": "2026-10-23T21:44:23.126Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -14598,9 +14566,9 @@
         },
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
-        "discoveredBy": "9d0edc36-35d3-4f55-8f97-49ef79feb88b",
-        "discoveredAt": "2026-10-23T21:44:23.126Z",
-        "updatedAt": "2026-10-23T21:44:23.126Z",
+        "discoveredBy": "ySIAuGftmwUrbNziu3mVGuuKVJ83",
+        "discoveredAt": "2026-10-18T19:06:00.425Z",
+        "updatedAt": "2026-10-18T19:06:00.425Z",
         "createdAt": "2026-10-09T07:24:55.141Z"
       },
       {
@@ -15939,8 +15907,8 @@
         "opportunityScore": 100,
         "opportunityCategory": "Very High Opportunity",
         "discoveredBy": "owner",
-        "discoveredAt": "2026-10-10T21:28:18.266Z",
-        "updatedAt": "2026-10-10T21:28:18.266Z",
+        "discoveredAt": "2026-10-23T23:26:53.369Z",
+        "updatedAt": "2026-10-23T23:26:53.369Z",
         "createdAt": "2026-10-09T21:46:56.495Z"
       },
       {
@@ -16725,6 +16693,420 @@
         "discoveredAt": "2026-10-10T20:49:37.827Z",
         "updatedAt": "2026-10-10T20:49:37.827Z",
         "createdAt": "2026-10-10T20:49:37.827Z"
+      },
+      {
+        "id": "photon-node-1348720499",
+        "name": "Restaurant Dumplings Nian",
+        "category": "Restaurant",
+        "businessType": "Restaurant",
+        "address": "4, Eisenbahnstraße, Berlin, 10997, DE",
+        "phone": "",
+        "rating": null,
+        "reviewsCount": 0,
+        "websiteUrl": "",
+        "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Dumplings%20Nian%204%2C%20Eisenbahnstra%C3%9Fe%2C%20Berlin%2C%2010997%2C%20DE",
+        "latitude": 52.5018079,
+        "longitude": 13.4321975,
+        "country": "Germany",
+        "countryCode": "DE",
+        "email": "",
+        "social": "",
+        "openingHours": "",
+        "details": {
+          "ownerContact": {
+            "publicContactNote": "Owner or direct contact person was not listed in the public map data."
+          },
+          "contact": {},
+          "social": {},
+          "location": {
+            "latitude": 52.5018079,
+            "longitude": 13.4321975,
+            "address": "4, Eisenbahnstraße, Berlin, 10997, DE",
+            "houseNumber": "4",
+            "street": "Eisenbahnstraße",
+            "city": "Berlin",
+            "postcode": "10997",
+            "country": "Germany",
+            "countryCode": "DE",
+            "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Dumplings%20Nian%204%2C%20Eisenbahnstra%C3%9Fe%2C%20Berlin%2C%2010997%2C%20DE"
+          },
+          "business": {},
+          "operations": {},
+          "payments": {},
+          "source": {
+            "provider": "OpenStreetMap Photon",
+            "osmType": "node",
+            "osmId": 1348720499,
+            "osmUrl": "https://www.openstreetmap.org/node/1348720499",
+            "rawTags": {
+              "name": "Restaurant Dumplings Nian",
+              "amenity": "restaurant",
+              "addr:housenumber": "4",
+              "addr:street": "Eisenbahnstraße",
+              "addr:city": "Berlin",
+              "addr:postcode": "10997",
+              "addr:country": "DE",
+              "is_in:country": "Germany"
+            },
+            "photonProperties": {
+              "osm_type": "N",
+              "osm_id": 1348720499,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "housenumber": "4",
+              "name": "Restaurant Dumplings Nian",
+              "street": "Eisenbahnstraße",
+              "locality": "Reichenberger kiez",
+              "district": "Kreuzberg",
+              "city": "Berlin",
+              "country": "Germany",
+              "postcode": "10997",
+              "countrycode": "DE"
+            }
+          }
+        },
+        "source": "openstreetmap_photon",
+        "raw": {
+          "osmType": "node",
+          "osmId": 1348720499,
+          "tags": {
+            "name": "Restaurant Dumplings Nian",
+            "amenity": "restaurant",
+            "addr:housenumber": "4",
+            "addr:street": "Eisenbahnstraße",
+            "addr:city": "Berlin",
+            "addr:postcode": "10997",
+            "addr:country": "DE",
+            "is_in:country": "Germany"
+          },
+          "photon": {
+            "type": "Feature",
+            "properties": {
+              "osm_type": "N",
+              "osm_id": 1348720499,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "housenumber": "4",
+              "name": "Restaurant Dumplings Nian",
+              "street": "Eisenbahnstraße",
+              "locality": "Reichenberger kiez",
+              "district": "Kreuzberg",
+              "city": "Berlin",
+              "country": "Germany",
+              "postcode": "10997",
+              "countrycode": "DE"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                13.4321975,
+                52.5018079
+              ]
+            }
+          }
+        },
+        "searchRelevance": 77,
+        "marketName": "Berlin",
+        "countryName": "Germany",
+        "audit": {
+          "score": 100,
+          "category": "Very High Opportunity",
+          "checks": {
+            "websiteExists": false,
+            "https": false,
+            "mobileFriendly": false,
+            "seoMetadata": false,
+            "contactForm": false,
+            "socialLinksFound": false,
+            "businessEmailDetected": false,
+            "bookingSystem": false,
+            "outdatedDesign": true
+          },
+          "elapsedMs": 0
+        },
+        "opportunityScore": 100,
+        "opportunityCategory": "Very High Opportunity",
+        "discoveredBy": "owner",
+        "discoveredAt": "2026-10-23T23:28:02.732Z",
+        "updatedAt": "2026-10-23T23:28:02.732Z",
+        "createdAt": "2026-10-23T23:12:30.105Z"
+      },
+      {
+        "id": "photon-node-1700274332",
+        "name": "Restaurant Fischerhaus",
+        "category": "Restaurant",
+        "businessType": "Restaurant",
+        "address": "14, St. Pauli Fischmarkt, Hamburg, 20359, DE",
+        "phone": "",
+        "rating": null,
+        "reviewsCount": 0,
+        "websiteUrl": "",
+        "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Fischerhaus%2014%2C%20St.%20Pauli%20Fischmarkt%2C%20Hamburg%2C%2020359%2C%20DE",
+        "latitude": 53.5458919,
+        "longitude": 9.9557134,
+        "country": "Germany",
+        "countryCode": "DE",
+        "email": "",
+        "social": "",
+        "openingHours": "",
+        "details": {
+          "ownerContact": {
+            "publicContactNote": "Owner or direct contact person was not listed in the public map data."
+          },
+          "contact": {},
+          "social": {},
+          "location": {
+            "latitude": 53.5458919,
+            "longitude": 9.9557134,
+            "address": "14, St. Pauli Fischmarkt, Hamburg, 20359, DE",
+            "houseNumber": "14",
+            "street": "St. Pauli Fischmarkt",
+            "city": "Hamburg",
+            "postcode": "20359",
+            "country": "Germany",
+            "countryCode": "DE",
+            "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Fischerhaus%2014%2C%20St.%20Pauli%20Fischmarkt%2C%20Hamburg%2C%2020359%2C%20DE"
+          },
+          "business": {},
+          "operations": {},
+          "payments": {},
+          "source": {
+            "provider": "OpenStreetMap Photon",
+            "osmType": "node",
+            "osmId": 1700274332,
+            "osmUrl": "https://www.openstreetmap.org/node/1700274332",
+            "rawTags": {
+              "name": "Restaurant Fischerhaus",
+              "amenity": "restaurant",
+              "addr:housenumber": "14",
+              "addr:street": "St. Pauli Fischmarkt",
+              "addr:city": "Hamburg",
+              "addr:postcode": "20359",
+              "addr:country": "DE",
+              "is_in:country": "Germany"
+            },
+            "photonProperties": {
+              "osm_type": "N",
+              "osm_id": 1700274332,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "housenumber": "14",
+              "name": "Restaurant Fischerhaus",
+              "street": "St. Pauli Fischmarkt",
+              "locality": "Altona",
+              "district": "Altona-Altstadt",
+              "city": "Hamburg",
+              "country": "Germany",
+              "postcode": "20359",
+              "countrycode": "DE"
+            }
+          }
+        },
+        "source": "openstreetmap_photon",
+        "raw": {
+          "osmType": "node",
+          "osmId": 1700274332,
+          "tags": {
+            "name": "Restaurant Fischerhaus",
+            "amenity": "restaurant",
+            "addr:housenumber": "14",
+            "addr:street": "St. Pauli Fischmarkt",
+            "addr:city": "Hamburg",
+            "addr:postcode": "20359",
+            "addr:country": "DE",
+            "is_in:country": "Germany"
+          },
+          "photon": {
+            "type": "Feature",
+            "properties": {
+              "osm_type": "N",
+              "osm_id": 1700274332,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "housenumber": "14",
+              "name": "Restaurant Fischerhaus",
+              "street": "St. Pauli Fischmarkt",
+              "locality": "Altona",
+              "district": "Altona-Altstadt",
+              "city": "Hamburg",
+              "country": "Germany",
+              "postcode": "20359",
+              "countrycode": "DE"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                9.9557134,
+                53.5458919
+              ]
+            }
+          }
+        },
+        "searchRelevance": 77,
+        "marketName": "Hamburg",
+        "countryName": "Germany",
+        "audit": {
+          "score": 100,
+          "category": "Very High Opportunity",
+          "checks": {
+            "websiteExists": false,
+            "https": false,
+            "mobileFriendly": false,
+            "seoMetadata": false,
+            "contactForm": false,
+            "socialLinksFound": false,
+            "businessEmailDetected": false,
+            "bookingSystem": false,
+            "outdatedDesign": true
+          },
+          "elapsedMs": 0
+        },
+        "opportunityScore": 100,
+        "opportunityCategory": "Very High Opportunity",
+        "discoveredBy": "owner",
+        "discoveredAt": "2026-10-23T23:12:30.105Z",
+        "updatedAt": "2026-10-23T23:12:30.105Z",
+        "createdAt": "2026-10-23T23:12:30.105Z"
+      },
+      {
+        "id": "photon-node-7348469065",
+        "name": "Restaurant gud",
+        "category": "Restaurant",
+        "businessType": "Restaurant",
+        "address": "Staufenstraße, Frankfurt, 60323, DE",
+        "phone": "",
+        "rating": null,
+        "reviewsCount": 0,
+        "websiteUrl": "",
+        "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20gud%20Staufenstra%C3%9Fe%2C%20Frankfurt%2C%2060323%2C%20DE",
+        "latitude": 50.1191489,
+        "longitude": 8.6684446,
+        "country": "Germany",
+        "countryCode": "DE",
+        "email": "",
+        "social": "",
+        "openingHours": "",
+        "details": {
+          "ownerContact": {
+            "publicContactNote": "Owner or direct contact person was not listed in the public map data."
+          },
+          "contact": {},
+          "social": {},
+          "location": {
+            "latitude": 50.1191489,
+            "longitude": 8.6684446,
+            "address": "Staufenstraße, Frankfurt, 60323, DE",
+            "street": "Staufenstraße",
+            "city": "Frankfurt",
+            "postcode": "60323",
+            "country": "Germany",
+            "countryCode": "DE",
+            "googleMapsLink": "https://www.google.com/maps/search/?api=1&query=Restaurant%20gud%20Staufenstra%C3%9Fe%2C%20Frankfurt%2C%2060323%2C%20DE"
+          },
+          "business": {},
+          "operations": {},
+          "payments": {},
+          "source": {
+            "provider": "OpenStreetMap Photon",
+            "osmType": "node",
+            "osmId": 7348469065,
+            "osmUrl": "https://www.openstreetmap.org/node/7348469065",
+            "rawTags": {
+              "name": "Restaurant gud",
+              "amenity": "restaurant",
+              "addr:street": "Staufenstraße",
+              "addr:city": "Frankfurt",
+              "addr:postcode": "60323",
+              "addr:country": "DE",
+              "is_in:country": "Germany"
+            },
+            "photonProperties": {
+              "osm_type": "N",
+              "osm_id": 7348469065,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "name": "Restaurant gud",
+              "street": "Staufenstraße",
+              "locality": "Westend Süd",
+              "district": "Westend Süd",
+              "city": "Frankfurt",
+              "state": "Hesse",
+              "country": "Germany",
+              "postcode": "60323",
+              "countrycode": "DE"
+            }
+          }
+        },
+        "source": "openstreetmap_photon",
+        "raw": {
+          "osmType": "node",
+          "osmId": 7348469065,
+          "tags": {
+            "name": "Restaurant gud",
+            "amenity": "restaurant",
+            "addr:street": "Staufenstraße",
+            "addr:city": "Frankfurt",
+            "addr:postcode": "60323",
+            "addr:country": "DE",
+            "is_in:country": "Germany"
+          },
+          "photon": {
+            "type": "Feature",
+            "properties": {
+              "osm_type": "N",
+              "osm_id": 7348469065,
+              "osm_key": "amenity",
+              "osm_value": "restaurant",
+              "type": "house",
+              "name": "Restaurant gud",
+              "street": "Staufenstraße",
+              "locality": "Westend Süd",
+              "district": "Westend Süd",
+              "city": "Frankfurt",
+              "state": "Hesse",
+              "country": "Germany",
+              "postcode": "60323",
+              "countrycode": "DE"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                8.6684446,
+                50.1191489
+              ]
+            }
+          }
+        },
+        "searchRelevance": 77,
+        "marketName": "Frankfurt",
+        "countryName": "Germany",
+        "audit": {
+          "score": 100,
+          "category": "Very High Opportunity",
+          "checks": {
+            "websiteExists": false,
+            "https": false,
+            "mobileFriendly": false,
+            "seoMetadata": false,
+            "contactForm": false,
+            "socialLinksFound": false,
+            "businessEmailDetected": false,
+            "bookingSystem": false,
+            "outdatedDesign": true
+          },
+          "elapsedMs": 0
+        },
+        "opportunityScore": 100,
+        "opportunityCategory": "Very High Opportunity",
+        "discoveredBy": "owner",
+        "discoveredAt": "2026-10-23T23:12:30.105Z",
+        "updatedAt": "2026-10-23T23:12:30.105Z",
+        "createdAt": "2026-10-23T23:12:30.105Z"
       }
     ],
     "auditLogs": [
@@ -17808,23 +18190,25 @@
         "updatedAt": "2026-10-18T23:56:49.687Z"
       },
       {
-        "actor": "smoke-1792791778810@example.com",
+        "actor": "owner@matleads.local",
         "action": "lead_search",
         "query": {
-          "country": "",
-          "countries": [],
+          "country": "Germany",
+          "countries": [
+            "Germany"
+          ],
           "state": "",
           "city": "",
           "zip": "",
           "industry": "",
-          "keyword": "businesses",
+          "keyword": "",
           "businessTypes": [],
-          "mapLink": "https://www.google.com/maps/@13.4053888,-16.6887424,11z?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D",
+          "mapLink": "",
           "latitude": null,
           "longitude": null,
           "radiusMeters": 15000,
           "limit": 10,
-          "searchDepth": "deep",
+          "searchDepth": "standard",
           "leadQuality": "all",
           "sortBy": "opportunity",
           "minOpportunityScore": 0,
@@ -17833,10 +18217,109 @@
           "bypassCache": false,
           "refreshSeed": ""
         },
-        "count": 5,
-        "id": "d3ef6deb-b4e7-4474-a35b-da05aed332a8",
-        "createdAt": "2026-10-23T21:44:26.785Z",
-        "updatedAt": "2026-10-23T21:44:26.785Z"
+        "count": 10,
+        "id": "1d03c44d-0149-4064-ade1-bbb4bd795d59",
+        "createdAt": "2026-10-23T23:12:55.344Z",
+        "updatedAt": "2026-10-23T23:12:55.344Z"
+      },
+      {
+        "actor": "owner@matleads.local",
+        "action": "lead_search",
+        "query": {
+          "country": "Germany",
+          "countries": [
+            "Germany"
+          ],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "",
+          "businessTypes": [],
+          "mapLink": "",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 3,
+          "searchDepth": "standard",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 3,
+        "id": "5dba7077-1f06-4ad2-9d50-5b9730e9b0fd",
+        "createdAt": "2026-10-23T23:27:02.964Z",
+        "updatedAt": "2026-10-23T23:27:02.964Z"
+      },
+      {
+        "actor": "owner@matleads.local",
+        "action": "lead_search",
+        "query": {
+          "country": "Germany",
+          "countries": [
+            "Germany"
+          ],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "",
+          "businessTypes": [],
+          "mapLink": "",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 2,
+          "searchDepth": "standard",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 2,
+        "id": "653304fd-cf00-4734-b52c-568bb3f3f556",
+        "createdAt": "2026-10-23T23:28:08.703Z",
+        "updatedAt": "2026-10-23T23:28:08.703Z"
+      },
+      {
+        "actor": "owner@matleads.local",
+        "action": "lead_search_cached",
+        "query": {
+          "country": "Germany",
+          "countries": [
+            "Germany"
+          ],
+          "state": "",
+          "city": "",
+          "zip": "",
+          "industry": "",
+          "keyword": "",
+          "businessTypes": [],
+          "mapLink": "",
+          "latitude": null,
+          "longitude": null,
+          "radiusMeters": 15000,
+          "limit": 2,
+          "searchDepth": "standard",
+          "leadQuality": "all",
+          "sortBy": "opportunity",
+          "minOpportunityScore": 0,
+          "requireContact": false,
+          "missingWebsiteOnly": false,
+          "bypassCache": false,
+          "refreshSeed": ""
+        },
+        "count": 2,
+        "id": "e1db1353-a9c6-41c5-9a45-cf879e06afab",
+        "createdAt": "2026-10-23T23:28:27.472Z",
+        "updatedAt": "2026-10-23T23:28:27.472Z"
       }
     ],
     "activities": [
@@ -17893,15 +18376,6 @@
         "id": "0af89efd-e40d-46f2-939a-8b61dc723606",
         "createdAt": "2026-10-18T23:56:57.398Z",
         "updatedAt": "2026-10-18T23:56:57.398Z"
-      },
-      {
-        "leadId": "photon-node-8209452111",
-        "actor": "smoke-1792791778810@example.com",
-        "action": "stage_updated",
-        "stage": "Contacted",
-        "id": "8c98968c-9e11-4a79-ae30-552ff7df91bc",
-        "createdAt": "2026-10-23T21:44:28.175Z",
-        "updatedAt": "2026-10-23T21:44:28.175Z"
       }
     ],
     "checkoutSessions": [
